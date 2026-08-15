@@ -13,7 +13,8 @@ Released August 14, 2026.
 
 - Adds the same PoS workflow to the Report page on ColumbiaWalks.com.
 - Moves the public Page of Shame gallery to its own page.
-- Accepts and prepares larger phone-camera pictures for the upload limit.
+- Web maintenance release 3.12.1 removes the GPS requirement from website PoS reports; the Android app still requires GPS.
+- Web maintenance release 3.12.2 prepares supported phone pictures as compatible JPEG files and shows a clear message for unreadable formats.
 
 ## Important Android installation help
 

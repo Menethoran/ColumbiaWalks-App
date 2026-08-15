@@ -8,7 +8,7 @@ ColumbiaWalks is a private community walking-safety initiative. It is not affili
 
 ## Current release
 
-ColumbiaWalks 3.12.0 was released August 14, 2026. The new Page of Shame (PoS) tab is picture-first: opening it launches the camera, requires current GPS coordinates, and allows an optional description before submission.
+ColumbiaWalks for Android 3.12.0 was released August 14, 2026. Its new Page of Shame (PoS) tab is picture-first: opening it launches the camera, requires current GPS coordinates, and allows an optional description before submission. The website uses a GPS-free version of this workflow and is maintained separately.
 
 [Download ColumbiaWalks 3.12.0](https://www.columbiawalks.com/assets/downloads/ColumbiaWalks-3.12.0.apk)
 
