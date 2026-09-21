@@ -13,11 +13,13 @@ in the signed 3.16.1 archive and uploaded IPA.
   Distribution team `JKA6EGL5J2` with bundle ID `org.columbiawalks.app`.
 - Apple's `altool --validate-app` and `--upload-app` both succeeded with no
   errors. Delivery UUID: `80bac17f-4d62-4f68-b875-98b6a726bb7f`.
-- App Store Connect now reports build 31601 as `VALID` and
-  `APP_STORE_ELIGIBLE`. The 3.16.0 draft has not yet been changed to 3.16.1
-  or attached to build 31601. The API key permits reading but returned HTTP
-  403 on a version update, so this change needs the App Store Connect UI.
-  Public version 3.14.0 remains live.
+- App Store Connect reports build 31601 as `VALID` and
+  `APP_STORE_ELIGIBLE`. The version is now **3.16.1, Ready for Review**, with
+  build 31601 attached and the superseded 31600 build detached. Description
+  and release notes match their source files exactly; App Review notes describe
+  3.16.1 without physical-device placeholders. Manual release remains selected.
+  A draft review submission contains 3.16.1 (31601), but **Submit for Review
+  has not been pressed**. Public version 3.14.0 remains live.
 - The static iOS UI-clarity verifier passed. Two simulator test attempts built
   the app and test bundle but stalled before executing any tests in this 4 GB
   VM; both were stopped. Do not claim a 3.16.1 test pass yet. The signed device
@@ -25,13 +27,14 @@ in the signed 3.16.1 archive and uploaded IPA.
 
 ## Current release gates
 
-- Change the App Store Connect version to 3.16.1, replace the attached 31600
-  build with valid build 31601, and
-  update the description, release notes, and App Review notes from the 3.16.1
-  source files. Keep manual release selected.
+- The listing still has three inherited 3.14 screenshots. They show the old
+  single Report submit action and Feedback tab, so do not submit them as a
+  representation of 3.16.1. A direct 6.9-inch simulator capture attempt spent
+  over ten minutes at the iOS startup spinner on this 4 GB VM and did not yield
+  a usable app screenshot. Obtain current captures from TestFlight on an iPhone.
 - Replace the three inherited 3.14 screenshots with visually verified 3.16.1
   images, and attach a fresh physical-iPhone review recording with exact model
-  and iOS version. The old simulator did not produce usable screenshots.
+  and iOS version.
 - Complete 3.16.1 physical-device acceptance and resolve the simulator test
   result. Submit to Apple review only after the final build and assets match.
 
