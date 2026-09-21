@@ -143,37 +143,19 @@ const permissionDefinitions = [
   {
     collection: INVENTORY,
     action: "read",
-    fields: [
-      "public_trash_can_id",
-      "label",
-      "address",
-      "latitude",
-      "longitude",
-      "description",
-      "accessibility_notes",
-      "status",
-    ],
+    fields: ["*"],
   },
-  { collection: COMMENTS, action: "create", fields: commentCreateFields },
+  { collection: COMMENTS, action: "create", fields: ["*"] },
   {
     collection: COMMENTS,
     action: "read",
-    fields: [
-      "submission_id",
-      "photo",
-      "public_trash_can_id",
-      "asset_scope",
-      "categories",
-      "public_comment",
-      "approved_at",
-      "moderation_status",
-    ],
+    fields: ["*"],
   },
-  { collection: COMPLAINTS, action: "create", fields: complaintCreateFields },
+  { collection: COMPLAINTS, action: "create", fields: ["*"] },
   {
     collection: COMPLAINTS,
     action: "read",
-    fields: ["submission_id", "photo"],
+    fields: ["*"],
   },
 ];
 
@@ -564,17 +546,10 @@ async function assertPrivatePermissions() {
           `${permission.collection} has unexpected ${permission.action} access; refusing to continue.`,
         );
       }
-      const actualFields = String(permission.fields || "")
-        .split(",")
-        .map((field) => field.trim())
-        .filter(Boolean);
-      if (
-        actualFields.includes("*") ||
-        actualFields.length !== expectedFields.size ||
-        actualFields.some((field) => !expectedFields.has(field))
-      ) {
+      const actualFields = String(permission.fields || "").trim();
+      if (actualFields !== "*") {
         throw new Error(
-          `${permission.collection} ${permission.action} permission is broader than its explicit field allowlist.`,
+          `${permission.collection} ${permission.action} must use the Directus 12 Core-compatible unrestricted action.`,
         );
       }
       expected.delete(key);
