@@ -147,6 +147,27 @@ function closeDatabase(database) {
   });
 }
 
+async function userHasAdministratorPolicy(userId) {
+  if (!userId) return false;
+  const database = await openDatabase(databasePath, sqlite3.OPEN_READONLY);
+  try {
+    return Boolean(await databaseGet(
+      database,
+      `SELECT 1
+         FROM directus_access access
+         JOIN directus_policies policy ON policy.id = access.policy
+         JOIN directus_users user ON user.id = ?
+        WHERE policy.admin_access = 1
+          AND (access.user = user.id OR
+               (access.user IS NULL AND access.role = user.role))
+        LIMIT 1`,
+      [userId],
+    ));
+  } finally {
+    await closeDatabase(database);
+  }
+}
+
 async function createAndVerifyBackup() {
   if (!fs.existsSync(backupPath)) {
     const database = await openDatabase(databasePath, sqlite3.OPEN_READWRITE);
@@ -205,7 +226,8 @@ async function assertAdministrator() {
     ...(Array.isArray(role?.policies) ? role.policies : []),
     ...(Array.isArray(identity.data?.policies) ? identity.data.policies : []),
   ].some((entry) => (entry?.policy ?? entry)?.admin_access === true);
-  if (role?.admin_access !== true && !policyAdmin) {
+  const databasePolicyAdmin = await userHasAdministratorPolicy(identity.data?.id);
+  if (role?.admin_access !== true && !policyAdmin && !databasePolicyAdmin) {
     throw new Error("The migration session is not a Directus administrator.");
   }
   return identity.data?.email || identity.data?.id;
