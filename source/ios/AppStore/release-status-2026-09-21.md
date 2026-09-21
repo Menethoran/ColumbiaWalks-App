@@ -20,12 +20,21 @@ release after approval.
   the successful simulator build, tests, and signed archive.
 - The App Store description, promotional text, release notes, and App Review
   notes now describe 3.16.0 and its Community tab.
+- On September 21, Adonai reported that the backend deployment is completely
+  ready. A fresh independent check returned HTTP 200 and empty public trash-can
+  and comment arrays, while malformed submission JSON returned the expected
+  HTTP 400 validation error. Both live Cloudflare privacy-page addresses served
+  the September 18 policy with the 3.16 topics. The latest GitHub changes after
+  the uploaded build affect only Directus migration code/tests; the iOS project
+  still declares `3.16.0 (31600)`. The App Store draft still has that build
+  attached in Prepare for Submission.
 
 ## Release gates still open
 
-- Verify the separate backups and narrow private-policy allowlists from both
-  3.16 Directus migrations, and the weather safeguards described in
-  `source/android/DEVELOPMENT_3.16.md`. The first valid private QA submission
+- Retain Adonai's deployment verification for the separate backups and narrow
+  private-policy allowlists from both 3.16 Directus migrations, and the weather
+  safeguards described in `source/android/DEVELOPMENT_3.16.md`. These host-side
+  details cannot be inspected from this Mac. The first valid private QA submission
   and public-feed request returned 502 during deployment. Later on September
   21, the same private complaint returned 201 `new`, then 200 with
   `duplicate: true`; a separate public comment returned 201
@@ -34,10 +43,9 @@ release after approval.
   private QA complaint `93b899a0-ce9d-4f2c-9796-618b4097c402` and reject
   public QA comment `c8359304-458b-4c20-b447-6a36d3279399`; both are
   explicitly marked as tests with no physical location.
-- Verify the newly deployed public `/privacy-policy/` page against the 3.16
-  source in `source/android/server/intake/src/privacy-page.js`. It now shows
-  an effective date of September 18, 2026 and mentions the 3.16 Community
-  tools, trash-can handling, and Open-Meteo.
+- The deployed public `/privacy-policy/` page now shows an effective date of
+  September 18, 2026 and mentions the 3.16 Community tools, trash-can handling,
+  moderation, and Open-Meteo. Both live Cloudflare addresses were checked.
 - Replace the three remaining inherited 3.14 App Store screenshots with
   visually verified 3.16 screenshots. The obsolete Feedback-tab image was
   removed from the draft. A 6.9-inch iPhone 17 Pro Max simulator booted and
