@@ -1,0 +1,24 @@
+# General Directus router only.
+# The more-specific ColumbiaWalks intake route is defined on the companion
+# service in intake/compose.example.yml.
+# Replace "St_Peter" and "letsencrypt" if your Traefik setup uses other names.
+services:
+  directus:
+    networks:
+      - St_Peter
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=St_Peter"
+
+      - "traefik.http.services.directus.loadbalancer.server.port=8055"
+
+      - "traefik.http.routers.directus.rule=Host(`directus.rndtech.org`)"
+      - "traefik.http.routers.directus.entrypoints=websecure"
+      - "traefik.http.routers.directus.tls=true"
+      - "traefik.http.routers.directus.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.directus.service=directus"
+
+networks:
+  St_Peter:
+    external: true
+

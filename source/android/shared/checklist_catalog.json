@@ -1,0 +1,529 @@
+{
+  "version": 2,
+  "title": "ColumbiaWalks walking-safety checklist",
+  "instructions": "Choose the major issue type first. Only related follow-up questions will appear. Answer only the items you can observe, add context in the report details, and attach a photo only when it is safe to do so.",
+  "response_options": [
+    {
+      "id": "ok",
+      "label": "OK"
+    },
+    {
+      "id": "needs_attention",
+      "label": "Needs attention"
+    },
+    {
+      "id": "not_applicable",
+      "label": "N/A"
+    }
+  ],
+  "sources": {
+    "existing_app": "Original ColumbiaWalks report categories",
+    "nhtsa_2025": "NHTSA Rate Your Walk: Pedestrian Walkability Checklist (2025)",
+    "caerphilly_vehicle_safety": "Caerphilly County Borough Council vehicle movements and pedestrian safety inspection checklist",
+    "florida_srts": "Florida Safe Routes to School Walk and Bike to School Day Pre-Assessment Site Checklist"
+  },
+  "categories": [
+    {
+      "id": "walking_surfaces",
+      "title": "Sidewalks, paths & trip hazards",
+      "description": "Walking space, continuity, condition, maintenance, and comfort.",
+      "report_category": "sidewalk_safety",
+      "report_categories": ["sidewalk_safety", "trip_hazards"],
+      "questions": [
+        {
+          "id": "walk_01",
+          "text": "Is there a safe, designated space to walk?",
+          "sources": ["existing_app", "nhtsa_2025", "caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "walk_02",
+          "text": "Are sidewalks or separated paths provided where pedestrians need them?",
+          "sources": ["caerphilly_vehicle_safety", "florida_srts"]
+        },
+        {
+          "id": "walk_03",
+          "text": "Are walkways and shared entrances wide enough for people to pass safely?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "walk_04",
+          "text": "Are sidewalks and walking routes continuous and free of gaps?",
+          "sources": ["nhtsa_2025", "florida_srts"]
+        },
+        {
+          "id": "walk_05",
+          "text": "Are walking surfaces free of debris, cracks, holes, uneven areas, slippery spots, and other trip hazards?",
+          "sources": ["existing_app", "nhtsa_2025", "caerphilly_vehicle_safety", "florida_srts"]
+        },
+        {
+          "id": "walk_06",
+          "text": "Are walkways maintained during winter, including timely ice and snow control?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "walk_07",
+          "text": "Is the route clean and free of litter or trash?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "walk_08",
+          "text": "Does the walking route appear to be regularly used?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "walk_09",
+          "text": "Are public seating and weather-shelter options available where they are needed?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "walk_10",
+          "text": "Is there adequate shade along the route?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "walk_11",
+          "text": "Is traffic noise low enough that the walk feels comfortable?",
+          "sources": ["nhtsa_2025"]
+        }
+      ]
+    },
+    {
+      "id": "crossings",
+      "title": "Crosswalks & intersections",
+      "description": "Crossing distance, signals, markings, traffic control, and pedestrian visibility.",
+      "report_category": "crosswalk_safety",
+      "report_categories": ["crosswalk_safety"],
+      "questions": [
+        {
+          "id": "cross_01",
+          "text": "Is the crossing distance short enough to cross safely?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "cross_02",
+          "text": "Do traffic signals operate often enough and allow enough time to cross?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "cross_03",
+          "text": "Are pedestrian walk signals present, working, and accessible to people with low vision?",
+          "sources": ["nhtsa_2025", "florida_srts"]
+        },
+        {
+          "id": "cross_04",
+          "text": "Are needed crosswalks clearly marked in each crossing direction?",
+          "sources": ["nhtsa_2025", "caerphilly_vehicle_safety", "florida_srts"]
+        },
+        {
+          "id": "cross_05",
+          "text": "Are crossing points placed appropriately and used as intended?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "cross_06",
+          "text": "Are intersections clear of parked vehicles, plants, and other objects that block views?",
+          "sources": ["nhtsa_2025", "florida_srts"]
+        },
+        {
+          "id": "cross_07",
+          "text": "Are curb ramps present and well maintained at crossings?",
+          "sources": ["nhtsa_2025", "florida_srts"]
+        },
+        {
+          "id": "cross_08",
+          "text": "Is an adult crossing guard present where one is needed?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "cross_09",
+          "text": "Are appropriate stop signs, traffic lights, and vehicle signs present?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "cross_10",
+          "text": "Can the intersection safely handle the observed motor-vehicle and pedestrian traffic volumes?",
+          "sources": ["florida_srts"]
+        }
+      ]
+    },
+    {
+      "id": "driver_behavior",
+      "title": "Drivers & traffic behavior",
+      "description": "Yielding, speed, signals, stopping, backing, and aggressive conduct.",
+      "report_category": "vehicle_safety",
+      "report_categories": ["vehicle_safety", "aggressive_drivers"],
+      "questions": [
+        {
+          "id": "driver_01",
+          "text": "Do drivers scan the surrounding area before backing up?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "driver_02",
+          "text": "Do drivers yield to children and other pedestrians crossing the street?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "driver_03",
+          "text": "Do drivers use turn signals and other clear visual cues?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "driver_04",
+          "text": "Do drivers travel at a safe speed for the posted limit and current conditions?",
+          "sources": ["existing_app", "nhtsa_2025"]
+        },
+        {
+          "id": "driver_05",
+          "text": "Do drivers slow and stop for traffic lights instead of speeding through them?",
+          "sources": ["existing_app", "nhtsa_2025"]
+        },
+        {
+          "id": "driver_06",
+          "text": "Do drivers stop at stop signs and red lights and turn cautiously?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "driver_07",
+          "text": "Do drivers leave crosswalks clear when stopped?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "driver_08",
+          "text": "Are pedestrians free from threatening, harassing, crowding, following, or intentionally aggressive driving?",
+          "sources": ["existing_app"]
+        }
+      ]
+    },
+    {
+      "id": "visibility_lighting",
+      "title": "Lighting & sight distance",
+      "description": "Lighting and clear views between drivers, pedestrians, and bicyclists.",
+      "report_category": "lighting_or_visibility",
+      "report_categories": ["lighting_or_visibility"],
+      "questions": [
+        {
+          "id": "view_01",
+          "text": "Is the walking route adequately lit when used after dark?",
+          "sources": ["existing_app", "nhtsa_2025", "caerphilly_vehicle_safety", "florida_srts"]
+        },
+        {
+          "id": "view_02",
+          "text": "Can pedestrians and drivers see approaching traffic clearly at crossings?",
+          "sources": ["caerphilly_vehicle_safety", "florida_srts"]
+        },
+        {
+          "id": "view_03",
+          "text": "Are parking and waiting vehicles kept from blocking sight lines?",
+          "sources": ["nhtsa_2025", "florida_srts"]
+        },
+        {
+          "id": "view_04",
+          "text": "Are fences, walls, dumpsters, utility boxes, landscaping, signs, and buildings placed so they do not block views?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "view_05",
+          "text": "Do vehicle routes avoid sharp or blind bends that hide pedestrians?",
+          "sources": ["caerphilly_vehicle_safety"]
+        }
+      ]
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility & mobility",
+      "description": "Wheelchair access, detectable warnings, accessible signals, and inclusive pick-up areas.",
+      "report_category": "accessibility_ada",
+      "report_categories": ["accessibility_ada"],
+      "questions": [
+        {
+          "id": "access_01",
+          "text": "Are routes, crossings, and entrances usable by people using wheelchairs or other mobility devices?",
+          "sources": ["existing_app", "florida_srts"]
+        },
+        {
+          "id": "access_02",
+          "text": "Are accessible curb ramps available where needed?",
+          "sources": ["nhtsa_2025", "florida_srts"]
+        },
+        {
+          "id": "access_03",
+          "text": "Do curb ramps have tactile warning strips or another detectable surface?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "access_04",
+          "text": "Are pick-up and drop-off areas safe and accessible for people with physical disabilities?",
+          "sources": ["caerphilly_vehicle_safety", "florida_srts"]
+        }
+      ]
+    },
+    {
+      "id": "vehicle_operations",
+      "title": "Vehicle routes, parking & site operations",
+      "description": "Separation, delivery areas, parking, reversing, speed control, and driver management.",
+      "report_category": "vehicle_safety",
+      "report_categories": ["vehicle_safety"],
+      "questions": [
+        {
+          "id": "vehicle_01",
+          "text": "Are vehicles and pedestrians kept safely separated wherever practical?",
+          "sources": ["caerphilly_vehicle_safety", "florida_srts"]
+        },
+        {
+          "id": "vehicle_02",
+          "text": "Are barriers or railings provided at gates, corners, entrances, and blind spots where needed?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_03",
+          "text": "Are traffic routes, entrances, and gateways wide enough for safe shared use?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_04",
+          "text": "Is site traffic arranged to avoid congestion that increases pedestrian risk?",
+          "sources": ["caerphilly_vehicle_safety", "florida_srts"]
+        },
+        {
+          "id": "vehicle_05",
+          "text": "Are one-way systems or parking restrictions used where they would reduce conflicts?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_06",
+          "text": "Are delivery and loading activities kept in a designated area away from pedestrians and passing traffic?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_07",
+          "text": "Are roads and parking areas well constructed, maintained, and free of obstructions or hazards?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_08",
+          "text": "Are roads and parking areas maintained during winter, including ice control?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_09",
+          "text": "Are roadways marked where needed for right-of-way, no-entry, and other controls?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_10",
+          "text": "Are speed bumps, speed tables, surface treatments, or other speed-control measures used where needed?",
+          "sources": ["caerphilly_vehicle_safety", "florida_srts"]
+        },
+        {
+          "id": "vehicle_11",
+          "text": "Are appropriate speed limits posted for site roadways?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_12",
+          "text": "Are drivers clearly informed of site rules through suitable safety signs?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_13",
+          "text": "Are safety signs clear, consistent, and appropriate for the location?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_14",
+          "text": "Has the need for vehicles to reverse, and the distance they reverse, been minimized?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_15",
+          "text": "Are reversing areas designated and kept separate from pedestrians?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_16",
+          "text": "Are mirrors, cameras, or other aids provided where backing visibility is limited?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_17",
+          "text": "Is reversing supervised when site conditions make supervision necessary?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_18",
+          "text": "Are visiting and delivery drivers kept away from peak pedestrian periods where necessary?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_19",
+          "text": "Are visiting drivers told the rules and controlled or supervised in restricted areas?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "vehicle_20",
+          "text": "Is unsafe behavior addressed and are unnecessary vehicle trips on the site minimized?",
+          "sources": ["caerphilly_vehicle_safety"]
+        }
+      ]
+    },
+    {
+      "id": "school_routes",
+      "title": "School arrival, bus & bicycle areas",
+      "description": "Specialized checks for schools, student drop-off, bus loading, bicycle routes, and school zones.",
+      "report_category": "school_route_safety",
+      "report_categories": ["school_route_safety"],
+      "questions": [
+        {
+          "id": "school_01",
+          "text": "Are students entering or leaving cars protected from moving vehicles?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_02",
+          "text": "Does a continuous raised curb separate student drop-off areas from moving vehicles?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_03",
+          "text": "Are vehicular and pedestrian signs posted around student drop-off areas?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_04",
+          "text": "Does traffic move through the student drop-off area without unsafe congestion or backups?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_05",
+          "text": "Are bus driveways separated from pedestrian and bicycle routes by curbs or bollards?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_06",
+          "text": "Are bus driveways separated from parent pick-up and drop-off areas?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_07",
+          "text": "Where buses double-stack, are students protected when crossing in front of or behind buses?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_08",
+          "text": "Is bus-loading traffic one-way and wide enough for safe drop-off and pull-out movements?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_09",
+          "text": "Is there a continuous curb and sidewalk from the bus loading zone to the school?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_10",
+          "text": "Is the bus loading and unloading zone adequately lit?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_11",
+          "text": "Are bicycle routes designated by signs and marked lanes where appropriate?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_12",
+          "text": "Are students supervised during school arrival and departure?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "school_13",
+          "text": "Are nonessential vehicles restricted without shifting risk to nearby public streets?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "school_14",
+          "text": "Is a Safe Routes to School approach used to reduce vehicle traffic near the school?",
+          "sources": ["caerphilly_vehicle_safety"]
+        },
+        {
+          "id": "school_15",
+          "text": "Are school-advance, school-crossing, school-speed-limit, beacon, and parking-control signs provided where needed?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_16",
+          "text": "Is there an effective school-focused traffic-safety or enforcement program?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_17",
+          "text": "Is a designated school zone clearly identified?",
+          "sources": ["florida_srts"]
+        },
+        {
+          "id": "school_18",
+          "text": "Are school pavement markings present on nearby roadways where needed?",
+          "sources": ["florida_srts"]
+        }
+      ]
+    },
+    {
+      "id": "walking_practices",
+      "title": "Walking practices & overall comfort",
+      "description": "Observable pedestrian actions and the overall experience of the walk.",
+      "report_category": "other",
+      "report_categories": ["sidewalk_safety"],
+      "questions": [
+        {
+          "id": "practice_01",
+          "text": "Can people cross at a crosswalk or intersection where they can see and be seen?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "practice_02",
+          "text": "Can people stop and look left, right, and left again before crossing?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "practice_03",
+          "text": "Can people use a sidewalk, or face traffic on a shoulder where no sidewalk exists?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "practice_04",
+          "text": "Can people complete the crossing within the available time?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "practice_05",
+          "text": "Can people cross with the traffic light?",
+          "sources": ["nhtsa_2025"]
+        },
+        {
+          "id": "practice_06",
+          "text": "Did the walk feel safe overall?",
+          "sources": ["nhtsa_2025"]
+        }
+      ]
+    },
+    {
+      "id": "police_response",
+      "title": "Police & emergency response",
+      "description": "Optional feedback when police or emergency responders were involved.",
+      "report_category": "police_response",
+      "report_categories": ["police_response"],
+      "questions": [
+        {
+          "id": "police_01",
+          "text": "If police were involved, did their response improve safety at the scene?",
+          "sources": ["existing_app"]
+        },
+        {
+          "id": "police_02",
+          "text": "If police were involved, was the response timely, respectful, and appropriate?",
+          "sources": ["existing_app"]
+        }
+      ]
+    }
+  ]
+}
+

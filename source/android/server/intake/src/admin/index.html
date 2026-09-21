@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>ColumbiaWalks Admin</title>
+  <link rel="stylesheet" href="/columbiawalks-admin/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="/columbiawalks-admin/admin.css?v=20260821-beta-links">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <main>
+    <section class="login-shell" id="login-view" aria-labelledby="login-title">
+      <div class="brand-lockup">
+        <span class="brand-mark" aria-hidden="true">CW</span>
+        <div>
+          <p class="eyebrow">Columbia, Pennsylvania</p>
+          <strong>ColumbiaWalks</strong>
+        </div>
+      </div>
+      <div class="login-grid">
+        <div class="login-intro">
+          <p class="eyebrow">Private operations dashboard</p>
+          <h1 id="login-title">Turn community reports into safer streets.</h1>
+          <p class="lede">
+            Review issues, understand walking patterns, and see what residents
+            are asking ColumbiaWalks to address.
+          </p>
+          <div class="privacy-note">
+            <span aria-hidden="true">●</span>
+            This page is restricted to Directus administrators.
+          </div>
+        </div>
+        <form class="login-card" id="login-form">
+          <p class="eyebrow">Administrator sign in</p>
+          <h2>Welcome back</h2>
+          <p>Use the same account you use for Directus.</p>
+          <label>
+            <span>Email address</span>
+            <input id="email" name="email" type="email" autocomplete="username" required>
+          </label>
+          <label>
+            <span>Password</span>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+          </label>
+          <p class="form-message" id="login-message" role="alert" hidden></p>
+          <button class="primary-button" id="login-button" type="submit">Open dashboard</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="dashboard" id="dashboard-view" aria-labelledby="dashboard-title" hidden>
+      <header class="topbar">
+        <div class="brand-lockup compact">
+          <span class="brand-mark" aria-hidden="true">CW</span>
+          <div>
+            <strong>ColumbiaWalks</strong>
+            <p>Admin intelligence</p>
+          </div>
+        </div>
+        <div class="account-area">
+          <span class="live-indicator"><i></i> Private &amp; live</span>
+          <span id="account-name">Administrator</span>
+          <button class="text-button" id="logout-button" type="button">Sign out</button>
+        </div>
+      </header>
+
+      <div class="dashboard-heading">
+        <div>
+          <p class="eyebrow">Community overview</p>
+          <h1 id="dashboard-title">What Columbia is telling us</h1>
+          <p id="updated-at">Loading the latest submissions…</p>
+        </div>
+        <label class="range-control">
+          <span>Reporting window</span>
+          <select id="range-select">
+            <option value="30">Last 30 days</option>
+            <option value="90" selected>Last 90 days</option>
+            <option value="365">Last 12 months</option>
+            <option value="all">All time</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="notice" id="collection-notice" hidden></div>
+      <div class="loading-panel" id="loading-panel">
+        <span class="spinner" aria-hidden="true"></span>
+        Building the community overview…
+      </div>
+      <div class="dashboard-content" id="dashboard-content" hidden>
+        <section class="metric-grid" aria-label="Key statistics">
+          <article class="metric-card accent-coral">
+            <span>Issues raised</span><strong id="metric-issues">0</strong><small>Reports, feedback, and complaints</small>
+          </article>
+          <article class="metric-card accent-lime">
+            <span>Open issues</span><strong id="metric-open">0</strong><small>Still awaiting resolution</small>
+          </article>
+          <article class="metric-card accent-blue">
+            <span>Safety reports</span><strong id="metric-reports">0</strong><small>Street-level observations</small>
+          </article>
+          <article class="metric-card accent-gold">
+            <span>Pedestrian profiles</span><strong id="metric-profiles">0</strong><small>Walking experiences shared</small>
+          </article>
+          <article class="metric-card accent-navy">
+            <span>Police interactions</span><strong id="metric-police">0</strong><small>Private community reports</small>
+          </article>
+          <article class="metric-card accent-violet">
+            <span>Last 30 days</span><strong id="metric-recent">0</strong><small>All new submissions</small>
+          </article>
+        </section>
+
+        <section class="insight-grid">
+          <article class="panel panel-wide">
+            <div class="panel-heading">
+              <div><p class="eyebrow">Issue signals</p><h2>What residents report</h2></div>
+              <span class="panel-badge">Safety reports</span>
+            </div>
+            <div class="bar-chart" id="category-chart"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">Workflow</p><h2>Issue status</h2></div>
+            </div>
+            <div class="donut-layout">
+              <div class="donut" id="status-donut"><span>0</span></div>
+              <div class="legend" id="status-legend"></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="profile-section heatmap-section">
+          <div class="section-heading">
+            <div><p class="eyebrow">Report geography</p><h2>Where Columbia is reporting</h2></div>
+            <p id="heatmap-summary">Locations are grouped into nearby map cells.</p>
+          </div>
+          <div id="report-heatmap" role="img" aria-label="Heatmap of report locations in Columbia"></div>
+          <p class="map-attribution-note">Private administrator view. Points are grouped and do not identify reporters.</p>
+        </section>
+
+        <section class="profile-section">
+          <div class="section-heading">
+            <div><p class="eyebrow">Pedestrian profile insights</p><h2>How Columbia walks</h2></div>
+            <p>Anonymous, aggregate responses only.</p>
+          </div>
+          <div class="profile-metrics">
+            <article><span>Average walking days</span><strong id="profile-days">—</strong><small>per week</small></article>
+            <article><span>Estimated daily distance</span><strong id="profile-miles">—</strong><small>miles</small></article>
+            <article><span>Walk with children</span><strong id="profile-children">0</strong><small>responses</small></article>
+            <article><span>Accessibility needs</span><strong id="profile-access">0</strong><small>responses</small></article>
+          </div>
+          <div class="profile-charts">
+            <article class="mini-panel"><h3>Top walking barriers</h3><div class="bar-chart compact-bars" id="barrier-chart"></div></article>
+            <article class="mini-panel"><h3>How safe people feel</h3><div class="bar-chart compact-bars" id="safety-chart"></div></article>
+            <article class="mini-panel"><h3>Why people walk</h3><div class="bar-chart compact-bars" id="purpose-chart"></div></article>
+          </div>
+        </section>
+
+        <section class="profile-section police-insights-section">
+          <div class="section-heading">
+            <div><p class="eyebrow">Police interaction insights</p><h2>What the community experienced</h2></div>
+            <p>Private reports summarized without exposing contact details.</p>
+          </div>
+          <div class="profile-metrics">
+            <article><span>Police reports</span><strong id="police-responses">0</strong><small>in selected range</small></article>
+            <article><span>Bystander reports</span><strong id="police-bystanders">0</strong><small>observations</small></article>
+            <article><span>Felt safer</span><strong id="police-safer">0</strong><small>responses</small></article>
+            <article><span>Felt less safe</span><strong id="police-less-safe">0</strong><small>responses</small></article>
+          </div>
+          <div class="profile-charts">
+            <article class="mini-panel"><h3>Interaction label</h3><div class="bar-chart compact-bars" id="police-sentiment-chart"></div></article>
+            <article class="mini-panel"><h3>Top interaction topics</h3><div class="bar-chart compact-bars" id="police-topic-chart"></div></article>
+            <article class="mini-panel"><h3>Effect on safety</h3><div class="bar-chart compact-bars" id="police-safety-chart"></div></article>
+          </div>
+        </section>
+
+        <section class="profile-section">
+          <div class="section-heading">
+            <div><p class="eyebrow">Report intake insights</p><h2>How reports arrive</h2></div>
+            <p>New submissions are classified by app or web platform. Older web reports remain labeled as device not recorded.</p>
+          </div>
+          <div class="profile-charts one-chart">
+            <article class="mini-panel"><h3>Submission channel</h3><div class="bar-chart compact-bars" id="report-channel-chart"></div></article>
+          </div>
+        </section>
+
+        <section class="profile-section update-insights-section">
+          <div class="section-heading">
+            <div><p class="eyebrow">Android release insights</p><h2>How app updates are moving</h2></div>
+            <p>Anonymous event totals, not unique people or devices.</p>
+          </div>
+          <div class="profile-metrics">
+            <article><span>Launch checks</span><strong id="update-checks">0</strong><small>completed or failed checks</small></article>
+            <article><span>Updates found</span><strong id="update-available">0</strong><small>update prompts available</small></article>
+            <article><span>Verified downloads</span><strong id="update-downloads">0</strong><small>digest and signer passed</small></article>
+            <article><span>Confirmed installs</span><strong id="update-installs">0</strong><small>new version launched</small></article>
+          </div>
+          <div class="profile-charts update-charts">
+            <article class="mini-panel"><h3>Update events</h3><div class="bar-chart compact-bars" id="update-event-chart"></div></article>
+            <article class="mini-panel"><h3>Target versions</h3><div class="bar-chart compact-bars" id="update-version-chart"></div></article>
+            <article class="mini-panel"><h3>Versions submitting reports</h3><div class="bar-chart compact-bars" id="report-version-chart"></div></article>
+            <article class="mini-panel"><h3>Failure reasons</h3><div class="bar-chart compact-bars" id="update-failure-chart"></div></article>
+          </div>
+        </section>
+
+        <section class="profile-section walking-insights-section">
+          <div class="section-heading">
+            <div><p class="eyebrow">Opt-in walking summaries</p><h2>How far Columbia walks</h2></div>
+            <p>Aggregate distance only. Raw walking routes are never uploaded.</p>
+          </div>
+          <div class="profile-metrics">
+            <article><span>Walking activities</span><strong id="walking-activities">0</strong><small>shared summaries</small></article>
+            <article><span>Total distance</span><strong id="walking-total">0</strong><small>miles</small></article>
+            <article><span>Average distance</span><strong id="walking-average">0</strong><small>miles per activity</small></article>
+            <article><span>Total time</span><strong id="walking-hours">0</strong><small>hours</small></article>
+          </div>
+          <div class="profile-charts one-chart">
+            <article class="mini-panel"><h3>Walking data sources</h3><div class="bar-chart compact-bars" id="walking-source-chart"></div></article>
+          </div>
+        </section>
+
+        <section class="profile-section beta-requests-section" aria-labelledby="beta-requests-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">App beta access</p><h2 id="beta-requests-title">Beta tester requests</h2></div>
+            <p><strong id="beta-request-count">0 pending</strong><br>Mark a request added after placing its email address on the appropriate tester list.</p>
+          </div>
+          <div class="beta-request-columns">
+            <section class="beta-platform-panel" aria-labelledby="beta-ios-title">
+              <div class="beta-platform-heading">
+                <div><p class="eyebrow">Apple</p><h3 id="beta-ios-title">iOS / TestFlight</h3></div>
+                <span class="beta-count" id="beta-ios-count">0</span>
+              </div>
+              <a class="beta-manage-link" href="https://appstoreconnect.apple.com/apps/6803712364/testflight/groups/3c145254-5bb7-42d4-9200-9c5ac936b46d" target="_blank" rel="noopener noreferrer">Add people to the Apple beta tester list <span aria-hidden="true">↗</span></a>
+              <div class="beta-request-list" id="beta-ios-list"></div>
+              <p class="beta-empty" id="beta-ios-empty">No pending iOS requests.</p>
+            </section>
+            <section class="beta-platform-panel" aria-labelledby="beta-android-title">
+              <div class="beta-platform-heading">
+                <div><p class="eyebrow">Google</p><h3 id="beta-android-title">Android / Play testing</h3></div>
+                <span class="beta-count" id="beta-android-count">0</span>
+              </div>
+              <div class="beta-request-list" id="beta-android-list"></div>
+              <p class="beta-empty" id="beta-android-empty">No pending Android requests.</p>
+            </section>
+          </div>
+        </section>
+
+        <section class="records-section">
+          <div class="section-heading records-heading">
+            <div><p class="eyebrow">Submission finder</p><h2>Issues and public input</h2></div>
+            <button class="secondary-button" id="export-button" type="button">Export filtered CSV</button>
+          </div>
+          <div class="filters">
+            <label class="search-field"><span>Search submissions</span><input id="search-input" type="search" placeholder="Search issue, location, category…"></label>
+            <label><span>Type</span><select id="type-filter"><option value="all">All types</option><option value="safety_report">Safety reports</option><option value="feedback">Feedback</option><option value="pedestrian_profile">Pedestrian profiles</option><option value="walking_metric">Walking summaries</option><option value="police_complaint">Police complaints</option></select></label>
+            <label><span>Status</span><select id="status-filter"><option value="all">All statuses</option></select></label>
+          </div>
+          <div class="table-meta"><span id="record-count">0 submissions</span><span>Contact details are excluded from this view.</span></div>
+          <div class="records-table-wrap">
+            <table>
+              <thead><tr><th>Submission</th><th>Summary</th><th>Location / source</th><th>Status</th><th>Date</th><th></th></tr></thead>
+              <tbody id="records-body"></tbody>
+            </table>
+          </div>
+          <p class="empty-state" id="records-empty" hidden>No submissions match these filters.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="record-dialog">
+    <button class="dialog-close" id="dialog-close" type="button" aria-label="Close">×</button>
+    <p class="eyebrow" id="dialog-type">Submission</p>
+    <h2 id="dialog-title">Submission details</h2>
+    <p class="dialog-summary" id="dialog-summary"></p>
+    <dl id="dialog-details"></dl>
+    <div class="dialog-actions" id="dialog-actions" hidden>
+      <div>
+        <strong>Page of Shame review</strong>
+        <p id="approval-message">Approving publishes this photo, caption, and grouped location.</p>
+      </div>
+      <button class="approval-button" id="approve-pos-button" type="button">Approve and publish</button>
+    </div>
+  </dialog>
+
+  <script src="/columbiawalks-admin/vendor/leaflet/leaflet.js" defer></script>
+  <script src="/columbiawalks-admin/admin.js?v=20260821-beta-requests" defer></script>
+</body>
+</html>
+

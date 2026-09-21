@@ -1,0 +1,1065 @@
+{{!< default}}
+{{#contentFor "styles"}}<link rel="stylesheet" href="{{asset "vendor/leaflet/leaflet.css"}}"><link rel="stylesheet" href="{{asset "css/reporter.css"}}">{{/contentFor}}
+<div class="cw-app" id="columbiawalks-reporter">
+            <header class="cw-hero">
+                <p class="cw-eyebrow">Safer streets, one report at a time</p>
+                <h2>Help make every walk through Columbia safer.</h2>
+                <p>
+                    A Quick Report takes four short steps: category, photo,
+                    optional comment, and GPS. Full Report remains available
+                    when you need to document more.
+                </p>
+                <p>
+                    <a class="cw-button" href="{{@site.url}}/beta-testing/">Join Android beta testing</a>
+                    <a class="cw-button cw-button-secondary" href="https://github.com/Menethoran/ColumbiaWalks-App/releases/latest">Direct APK download</a>
+                    <a class="cw-button cw-button-secondary" href="https://play.google.com/apps/testing/org.columbiawalks.app">Open the Android closed-testing page</a>
+                    <a class="cw-button cw-button-secondary" href="mailto:columbiawalks@gmail.com?subject=ColumbiaWalks%20beta%20access%20request&amp;body=Please%20add%20the%20Google%20account%20sending%20this%20message%20to%20the%20ColumbiaWalks%20beta%20tester%20group.%0D%0A%0D%0AGoogle%20account%20email%3A%20">Email us for beta access</a>
+                </p>
+            </header>
+
+            <nav class="cw-app-switch" role="tablist" aria-label="ColumbiaWalks forms">
+                <button
+                    class="cw-app-switch-button is-active"
+                    id="cw-report-tab"
+                    type="button"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="cw-report-view"
+                >
+                    Safety report
+                </button>
+                <button
+                    class="cw-app-switch-button"
+                    id="cw-police-interaction-tab"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="cw-police-interaction-view"
+                >
+                    Police Interaction
+                </button>
+                <button
+                    class="cw-app-switch-button"
+                    id="cw-profile-tab"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="cw-profile-view"
+                >
+                    Pedestrian Profile
+                </button>
+                <button
+                    class="cw-app-switch-button"
+                    id="cw-feedback-tab"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="cw-feedback-view"
+                >
+                    Feedback
+                </button>
+                <button
+                    class="cw-app-switch-button"
+                    id="cw-pos-tab"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="cw-pos-view"
+                >
+                    PoS
+                </button>
+            </nav>
+
+            <div id="cw-report-view" role="tabpanel" aria-labelledby="cw-report-tab">
+            <div class="cw-layout">
+                <section class="cw-panel cw-map-panel">
+                    <div class="cw-panel-heading">
+                        <h3>Report location</h3>
+                        <p>
+                            Tap the map to move the report pin, or use your
+                            current GPS location.
+                        </p>
+                    </div>
+                    <div
+                        class="cw-map"
+                        id="cw-map"
+                        aria-label="Interactive map centered on Columbia, Pennsylvania"
+                    ></div>
+                    <div class="cw-map-footer">
+                        <div>
+                            <small>Report pin</small>
+                            <strong id="cw-coordinates">
+                                40.033700, -76.504400
+                            </strong>
+                        </div>
+                        <button class="cw-button cw-button-secondary" id="cw-use-location" type="button">
+                            Use my location
+                        </button>
+                    </div>
+                    <div class="cw-intersection">
+                        <small>Closest intersection estimate</small>
+                        <strong id="cw-intersection-label">
+                            Not determined
+                        </strong>
+                        <span>
+                            Optional: tap the map to drop a pin or name the
+                            roadway/intersection later in Additional
+                            information.
+                        </span>
+                    </div>
+                    <p class="cw-map-message" id="cw-map-message" hidden></p>
+                </section>
+
+                <form class="cw-panel cw-form" id="cw-report-form" novalidate>
+                    <div class="cw-emergency">
+                        <strong>Urgent danger?</strong>
+                        Call 911. This form does not contact emergency services.
+                    </div>
+
+                    <section class="cw-section" id="cw-mode-section">
+                        <h3>Report type</h3>
+                        <p>
+                            Choose Quick for a short report or Full Report for
+                            detailed questions. Use the PoS tab above for a
+                            picture-first submission.
+                        </p>
+                        <div class="cw-mode-grid">
+                            <button
+                                class="cw-mode"
+                                type="button"
+                                data-mode="quick"
+                                aria-pressed="true"
+                            >
+                                <strong>QUICK</strong>
+                                <small>
+                                    Fast complaint, GPS, optional details and
+                                    photo
+                                </small>
+                            </button>
+                            <button
+                                class="cw-mode"
+                                type="button"
+                                data-mode="full"
+                                aria-pressed="false"
+                            >
+                                <strong>Full Report</strong>
+                                <small>
+                                    All categories and targeted follow-up
+                                    questions
+                                </small>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="cw-section" id="cw-quick-options">
+                        <div class="cw-quick-heading">
+                            <span class="cw-quick-badge">Quick Report</span>
+                            <h3>Four short steps. Nothing extra.</h3>
+                        </div>
+                        <p>
+                            Choose one category, attach a photo, add a comment
+                            only if useful, then confirm your GPS location.
+                        </p>
+                        <ol class="cw-quick-steps">
+                            <li class="cw-quick-step">
+                                <span class="cw-step-number" aria-hidden="true">1</span>
+                                <fieldset class="cw-quick-fieldset">
+                                    <legend>What kind of issue?</legend>
+                                    <div class="cw-quick-category-grid">
+                                        <label class="cw-quick-category">
+                                            <input type="radio" name="cw-quick-category" value="sidewalk_issue" data-report-category="sidewalk_safety" />
+                                            <span>Sidewalk Issue</span>
+                                        </label>
+                                        <label class="cw-quick-category">
+                                            <input type="radio" name="cw-quick-category" value="driver_issue" data-report-category="aggressive_drivers" />
+                                            <span>Driver Issue</span>
+                                        </label>
+                                        <label class="cw-quick-category">
+                                            <input type="radio" name="cw-quick-category" value="crosswalk_issue" data-report-category="crosswalk_safety" />
+                                            <span>Crosswalk Issue</span>
+                                        </label>
+                                        <label class="cw-quick-category">
+                                            <input type="radio" name="cw-quick-category" value="other_safety_issue" data-report-category="not_included_elsewhere" />
+                                            <span>Other Safety Issue</span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                            </li>
+                            <li class="cw-quick-step">
+                                <span class="cw-step-number" aria-hidden="true">2</span>
+                                <div class="cw-quick-step-content">
+                                    <h4>Attach a photo</h4>
+                                    <div id="cw-quick-photo-mount"></div>
+                                </div>
+                            </li>
+                            <li class="cw-quick-step">
+                                <span class="cw-step-number" aria-hidden="true">3</span>
+                                <div class="cw-quick-step-content">
+                                    <h4>Add a comment <small>(optional)</small></h4>
+                                    <div id="cw-quick-comments-mount"></div>
+                                </div>
+                            </li>
+                            <li class="cw-quick-step">
+                                <span class="cw-step-number" aria-hidden="true">4</span>
+                                <div class="cw-quick-step-content">
+                                    <h4>Confirm the location</h4>
+                                    <p class="cw-quick-help">Tap once to use this device's current GPS position.</p>
+                                    <button class="cw-button cw-button-location" id="cw-quick-use-location" type="button">
+                                        Use current GPS
+                                    </button>
+                                    <p class="cw-location-status" id="cw-quick-location-status" role="status">
+                                        Location not yet confirmed
+                                    </p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <div
+                        class="cw-inline-expanded"
+                        id="cw-quick-expanded"
+                    ></div>
+
+                    <section class="cw-section" id="cw-full-options" hidden>
+                        <h3>What did you observe?</h3>
+                        <p>
+                            Select every issue type that applies. Related
+                            follow-up questions appear directly underneath the
+                            selected category and begin collapsed.
+                        </p>
+                        <div class="cw-section-heading">
+                            <span class="cw-count" id="cw-answer-count">
+                                0 answered
+                            </span>
+                        </div>
+                        <div class="cw-category-grid" id="cw-categories">
+                            <div class="cw-category-item" data-category-item="sidewalk_safety"><button class="cw-category" type="button" data-category="sidewalk_safety" aria-pressed="false"><span>Sidewalk safety</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="sidewalk_safety" hidden></div></div>
+<div class="cw-category-item" data-category-item="vehicle_safety"><button class="cw-category" type="button" data-category="vehicle_safety" aria-pressed="false"><span>Vehicle safety</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="vehicle_safety" hidden></div></div>
+<div class="cw-category-item" data-category-item="crosswalk_safety"><button class="cw-category" type="button" data-category="crosswalk_safety" aria-pressed="false"><span>Crosswalk safety</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="crosswalk_safety" hidden></div></div>
+<div class="cw-category-item" data-category-item="trip_hazards"><button class="cw-category" type="button" data-category="trip_hazards" aria-pressed="false"><span>Trip hazards</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="trip_hazards" hidden></div></div>
+<div class="cw-category-item" data-category-item="aggressive_drivers"><button class="cw-category" type="button" data-category="aggressive_drivers" aria-pressed="false"><span>Aggressive drivers</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="aggressive_drivers" hidden></div></div>
+<div class="cw-category-item" data-category-item="police_response"><button class="cw-category" type="button" data-category="police_response" aria-pressed="false"><span>Police interaction / conduct</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="police_response" hidden></div></div>
+<div class="cw-category-item" data-category-item="lighting_or_visibility"><button class="cw-category" type="button" data-category="lighting_or_visibility" aria-pressed="false"><span>Lighting or visibility</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="lighting_or_visibility" hidden></div></div>
+<div class="cw-category-item" data-category-item="accessibility_ada"><button class="cw-category" type="button" data-category="accessibility_ada" aria-pressed="false"><span>Accessibility / ADA</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="accessibility_ada" hidden></div></div>
+<div class="cw-category-item" data-category-item="school_route_safety"><button class="cw-category" type="button" data-category="school_route_safety" aria-pressed="false"><span>School route safety</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="school_route_safety" hidden></div></div>
+<div class="cw-category-item" data-category-item="not_included_elsewhere"><button class="cw-category" type="button" data-category="not_included_elsewhere" aria-pressed="false"><span>Not included elsewhere</span><span class="cw-category-action">Select</span></button><div class="cw-category-expanded" data-category-expanded="not_included_elsewhere" hidden><label class="cw-field"><span>Describe what is not included elsewhere</span><textarea id="cw-other-details" maxlength="5000"></textarea></label></div></div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="cw-checklist-reservoir"
+                        id="cw-checklist-section"
+                        hidden
+                        aria-hidden="true"
+                    >
+                        <div id="cw-checklist">
+                            <p>Loading related questions…</p>
+                        </div>
+                    </section>
+
+                    <section
+                        class="cw-section"
+                        id="cw-identification-section"
+                        hidden
+                    >
+                        <h3>
+                            Identify the reported person or vehicle (optional)
+                        </h3>
+                        <p>
+                            Enter only details you safely observed. Do not
+                            approach or follow a vehicle to obtain information.
+                        </p>
+
+                        <div class="cw-fields">
+                            <label class="cw-field-full">
+                                <span>Who is being reported?</span>
+                                <select id="cw-reported-party">
+                                    <option value="unknown" selected>
+                                        Unknown / not observed
+                                    </option>
+                                    <option value="civilian_driver">
+                                        Civilian driver
+                                    </option>
+                                    <option value="police_officer">
+                                        Police officer
+                                    </option>
+                                    <option value="other_government_driver">
+                                        Other government or agency driver
+                                    </option>
+                                    <option value="commercial_driver">
+                                        Commercial driver
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <label class="cw-vehicle-toggle">
+                            <input id="cw-vehicle-involved" type="checkbox" />
+                            <span>
+                                <strong>A vehicle was involved</strong>
+                                <small>
+                                    Add identifiers that can help distinguish
+                                    repeated reports.
+                                </small>
+                            </span>
+                        </label>
+
+                        <div
+                            class="cw-subsection"
+                            id="cw-vehicle-details"
+                            hidden
+                        >
+                            <h4>Vehicle identification</h4>
+                            <div class="cw-fields">
+                                <label>
+                                    <span>License plate</span>
+                                    <input
+                                        id="cw-license-plate"
+                                        type="text"
+                                        maxlength="20"
+                                    />
+                                </label>
+                                <label>
+                                    <span>Plate state/jurisdiction</span>
+                                    <select id="cw-plate-state">
+                                        <option value="AL">AL (Alabama)</option>
+                                        <option value="AK">AK (Alaska)</option>
+                                        <option value="AZ">AZ (Arizona)</option>
+                                        <option value="AR">AR (Arkansas)</option>
+                                        <option value="CA">CA (California)</option>
+                                        <option value="CO">CO (Colorado)</option>
+                                        <option value="CT">CT (Connecticut)</option>
+                                        <option value="DE">DE (Delaware)</option>
+                                        <option value="FL">FL (Florida)</option>
+                                        <option value="GA">GA (Georgia)</option>
+                                        <option value="HI">HI (Hawaii)</option>
+                                        <option value="ID">ID (Idaho)</option>
+                                        <option value="IL">IL (Illinois)</option>
+                                        <option value="IN">IN (Indiana)</option>
+                                        <option value="IA">IA (Iowa)</option>
+                                        <option value="KS">KS (Kansas)</option>
+                                        <option value="KY">KY (Kentucky)</option>
+                                        <option value="LA">LA (Louisiana)</option>
+                                        <option value="ME">ME (Maine)</option>
+                                        <option value="MD">MD (Maryland)</option>
+                                        <option value="MA">MA (Massachusetts)</option>
+                                        <option value="MI">MI (Michigan)</option>
+                                        <option value="MN">MN (Minnesota)</option>
+                                        <option value="MS">MS (Mississippi)</option>
+                                        <option value="MO">MO (Missouri)</option>
+                                        <option value="MT">MT (Montana)</option>
+                                        <option value="NE">NE (Nebraska)</option>
+                                        <option value="NV">NV (Nevada)</option>
+                                        <option value="NH">NH (New Hampshire)</option>
+                                        <option value="NJ">NJ (New Jersey)</option>
+                                        <option value="NM">NM (New Mexico)</option>
+                                        <option value="NY">NY (New York)</option>
+                                        <option value="NC">NC (North Carolina)</option>
+                                        <option value="ND">ND (North Dakota)</option>
+                                        <option value="OH">OH (Ohio)</option>
+                                        <option value="OK">OK (Oklahoma)</option>
+                                        <option value="OR">OR (Oregon)</option>
+                                        <option value="PA" selected>PA (Pennsylvania)</option>
+                                        <option value="RI">RI (Rhode Island)</option>
+                                        <option value="SC">SC (South Carolina)</option>
+                                        <option value="SD">SD (South Dakota)</option>
+                                        <option value="TN">TN (Tennessee)</option>
+                                        <option value="TX">TX (Texas)</option>
+                                        <option value="UT">UT (Utah)</option>
+                                        <option value="VT">VT (Vermont)</option>
+                                        <option value="VA">VA (Virginia)</option>
+                                        <option value="WA">WA (Washington)</option>
+                                        <option value="WV">WV (West Virginia)</option>
+                                        <option value="WI">WI (Wisconsin)</option>
+                                        <option value="WY">WY (Wyoming)</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    <span>Year</span>
+                                    <input
+                                        id="cw-vehicle-year"
+                                        type="text"
+                                        inputmode="numeric"
+                                        maxlength="8"
+                                    />
+                                </label>
+                                <label>
+                                    <span>Make</span>
+                                    <input
+                                        id="cw-vehicle-make"
+                                        type="text"
+                                        maxlength="80"
+                                    />
+                                </label>
+                                <label>
+                                    <span>Model</span>
+                                    <input
+                                        id="cw-vehicle-model"
+                                        type="text"
+                                        maxlength="80"
+                                    />
+                                </label>
+                                <label>
+                                    <span>Color</span>
+                                    <input
+                                        id="cw-vehicle-color"
+                                        type="text"
+                                        maxlength="80"
+                                    />
+                                </label>
+                                <label>
+                                    <span>Body style</span>
+                                    <input
+                                        id="cw-body-style"
+                                        type="text"
+                                        maxlength="80"
+                                        placeholder="SUV, sedan, pickup…"
+                                    />
+                                </label>
+                                <label>
+                                    <span>Fleet/unit number</span>
+                                    <input
+                                        id="cw-unit-number"
+                                        type="text"
+                                        maxlength="80"
+                                    />
+                                </label>
+                                <label class="cw-field-full">
+                                    <span>VIN</span>
+                                    <input
+                                        id="cw-vin"
+                                        type="text"
+                                        maxlength="32"
+                                    />
+                                </label>
+                                <label>
+                                    <span>Emergency lights</span>
+                                    <select id="cw-emergency-lights">
+                                        <option value="unknown" selected>
+                                            Unknown / not observed
+                                        </option>
+                                        <option value="on">Active</option>
+                                        <option value="off">Not active</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    <span>Siren</span>
+                                    <select id="cw-siren">
+                                        <option value="unknown" selected>
+                                            Unknown / not observed
+                                        </option>
+                                        <option value="on">Audible</option>
+                                        <option value="off">Not audible</option>
+                                    </select>
+                                </label>
+                                <label class="cw-field-full">
+                                    <span>
+                                        Dents, damage, stickers, or
+                                        distinguishing marks
+                                    </span>
+                                    <textarea
+                                        id="cw-visible-damage"
+                                        maxlength="500"
+                                    ></textarea>
+                                </label>
+                                <label class="cw-field-full">
+                                    <span>Additional vehicle description</span>
+                                    <textarea
+                                        id="cw-vehicle-description"
+                                        maxlength="1000"
+                                    ></textarea>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div
+                            class="cw-subsection cw-subsection-police"
+                            id="cw-police-section"
+                            hidden
+                        >
+                            <h4>Police interaction or complaint</h4>
+                            <p>
+                                Check only what you personally observed. Use
+                                the narrative box for names, badge numbers,
+                                sequence of events, and context.
+                            </p>
+                            <div class="cw-fields">
+                                <label class="cw-field-full">
+                                    <span>
+                                        If police responded to a separate
+                                        incident
+                                    </span>
+                                    <select id="cw-police-response">
+                                        <option value="not_involved" selected>
+                                            Not applicable
+                                        </option>
+                                        <option value="good">
+                                            Good response
+                                        </option>
+                                        <option value="poor">
+                                            Poor response
+                                        </option>
+                                        <option value="mixed">
+                                            Mixed response
+                                        </option>
+                                    </select>
+                                </label>
+                            </div>
+                            <fieldset class="cw-observations">
+                                <legend>Observed actions or response</legend>
+                                <label><input type="checkbox" name="cw-police-observations" value="helpful"><span>Helpful or professional</span></label>
+<label><input type="checkbox" name="cw-police-observations" value="unhelpful"><span>Unhelpful or dismissive</span></label>
+<label><input type="checkbox" name="cw-police-observations" value="unsafe_driving"><span>Unsafe driving</span></label>
+<label><input type="checkbox" name="cw-police-observations" value="failed_to_stop"><span>Failed to stop or yield</span></label>
+<label><input type="checkbox" name="cw-police-observations" value="blocked_crosswalk"><span>Blocked a crosswalk</span></label>
+<label><input type="checkbox" name="cw-police-observations" value="aggressive_conduct"><span>Aggressive conduct</span></label>
+<label><input type="checkbox" name="cw-police-observations" value="timely_response"><span>Timely response</span></label>
+<label><input type="checkbox" name="cw-police-observations" value="no_response"><span>No response</span></label>
+                            </fieldset>
+                            <label class="cw-police-details">
+                                <span>
+                                    Police complaint or interaction details
+                                </span>
+                                <textarea
+                                    id="cw-police-complaint-details"
+                                    maxlength="1500"
+                                    placeholder="Describe the officer, vehicle/unit number, badge number if known, traffic signal, direction of travel, response, and sequence of events."
+                                ></textarea>
+                            </label>
+                        </div>
+                    </section>
+
+                    <section class="cw-section" id="cw-report-details-section">
+                        <h3>Add report details</h3>
+                        <div class="cw-fields" id="cw-standard-fields">
+                            <label>
+                                <span>Urgency</span>
+                                <select id="cw-severity">
+                                    <option value="low" selected>Low — inconvenient</option>
+                                    <option value="medium">
+                                        Medium — could cause injury
+                                    </option>
+                                    <option value="high">
+                                        High — immediate danger
+                                    </option>
+                                </select>
+                            </label>
+                            <label class="cw-field-full">
+                                <span>When did you observe it?</span>
+                                <input id="cw-observed-at" type="datetime-local" />
+                            </label>
+                            <input id="cw-additional-toggle" type="checkbox" checked hidden />
+                            <div class="cw-shared-field cw-field-full" id="cw-comments-field">
+                                <label id="cw-additional-details">
+                                    <span>Comments (optional)</span>
+                                    <textarea
+                                        id="cw-details"
+                                        maxlength="700"
+                                        placeholder="Add anything a photo does not show."
+                                    ></textarea>
+                                </label>
+                            </div>
+                            <div class="cw-shared-field cw-field-full" id="cw-photo-field">
+                                <label>
+                                    <span id="cw-photo-label">Photo (optional)</span>
+                                    <input
+                                        id="cw-photo"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp"
+                                        capture="environment"
+                                    />
+                                    <small id="cw-photo-help">
+                                        One image, up to 6 MB. Avoid identifiable
+                                        people when possible.
+                                    </small>
+                                </label>
+                                <div class="cw-photo-preview" id="cw-photo-preview" hidden>
+                                    <img alt="Selected report attachment" />
+                                    <button type="button" id="cw-remove-photo">
+                                        Remove photo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <label class="cw-honeypot" aria-hidden="true">
+                        Leave this field blank
+                        <input
+                            name="organization_website"
+                            id="cw-honeypot"
+                            type="text"
+                            tabindex="-1"
+                            autocomplete="off"
+                        />
+                    </label>
+
+                    <p class="cw-message" id="cw-form-message" hidden></p>
+                    <button class="cw-button cw-button-primary" id="cw-submit" type="submit">
+                        Submit safety report
+                    </button>
+                    <p class="cw-privacy">
+                        Reports are sent over HTTPS to the protected
+                        ColumbiaWalks intake. Embedded photo metadata is removed
+                        before Directus stores the image.
+                    </p>
+                </form>
+            </div>
+            </div>
+
+            {{> "police-interaction-form"}}
+
+            <section
+                class="cw-pos-view"
+                id="cw-pos-view"
+                role="tabpanel"
+                aria-labelledby="cw-pos-tab"
+                hidden
+            >
+                <form class="cw-panel cw-form cw-pos-form" id="cw-pos-form" novalidate>
+                    <div class="cw-panel-heading cw-pos-heading">
+                        <p class="cw-eyebrow cw-eyebrow-dark">Page of Shame</p>
+                        <h3>Take the picture. GPS is not required on the web.</h3>
+                        <p>
+                            Only a picture is required. A description is optional.
+                            Submitting sends the photo to a ColumbiaWalks
+                            administrator for approval before it appears publicly.
+                        </p>
+                    </div>
+
+                    <input
+                        class="cw-pos-camera-input"
+                        id="cw-pos-photo"
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                    />
+
+                    <div class="cw-pos-capture" id="cw-pos-capture">
+                        <div class="cw-pos-camera-mark" aria-hidden="true">📷</div>
+                        <strong>Picture first</strong>
+                        <span>Opening this tab starts your camera when your browser allows it.</span>
+                        <button class="cw-button cw-button-primary" id="cw-pos-take-picture" type="button">
+                            Take picture
+                        </button>
+                    </div>
+
+                    <div class="cw-pos-preview" id="cw-pos-preview" hidden>
+                        <img alt="Selected Page of Shame picture" />
+                        <button class="cw-button cw-button-secondary" id="cw-pos-retake" type="button">
+                            Retake picture
+                        </button>
+                    </div>
+
+                    <label class="cw-pos-details" id="cw-pos-details" hidden>
+                        <span>Description (optional)</span>
+                        <textarea
+                            id="cw-pos-description"
+                            maxlength="1500"
+                            placeholder="Add only what the picture does not show."
+                        ></textarea>
+                    </label>
+
+                    <p class="cw-message" id="cw-pos-message" hidden></p>
+                    <button class="cw-button cw-button-primary cw-pos-submit" id="cw-pos-submit" type="submit" hidden>
+                        Submit picture
+                    </button>
+                    <p class="cw-privacy">
+                        The original picture metadata is removed by the protected
+                        ColumbiaWalks intake. Submitting sends the photo and
+                        optional description for administrator review before
+                        publication. Avoid faces, children, private property
+                        details, and sensitive information.
+                    </p>
+                </form>
+
+                <dialog class="cw-pos-dialog" id="cw-pos-dialog" aria-labelledby="cw-pos-dialog-title">
+                    <form method="dialog">
+                        <p class="cw-eyebrow cw-eyebrow-dark">Picture ready</p>
+                        <h3 id="cw-pos-dialog-title">Would you like to add details?</h3>
+                        <p>No submits the picture now. Yes opens an optional description box first.</p>
+                        <div class="cw-pos-dialog-actions">
+                            <button class="cw-button cw-button-primary" id="cw-pos-submit-now" value="submit" type="button">
+                                No, submit now
+                            </button>
+                            <button class="cw-button cw-button-secondary" id="cw-pos-add-details" value="details" type="button">
+                                Yes, add details
+                            </button>
+                        </div>
+                    </form>
+                </dialog>
+            </section>
+
+            <section
+                class="cw-profile-view"
+                id="cw-profile-view"
+                role="tabpanel"
+                aria-labelledby="cw-profile-tab"
+                hidden
+            >
+                <form class="cw-panel cw-form cw-profile-form" id="cw-profile-form" novalidate>
+                    <div class="cw-panel-heading cw-profile-heading">
+                        <p class="cw-eyebrow cw-eyebrow-dark">Pedestrian Profile</p>
+                        <h3>Tell us how you experience walking in Columbia.</h3>
+                        <p>
+                            Every question is optional. Responses are anonymous and
+                            help ColumbiaWalks understand who walks, where walking
+                            works well, and what needs attention. Please do not include
+                            a name, exact home address, or other identifying details.
+                        </p>
+                    </div>
+
+                    <section class="cw-profile-section" aria-labelledby="cw-profile-about-title">
+                        <h4 id="cw-profile-about-title">About you</h4>
+                        <div class="cw-fields">
+                            <label>
+                                <span>Age (optional)</span>
+                                <input id="cw-profile-age" type="number" min="0" max="120" inputmode="numeric" />
+                            </label>
+                            <label>
+                                <span>Years in Columbia Borough (optional)</span>
+                                <input id="cw-profile-years" type="number" min="0" max="120" step="0.5" inputmode="decimal" />
+                            </label>
+                            <label>
+                                <span>Rent or own? (optional)</span>
+                                <select id="cw-profile-housing">
+                                    <option value="">Choose an answer…</option>
+                                    <option value="rent">Rent</option>
+                                    <option value="own">Own</option>
+                                    <option value="other_arrangement">Other arrangement</option>
+                                    <option value="prefer_not_to_say">Prefer not to say</option>
+                                </select>
+                            </label>
+                            <label>
+                                <span>Primary language (optional)</span>
+                                <input id="cw-profile-language" type="text" maxlength="100" autocomplete="language" />
+                            </label>
+                            <label>
+                                <span>Ethnicity (optional)</span>
+                                <input id="cw-profile-ethnicity" type="text" maxlength="100" />
+                            </label>
+                            <label>
+                                <span>Neighborhood or nearby cross streets (optional)</span>
+                                <input id="cw-profile-neighborhood" type="text" maxlength="150" placeholder="Do not enter an exact address" />
+                            </label>
+                            <label class="cw-field-full">
+                                <span>Regular access to a motor vehicle? (optional)</span>
+                                <select id="cw-profile-vehicle-access">
+                                    <option value="">Choose an answer…</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="sometimes">Sometimes</option>
+                                    <option value="no">No</option>
+                                    <option value="prefer_not_to_say">Prefer not to say</option>
+                                </select>
+                            </label>
+                        </div>
+                    </section>
+
+                    <section class="cw-profile-section" aria-labelledby="cw-profile-mobility-title">
+                        <h4 id="cw-profile-mobility-title">Mobility and household</h4>
+                        <fieldset class="cw-profile-options">
+                            <legend>Mobility issues or accessibility needs (optional; select any)</legend>
+                            <div class="cw-profile-option-grid">
+                                <label><input name="cw-profile-mobility" type="checkbox" value="difficulty_walking_or_standing" /> Difficulty walking or standing</label>
+                                <label><input name="cw-profile-mobility" type="checkbox" value="wheelchair_or_scooter" /> Wheelchair or mobility scooter</label>
+                                <label><input name="cw-profile-mobility" type="checkbox" value="cane_or_walker" /> Cane or walker</label>
+                                <label><input name="cw-profile-mobility" type="checkbox" value="visual_access_need" /> Visual access need</label>
+                                <label><input name="cw-profile-mobility" type="checkbox" value="hearing_access_need" /> Hearing access need</label>
+                                <label><input name="cw-profile-mobility" type="checkbox" value="cognitive_or_sensory_need" /> Cognitive or sensory need</label>
+                                <label><input name="cw-profile-mobility" type="checkbox" value="temporary_injury" /> Temporary injury</label>
+                                <label><input name="cw-profile-mobility" type="checkbox" value="none" /> None</label>
+                                <label><input name="cw-profile-mobility" type="checkbox" value="prefer_not_to_say" /> Prefer not to say</label>
+                            </div>
+                        </fieldset>
+                        <div class="cw-fields">
+                            <label class="cw-field-full">
+                                <span>Other mobility information (optional)</span>
+                                <textarea id="cw-profile-mobility-details" maxlength="500"></textarea>
+                            </label>
+                            <label>
+                                <span>Do you regularly walk with children? (optional)</span>
+                                <select id="cw-profile-with-children">
+                                    <option value="">Choose an answer…</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="prefer_not_to_say">Prefer not to say</option>
+                                </select>
+                            </label>
+                            <div class="cw-profile-child-fields" id="cw-profile-child-fields" hidden>
+                                <label>
+                                    <span>How many children? (optional)</span>
+                                    <input id="cw-profile-children-count" type="number" min="1" max="20" inputmode="numeric" />
+                                </label>
+                                <label>
+                                    <span>Are any of them in school? (optional)</span>
+                                    <select id="cw-profile-children-school">
+                                        <option value="">Choose an answer…</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                        <option value="some">Some</option>
+                                        <option value="prefer_not_to_say">Prefer not to say</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="cw-profile-section" aria-labelledby="cw-profile-habits-title">
+                        <h4 id="cw-profile-habits-title">Walking habits</h4>
+                        <div class="cw-fields">
+                            <label>
+                                <span>How many days a week do you walk? (optional)</span>
+                                <select id="cw-profile-days">
+                                    <option value="">Choose 0–7 days…</option>
+                                    <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+                                    <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                                    <option value="6">6</option><option value="7">7</option>
+                                </select>
+                            </label>
+                            <label>
+                                <span>Typical walk duration (optional)</span>
+                                <select id="cw-profile-duration">
+                                    <option value="">Choose a range…</option>
+                                    <option value="under_10_minutes">Under 10 minutes</option>
+                                    <option value="10_to_29_minutes">10–29 minutes</option>
+                                    <option value="30_to_59_minutes">30–59 minutes</option>
+                                    <option value="60_minutes_or_more">60 minutes or more</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <fieldset class="cw-profile-distance">
+                            <legend>How far do you walk in a typical day? (optional)</legend>
+                            <p>Choose a common mileage amount or enter your own miles or steps.</p>
+                            <div class="cw-profile-mile-buttons" aria-label="Common daily mileage">
+                                <button type="button" data-profile-miles="0.1">0.1 mi</button>
+                                <button type="button" data-profile-miles="0.25">0.25 mi</button>
+                                <button type="button" data-profile-miles="0.5">0.5 mi</button>
+                                <button type="button" data-profile-miles="1">1 mi</button>
+                                <button type="button" data-profile-miles="2">2 mi</button>
+                                <button type="button" data-profile-miles="5">5 mi</button>
+                                <button type="button" data-profile-miles="10">10 mi</button>
+                            </div>
+                            <div class="cw-profile-distance-fields">
+                                <label>
+                                    <span>Amount</span>
+                                    <input id="cw-profile-walk-amount" type="number" min="0" step="any" inputmode="decimal" placeholder="Example: 2 or 6000" />
+                                </label>
+                                <label>
+                                    <span>Unit</span>
+                                    <select id="cw-profile-walk-unit">
+                                        <option value="">Let us make an educated guess</option>
+                                        <option value="miles">Miles per day</option>
+                                        <option value="steps">Steps per day</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <p class="cw-profile-unit-guess" id="cw-profile-unit-guess" aria-live="polite" hidden></p>
+                        </fieldset>
+
+                        <fieldset class="cw-profile-options">
+                            <legend>Why do you usually walk? (optional; select any)</legend>
+                            <div class="cw-profile-option-grid">
+                                <label><input name="cw-profile-purpose" type="checkbox" value="work_or_commute" /> Work or commute</label>
+                                <label><input name="cw-profile-purpose" type="checkbox" value="school_or_daycare" /> School or daycare</label>
+                                <label><input name="cw-profile-purpose" type="checkbox" value="errands" /> Errands</label>
+                                <label><input name="cw-profile-purpose" type="checkbox" value="transit_connection" /> Transit connection</label>
+                                <label><input name="cw-profile-purpose" type="checkbox" value="exercise" /> Exercise</label>
+                                <label><input name="cw-profile-purpose" type="checkbox" value="recreation_or_social" /> Recreation or social visits</label>
+                                <label><input name="cw-profile-purpose" type="checkbox" value="dog_walking" /> Dog walking</label>
+                                <label><input name="cw-profile-purpose" type="checkbox" value="other" /> Other</label>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="cw-profile-options">
+                            <legend>When do you usually walk? (optional; select any)</legend>
+                            <div class="cw-profile-option-grid">
+                                <label><input name="cw-profile-time" type="checkbox" value="morning" /> Morning</label>
+                                <label><input name="cw-profile-time" type="checkbox" value="midday" /> Midday</label>
+                                <label><input name="cw-profile-time" type="checkbox" value="evening" /> Evening</label>
+                                <label><input name="cw-profile-time" type="checkbox" value="after_dark" /> After dark</label>
+                            </div>
+                        </fieldset>
+                    </section>
+
+                    <section class="cw-profile-section" aria-labelledby="cw-profile-streets-title">
+                        <h4 id="cw-profile-streets-title">Streets and walking conditions</h4>
+                        <div class="cw-fields">
+                            <label>
+                                <span>Favorite street to walk (optional)</span>
+                                <input id="cw-profile-favorite-street" type="text" maxlength="150" />
+                            </label>
+                            <label>
+                                <span>Least favorite street to walk (optional)</span>
+                                <input id="cw-profile-least-favorite-street" type="text" maxlength="150" />
+                            </label>
+                            <label class="cw-field-full">
+                                <span>How safe do you generally feel while walking? (optional)</span>
+                                <select id="cw-profile-safety">
+                                    <option value="">Choose a rating…</option>
+                                    <option value="1_very_unsafe">1 — Very unsafe</option>
+                                    <option value="2_unsafe">2 — Unsafe</option>
+                                    <option value="3_mixed">3 — Mixed</option>
+                                    <option value="4_safe">4 — Safe</option>
+                                    <option value="5_very_safe">5 — Very safe</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <fieldset class="cw-profile-options">
+                            <legend>What makes walking difficult? (optional; select any)</legend>
+                            <div class="cw-profile-option-grid">
+                                <label><input name="cw-profile-barrier" type="checkbox" value="speeding_or_aggressive_driving" /> Speeding or aggressive driving</label>
+                                <label><input name="cw-profile-barrier" type="checkbox" value="unsafe_crossings" /> Unsafe crossings</label>
+                                <label><input name="cw-profile-barrier" type="checkbox" value="sidewalk_condition" /> Sidewalk condition</label>
+                                <label><input name="cw-profile-barrier" type="checkbox" value="missing_sidewalks" /> Missing sidewalks</label>
+                                <label><input name="cw-profile-barrier" type="checkbox" value="accessibility_barriers" /> Accessibility barriers</label>
+                                <label><input name="cw-profile-barrier" type="checkbox" value="lighting_or_visibility" /> Lighting or visibility</label>
+                                <label><input name="cw-profile-barrier" type="checkbox" value="personal_security_or_harassment" /> Personal security or harassment</label>
+                                <label><input name="cw-profile-barrier" type="checkbox" value="weather_or_maintenance" /> Weather or maintenance</label>
+                                <label><input name="cw-profile-barrier" type="checkbox" value="none" /> None</label>
+                                <label><input name="cw-profile-barrier" type="checkbox" value="other" /> Other</label>
+                            </div>
+                        </fieldset>
+
+                        <div class="cw-fields">
+                            <label class="cw-field-full">
+                                <span>What would help you walk more? (optional)</span>
+                                <textarea id="cw-profile-walk-more" maxlength="500"></textarea>
+                            </label>
+                            <label class="cw-field-full">
+                                <span>Anything else about your pedestrian experience? (optional)</span>
+                                <textarea id="cw-profile-comments" maxlength="500"></textarea>
+                            </label>
+                        </div>
+                    </section>
+
+                    <label class="cw-honeypot" aria-hidden="true">
+                        Leave this field blank
+                        <input id="cw-profile-honeypot" type="text" tabindex="-1" autocomplete="off" />
+                    </label>
+
+                    <p class="cw-message" id="cw-profile-message" hidden></p>
+                    <button class="cw-button cw-button-primary" id="cw-profile-submit" type="submit">
+                        Submit Pedestrian Profile
+                    </button>
+                    <p class="cw-privacy">
+                        All answers are optional. The profile is stored privately
+                        by ColumbiaWalks and is not published on the website.
+                    </p>
+                </form>
+            </section>
+
+            <section
+                class="cw-feedback-view"
+                id="cw-feedback-view"
+                role="tabpanel"
+                aria-labelledby="cw-feedback-tab"
+                hidden
+            >
+                <form class="cw-panel cw-form cw-feedback-form" id="cw-feedback-form" novalidate>
+                    <div class="cw-panel-heading cw-feedback-heading">
+                        <p class="cw-eyebrow cw-eyebrow-dark">Help improve ColumbiaWalks</p>
+                        <h3>Send feedback</h3>
+                        <p>
+                            Feedback is anonymous by default. Select a reason to
+                            open the message box; no separate subject is needed.
+                        </p>
+                    </div>
+
+                    <div class="cw-fields cw-feedback-fields">
+                        <label class="cw-field-full">
+                            <span>Reason for feedback</span>
+                            <select id="cw-feedback-category" required>
+                                <option value="">Select a reason…</option>
+                                <option value="app_feedback">App Feedback</option>
+                                <option value="feature_request">Feature Request</option>
+                                <option value="bug_report">Bug Report</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </label>
+
+                        <label class="cw-field-full" id="cw-feedback-text-field" hidden>
+                            <span>Your feedback</span>
+                            <textarea
+                                id="cw-feedback-text"
+                                maxlength="5000"
+                                placeholder="Tell us what worked, what did not, or what you would like to see."
+                            ></textarea>
+                            <small>Required after a reason is selected.</small>
+                        </label>
+                    </div>
+
+                    <fieldset class="cw-contact-choice">
+                        <legend>Would you like to provide contact information?</legend>
+                        <p>Every contact field is optional.</p>
+                        <label>
+                            <input
+                                name="cw-feedback-contact-choice"
+                                type="radio"
+                                value="no"
+                                checked
+                            />
+                            No, submit anonymously
+                        </label>
+                        <label>
+                            <input
+                                name="cw-feedback-contact-choice"
+                                type="radio"
+                                value="yes"
+                            />
+                            Yes, show the optional contact fields
+                        </label>
+                    </fieldset>
+
+                    <div class="cw-fields cw-contact-fields" id="cw-feedback-contact-fields" hidden>
+                        <label>
+                            <span>Name (optional)</span>
+                            <input id="cw-feedback-name" type="text" maxlength="200" autocomplete="name" />
+                        </label>
+                        <label>
+                            <span>Phone number (optional)</span>
+                            <input id="cw-feedback-phone" type="tel" maxlength="64" autocomplete="tel" />
+                        </label>
+                        <label class="cw-field-full">
+                            <span>Email address (optional)</span>
+                            <input id="cw-feedback-email" type="email" maxlength="254" autocomplete="email" />
+                        </label>
+                        <label class="cw-field-full">
+                            <span>Street address (optional)</span>
+                            <textarea id="cw-feedback-address" maxlength="500" autocomplete="street-address"></textarea>
+                        </label>
+                        <label class="cw-field-full">
+                            <span>Additional contact details or notes (optional)</span>
+                            <textarea id="cw-feedback-contact-notes" maxlength="1500"></textarea>
+                        </label>
+                        <label class="cw-consent cw-field-full">
+                            <input id="cw-feedback-consent" type="checkbox" />
+                            <span>I consent to being contacted about this feedback.</span>
+                        </label>
+                    </div>
+
+                    <label class="cw-honeypot" aria-hidden="true">
+                        Leave this field blank
+                        <input
+                            id="cw-feedback-honeypot"
+                            type="text"
+                            tabindex="-1"
+                            autocomplete="off"
+                        />
+                    </label>
+
+                    <p class="cw-message" id="cw-feedback-message" hidden></p>
+                    <button class="cw-button cw-button-primary" id="cw-feedback-submit" type="submit">
+                        Submit feedback
+                    </button>
+                    <p class="cw-privacy">
+                        Contact information is hidden unless you opt in. Providing
+                        contact information does not grant permission to contact
+                        you unless you also select the consent box.
+                    </p>
+                </form>
+            </section>
+        </div>
+
+<script>window.ColumbiaWalksConfig={"version":"3.14.1","catalogUrl":"{{asset "data/checklist_catalog.json"}}","reportEndpoint":"/columbiawalks-api/reports","policeComplaintEndpoint":"/columbiawalks-api/police-complaints","feedbackEndpoint":"/columbiawalks-api/feedback","intersectionEndpoint":"/columbiawalks-api/intersection"};</script><script src="{{asset "vendor/leaflet/leaflet.js"}}"></script><script src="{{asset "js/reporter.js"}}"></script><script src="{{asset "js/police-interaction.js"}}"></script><script src="{{asset "js/pos-reporter.js"}}"></script><script src="{{asset "js/pedestrian-profile.js"}}"></script>

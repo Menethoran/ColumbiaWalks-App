@@ -1,0 +1,10 @@
+{
+  "name": "columbiawalks-ghost-theme-3-14-1",
+  "description": "Independent ColumbiaWalks community safety theme",
+  "version": "3.14.1",
+  "author": { "name": "ColumbiaWalks", "email": "admin@www.columbiawalks.com" },
+  "engines": { "ghost": ">=5.0.0" },
+  "keywords": ["ghost-theme"],
+  "config": { "posts_per_page": 5 },
+  "license": "MIT"
+}

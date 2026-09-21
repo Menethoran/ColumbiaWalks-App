@@ -1,0 +1,58 @@
+{{!< default}}
+{{#contentFor "styles"}}<link rel="stylesheet" href="{{asset "css/android-help.css"}}"><link rel="stylesheet" href="{{asset "css/homepage-beta-links.css"}}"><link rel="stylesheet" href="{{asset "css/civic-editorial.css"}}"><script defer src="{{asset "js/civic-editorial.js"}}"></script>{{/contentFor}}
+<section class="hero">
+  <div class="hero-photo" role="img" aria-label="Historic downtown Columbia, Pennsylvania"></div>
+  <div class="hero-copy"><p class="eyebrow">Columbia, Pennsylvania</p><h1>Every street should feel safe to walk.</h1><p>ColumbiaWalks gives residents a simple way to document sidewalk hazards, unsafe crossings, aggressive driving, accessibility barriers, and other concerns—right where they happen.</p><div class="actions"><a class="button primary" href="{{@site.url}}/report/">Report a walking concern</a><a class="button app-button" href="{{asset "downloads/ColumbiaWalks-3.14.1.apk"}}">Download Android app</a><a class="button secondary" href="#mission">Learn how it works</a></div></div>
+</section>
+<section class="stat-strip" aria-label="What you can report"><div><strong>Quick</strong><span>Four short reporting steps</span></div><div><strong>Precise</strong><span>GPS-confirmed location</span></div><div><strong>Complete</strong><span>84 detailed safety checks</span></div><div><strong>Accessible</strong><span>Web and Android options</span></div></section>
+{{> "civic-editorial"}}
+<section class="section press-feature" id="in-the-news" aria-labelledby="press-feature-title">
+  <div class="press-feature__masthead">
+    <span>ColumbiaWalks in the news</span>
+    <time datetime="2026-08-12">August 12, 2026</time>
+  </div>
+  <div class="press-feature__layout">
+    <div class="press-feature__copy">
+      <p class="eyebrow">Front-page coverage · The Columbia Chronicle</p>
+      <h2 id="press-feature-title">Pedestrian safety takes center stage at Borough Council.</h2>
+      <p>Following ColumbiaWalks developer Robert Thompson’s August 11 address to Columbia Borough Council, <em>The Columbia Chronicle</em> reported on the community’s urgent call for safer streets. The coverage highlights requests for a comprehensive pedestrian-safety plan, stronger crosswalk enforcement, infrastructure review, and a full examination of pedestrian incidents and complaints.</p>
+      <a class="button press-feature__button" href="https://thecolumbiachronicle.com/website-news/tragedy-public-safety-and-heated-debate-dominate-columbia-borough-meeting/" target="_blank" rel="noopener noreferrer">Read the Chronicle coverage <span aria-hidden="true">↗</span></a>
+      <p class="press-feature__note">Independent reporting by <em>The Columbia Chronicle</em>. The article opens on the newspaper’s website.</p>
+    </div>
+    <aside class="press-feature__summary" aria-label="Requests highlighted in the coverage">
+      <p>What the Council address called for</p>
+      <ul>
+        <li>A comprehensive pedestrian-safety plan</li>
+        <li>Stronger crosswalk enforcement</li>
+        <li>Infrastructure, incident, and complaint review</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+<section class="section wgal-feature" aria-labelledby="wgal-feature-title">
+  <div class="wgal-feature__copy">
+    <p class="eyebrow">Local television coverage · WGAL News 8</p>
+    <h2 id="wgal-feature-title">Columbia residents call for action after deadly crash.</h2>
+    <p>WGAL's August 13 report connects the deaths of Eric and Donna Lutz at Third and Chestnut streets with residents' longstanding concerns about speeding, unsafe crossings, and the need for visible enforcement. The coverage also examines practical ideas raised by neighbors, including improved markings, additional signs, pedestrian-activated flashing beacons, and targeted monitoring at dangerous intersections.</p>
+    <div class="actions">
+      <a class="button primary" href="{{@site.url}}/wgal-coverage/">View the coverage summary and media</a>
+      <a class="text-link" href="https://www.wgal.com/article/columbia-residents-urge-action-after-fatal-crash-at-intersection/73418945" target="_blank" rel="noopener noreferrer">Read and watch on WGAL →</a>
+    </div>
+    <p class="wgal-feature__credit">Reporting by Maegan Summers for WGAL News 8. ColumbiaWalks does not host or alter WGAL's video footage.</p>
+  </div>
+  <aside class="wgal-feature__facts" aria-label="WGAL coverage highlights">
+    <span>Coverage highlights</span>
+    <strong>2 official videos</strong>
+    <ul>
+      <li>Residents describe speeding and dangerous driving</li>
+      <li>Neighbors propose signs, markings, and flashing beacons</li>
+      <li>Police discuss possible targeted intersection enforcement</li>
+    </ul>
+  </aside>
+</section>
+<section class="section app-download" id="android-app"><div><p class="eyebrow">Android app</p><h2>Take ColumbiaWalks with you.</h2><p>ColumbiaWalks 3.14.1, released September 6, 2026, makes text and pale backgrounds consistently clear across phones, separates field instructions so they do not overlap at larger text sizes, and clarifies Repeat Reporting prompts while preserving the 3.14 reporting and walking features.</p><div class="actions"><a class="button primary" href="{{asset "downloads/ColumbiaWalks-3.14.1.apk"}}">Download ColumbiaWalks 3.14.1 APK</a><a class="button app-beta-button" href="{{@site.url}}/beta-testing/">Join the iOS or Android beta</a><a class="text-link" href="https://github.com/Menethoran/ColumbiaWalks-App/releases/tag/v3.14.1">View release details →</a></div><div class="android-help" aria-labelledby="android-help-title"><p class="eyebrow" id="android-help-title">Upgrade help</p><ol><li><strong>The website APK updates website-distributed 3.13.0 or 3.14.0 installs.</strong><span>Google Play and website downloads are separate signing channels and cannot update each other. Before switching channels—or upgrading from 3.12.0 or earlier—make sure saved reports have submitted, uninstall the existing app, and then install 3.14.1 from the channel you intend to keep using.</span></li></ol></div><p class="install-note">Android may ask you to allow installation from your browser or file manager. You can turn that permission off again after installation.</p></div><div class="app-version"><strong>3.14.1</strong><span>Latest Android app</span><small>Released September 6, 2026</small></div></section>
+<section class="section mission" id="mission"><div><p class="eyebrow">Built for neighbors</p><h2>Turn everyday observations into useful community data.</h2><p>Cracked sidewalks, blocked crosswalks, poor lighting, speeding, and inaccessible curb ramps are easy to notice but difficult to track. ColumbiaWalks keeps those observations organized so recurring trouble spots become visible.</p></div><ol class="steps"><li><b>1</b><span><strong>Choose one category</strong>Sidewalk, driver, crosswalk, or another safety issue.</span></li><li><b>2</b><span><strong>Add a clear photo</strong>Document the condition without putting yourself in danger.</span></li><li><b>3</b><span><strong>Confirm GPS and submit</strong>Add an optional comment only when it helps explain the picture.</span></li></ol></section>
+<section class="section pedestrian-profile-callout" id="pedestrian-profile" aria-labelledby="pedestrian-profile-title"><div><p class="eyebrow">New community questionnaire</p><h2 id="pedestrian-profile-title">What is walking in Columbia like for you?</h2><p>Share an anonymous Pedestrian Profile to help us understand residents’ walking habits, favorite and least favorite streets, accessibility needs, and the changes that would make walking easier. Every question is optional.</p><a class="button primary" href="{{@site.url}}/report/#pedestrian-profile">Complete a Pedestrian Profile</a></div><aside aria-label="Pedestrian Profile privacy and timing"><strong>Optional. Anonymous. Useful.</strong><span>No account, name, or exact address is requested.</span><span>Answer only the questions you are comfortable sharing.</span></aside></section>
+<section class="section report-callout"><div><p class="eyebrow">Safety reporting</p><h2>See a problem? Put it on the map.</h2><p>No account is required. Quick Report asks only for one broad category, a photograph, an optional comment, and a confirmed GPS location. Use Full Report when the incident needs detailed questions or additional documentation.</p><a class="button primary" href="{{@site.url}}/report/">Open the reporting tool</a></div><div class="badge-panel"><img src="{{asset "columbiawalks-badge.svg"}}" alt="ColumbiaWalks badge"><span>Safer streets<br>start with a clear picture.</span></div></section>
+<section class="section split"><article><p class="eyebrow">Explore on foot</p><h2>Historic Columbia Walking Tours</h2><p>Discover Columbia’s architecture, river heritage, parks, and neighborhood stories through a separate collection of self-guided walks.</p><a class="text-link" href="{{@site.url}}/historic-walks/">Explore historic walks →</a></article><article class="river"><p class="eyebrow">Walk the river</p><h2>Northwest Lancaster County River Trail</h2><p>Columbia is the southern gateway to miles of paved trail, river views, and connections to our region’s industrial history.</p></article></section>
+<section class="section news"><p class="eyebrow">Project updates</p><h2>From ColumbiaWalks</h2><div class="post-grid">{{#foreach posts limit="3"}}<article><p>{{date published_at format="MMMM D, YYYY"}}</p><h3><a href="{{url}}">{{title}}</a></h3><p>{{excerpt words="24"}}</p></article>{{else}}<p>Updates from the ColumbiaWalks project will appear here.</p>{{/foreach}}</div></section>

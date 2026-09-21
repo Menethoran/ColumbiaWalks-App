@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join the App Beta | ColumbiaWalks</title>
+  <meta name="description" content="Request access to the ColumbiaWalks Apple TestFlight or Google Play beta.">
+  <link rel="canonical" href="https://www.columbiawalks.com/beta-testing/">
+  <link rel="stylesheet" href="/beta-testing/beta-testing.css?v=20260821">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="ColumbiaWalks home">
+      <span class="brand-mark" aria-hidden="true">CW</span>
+      <span><small>Columbia, Pennsylvania</small><strong>ColumbiaWalks</strong></span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="/report/">Make a report</a>
+      <a href="/columbiawalks-insights/">Community insights</a>
+      <a href="/">Main website</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Help test ColumbiaWalks</p>
+        <h1 id="page-title">Join an app beta.</h1>
+        <p class="lede">Choose the app you use, then give us the account email that should receive testing access. We will use this information only to manage your beta request.</p>
+      </div>
+      <aside>
+        <strong>Before you begin</strong>
+        <p>For iPhone, use the email connected to your Apple Account. For Android, use the email connected to your Google Account.</p>
+      </aside>
+    </section>
+
+    <section class="form-shell">
+      <div class="form-heading">
+        <p class="eyebrow">Beta access request</p>
+        <h2>Which app would you like to test?</h2>
+        <p>Select one platform. You can submit another request later if you use both.</p>
+      </div>
+
+      <form id="beta-form" novalidate>
+        <fieldset class="platform-choice">
+          <legend class="sr-only">Choose a beta platform</legend>
+          <label>
+            <input type="radio" name="platform" value="ios" required>
+            <span class="platform-mark" aria-hidden="true">●</span>
+            <span><strong>Apple / iOS</strong><small>iPhone beta through TestFlight</small></span>
+          </label>
+          <label>
+            <input type="radio" name="platform" value="android" required>
+            <span class="platform-mark android" aria-hidden="true">▲</span>
+            <span><strong>Google / Android</strong><small>Android beta through Google Play</small></span>
+          </label>
+        </fieldset>
+
+        <div class="field-grid">
+          <label>
+            <span>Name</span>
+            <input id="account-name" name="account_name" type="text" maxlength="200" autocomplete="name" required placeholder="Your name">
+          </label>
+          <label>
+            <span>Account email</span>
+            <input id="account-email" name="account_email" type="email" maxlength="254" autocomplete="email" required placeholder="Apple or Google account email">
+            <small>Use the email linked to the account for the platform selected above.</small>
+          </label>
+        </div>
+
+        <label class="street-field">
+          <span>Columbia street only — no house number</span>
+          <input id="columbia-street" name="columbia_street" type="text" maxlength="200" autocomplete="off" inputmode="text" required aria-describedby="street-help street-message" placeholder="Example: Locust Street">
+          <small id="street-help">Enter only the street name where you live in Columbia. Numbers cannot be entered or saved.</small>
+          <small class="street-message" id="street-message" aria-live="polite"></small>
+        </label>
+
+        <label>
+          <span>Comments <em>optional</em></span>
+          <textarea id="comments" name="comments" maxlength="2000" rows="5" placeholder="Tell us anything helpful about your device, testing interests, or accessibility needs."></textarea>
+        </label>
+
+        <label class="consent">
+          <input id="privacy-consent" type="checkbox" required>
+          <span>I consent to ColumbiaWalks storing my name, account email, street name, platform choice, and comments to process this beta request.</span>
+        </label>
+
+        <label class="honeypot" aria-hidden="true">
+          Website
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </label>
+
+        <p class="form-message" id="form-message" aria-live="polite" hidden></p>
+        <button id="submit-button" type="submit">Request beta access</button>
+        <p class="privacy-note">Requests are private and are not shown on public maps, public insights, or the Page of Shame. Read the <a href="/privacy-policy/">privacy policy</a>.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>Thank you for helping ColumbiaWalks improve before wider release.</p>
+    <a href="/">Return to ColumbiaWalks</a>
+  </footer>
+
+  <script src="/beta-testing/beta-testing.js?v=20260821" defer></script>
+</body>
+</html>

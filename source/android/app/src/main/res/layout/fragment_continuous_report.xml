@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/continuous_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cw_surface"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="18dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:padding="5dp"
+                android:src="@drawable/ic_repeat"
+                app:tint="@color/cw_green" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/continuous_reporting_title"
+                    android:textColor="@color/cw_text"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/continuous_session_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/continuous_session_initial"
+                    android:textColor="@color/cw_green"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/continuous_intro"
+            android:textColor="@color/cw_text_secondary"
+            android:textSize="15sp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:cardBackgroundColor="#FFF4DA"
+            app:cardCornerRadius="12dp"
+            app:strokeColor="@color/cw_gold"
+            app:strokeWidth="1dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="@string/continuous_safety_warning"
+                android:textColor="@color/cw_text"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:strokeColor="@color/cw_blue"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/continuous_step_hierarchy"
+                    android:textColor="@color/cw_text"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/continuous_hierarchy_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:contentDescription="@string/continuous_hierarchy_description"
+                    android:minHeight="52dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:strokeColor="@color/cw_green"
+            app:strokeWidth="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/continuous_step_photo"
+                    android:textColor="@color/cw_text"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/continuous_photo_gps_intro"
+                    android:textColor="@color/cw_text_secondary"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/take_continuous_photo_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:contentDescription="@string/continuous_take_picture_description"
+                    android:minHeight="62dp"
+                    android:text="@string/continuous_take_picture"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    app:icon="@drawable/ic_report"
+                    app:iconGravity="textStart"
+                    app:iconPadding="10dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/choose_continuous_photo_button"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:minHeight="50dp"
+                    android:text="@string/continuous_select_picture"
+                    android:textAllCaps="false" />
+
+                <LinearLayout
+                    android:id="@+id/continuous_working_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:accessibilityLiveRegion="polite"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:id="@+id/continuous_progress"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:indeterminate="true" />
+
+                    <TextView
+                        android:id="@+id/continuous_working_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="9dp"
+                        android:layout_weight="1"
+                        android:text="@string/continuous_preparing_picture"
+                        android:textColor="@color/cw_text_secondary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/continuous_photo_preview_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/continuous_photo_preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="210dp"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/continuous_selected_picture_description"
+                        android:scaleType="centerCrop" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/remove_continuous_photo_button"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/continuous_remove_picture"
+                        android:textAllCaps="false"
+                        android:textColor="@color/cw_error" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/continuous_photo_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:accessibilityLiveRegion="assertive"
+                    android:text="@string/continuous_picture_required"
+                    android:textColor="@color/cw_error"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/continuous_location_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="@color/cw_surface_variant"
+            app:cardCornerRadius="14dp"
+            app:strokeColor="@color/cw_green"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/continuous_step_location"
+                    android:textColor="@color/cw_text"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/continuous_location_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/finding_location"
+                    android:textColor="@color/cw_text"
+                    android:textIsSelectable="true"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/continuous_location_source_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/continuous_location_waiting_short"
+                    android:textColor="@color/cw_text_secondary"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="9dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/use_device_location_button"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
+                        android:minHeight="48dp"
+                        android:text="@string/continuous_use_device_gps"
+                        android:textAllCaps="false"
+                        android:textSize="13sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/override_coordinates_button"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:minHeight="48dp"
+                        android:text="@string/continuous_enter_coordinates"
+                        android:textAllCaps="false"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/continuous_location_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:accessibilityLiveRegion="assertive"
+                    android:text="@string/continuous_location_required"
+                    android:textColor="@color/cw_error"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:id="@+id/continuous_sidewalk_lip_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/continuous_missing_sidewalk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/continuous_missing_sidewalk" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/continuous_sidewalk_lip_optional"
+                android:textColor="@color/cw_text"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/continuous_sidewalk_lip_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:contentDescription="@string/continuous_sidewalk_lip_description"
+                android:minHeight="52dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/continuous_vehicle_issue_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/continuous_vehicle_issue_optional"
+                android:textColor="@color/cw_text"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/continuous_vehicle_issue_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:contentDescription="@string/continuous_vehicle_issue_description"
+                android:minHeight="52dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.ColumbiaWalks.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="@string/continuous_license_plate_optional"
+                app:helperText="@string/continuous_vehicle_identification_helper">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/continuous_license_plate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="20"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.ColumbiaWalks.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/continuous_plate_state_optional">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/continuous_plate_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:maxLength="32"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/continuous_official_email_notice_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:importantForAccessibility="yes"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/cw_green_light"
+            app:cardCornerRadius="10dp"
+            app:strokeColor="@color/cw_green"
+            app:strokeWidth="1dp">
+
+            <TextView
+                android:id="@+id/continuous_official_email_notice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="@string/continuous_official_email_disclosure_codes"
+                android:textColor="@color/cw_text"
+                android:textSize="14sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/continuous_comments_layout"
+            style="@style/Widget.ColumbiaWalks.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:hint="@string/continuous_comments_optional"
+            app:counterEnabled="true"
+            app:counterMaxLength="1250"
+            app:helperText="@string/continuous_comments_helper">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/continuous_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLength="1250"
+                android:minLines="3" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/continuous_submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:contentDescription="@string/continuous_submit_next_description"
+            android:minHeight="62dp"
+            android:text="@string/continuous_submit_next"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            app:backgroundTint="@color/cw_green"
+            app:icon="@drawable/ic_repeat"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp" />
+
+        <TextView
+            android:id="@+id/continuous_ready_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:accessibilityLiveRegion="polite"
+            android:gravity="center"
+            android:text="@string/continuous_ready_hint"
+            android:textColor="@color/cw_text_secondary"
+            android:textSize="13sp" />
+    </LinearLayout>
+</ScrollView>

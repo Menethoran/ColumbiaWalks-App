@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Community Insights | ColumbiaWalks</title>
+  <meta name="description" content="Public, aggregate ColumbiaWalks reporting and walking insights for Columbia, Pennsylvania.">
+  <link rel="canonical" href="https://www.columbiawalks.com/columbiawalks-insights/">
+  <link rel="stylesheet" href="/columbiawalks-insights/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="/columbiawalks-insights/insights.css?v=20260821-public">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="ColumbiaWalks home">
+      <span class="brand-mark" aria-hidden="true">CW</span>
+      <span><small>Columbia, Pennsylvania</small><strong>ColumbiaWalks</strong></span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="/report/">Make a report</a>
+      <a href="/beta-testing/">Join the beta</a>
+      <a href="/">Main website</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Community data · aggregate public view</p>
+        <h1>How Columbia walks.</h1>
+        <p class="lede">A privacy-conscious view of the concerns people raise, the places that need attention, and the walking experiences residents share.</p>
+      </div>
+      <label class="range-control">
+        <span>Time period</span>
+        <select id="range-select">
+          <option value="30">Last 30 days</option>
+          <option value="90" selected>Last 90 days</option>
+          <option value="365">Last year</option>
+          <option value="all">All time</option>
+        </select>
+      </label>
+    </section>
+
+    <div class="privacy-banner">
+      <span aria-hidden="true">●</span>
+      <p><strong>Aggregate data only.</strong> This page never shows individual submissions, report text, photos, contact details, IDs, or exact locations.</p>
+    </div>
+
+    <section class="loading" id="loading-panel" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      Loading community insights…
+    </section>
+    <p class="error-message" id="error-message" hidden></p>
+
+    <div id="insights-content" hidden>
+      <section class="metric-grid" aria-label="Community totals">
+        <article><span>Issues raised</span><strong id="metric-issues">0</strong><small>reports and feedback</small></article>
+        <article><span>Safety reports</span><strong id="metric-reports">0</strong><small>street concerns recorded</small></article>
+        <article><span>Profiles made</span><strong id="metric-profiles">0</strong><small>walking experiences shared</small></article>
+        <article><span>Walks counted</span><strong id="metric-walks">0</strong><small>opt-in walking activities</small></article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel map-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Where concerns are raised</p><h2>Report heat map</h2></div>
+            <span class="pill" id="map-total">0 reports mapped</span>
+          </div>
+          <p class="panel-copy">Locations are grouped to approximately 100 metres. The map cannot be used to open or identify a submission.</p>
+          <div id="public-heatmap" aria-label="Aggregate map of ColumbiaWalks reports"></div>
+          <p class="map-note">Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.</p>
+        </article>
+
+        <article class="panel reported-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">What is reported</p><h2>Leading concerns</h2></div>
+          </div>
+          <div class="bar-chart" id="category-chart"></div>
+        </article>
+      </section>
+
+      <section class="panel walking-panel">
+        <div class="panel-heading walking-heading">
+          <div><p class="eyebrow">How Columbia walks</p><h2>Shared pedestrian profiles</h2></div>
+          <p>Anonymous profile answers are combined so patterns are visible without exposing any person’s response.</p>
+        </div>
+        <div class="walking-metrics">
+          <article><span>Profiles</span><strong id="profile-responses">0</strong><small>responses</small></article>
+          <article><span>Walking days</span><strong id="profile-days">—</strong><small>average per week</small></article>
+          <article><span>Daily distance</span><strong id="profile-miles">—</strong><small>estimated average miles</small></article>
+          <article><span>Total walk distance</span><strong id="walking-total">0</strong><small>opt-in miles recorded</small></article>
+        </div>
+        <div class="three-charts">
+          <div><h3>Walking barriers</h3><div class="bar-chart compact" id="barrier-chart"></div></div>
+          <div><h3>Feeling safe while walking</h3><div class="bar-chart compact" id="safety-chart"></div></div>
+          <div><h3>Reasons people walk</h3><div class="bar-chart compact" id="purpose-chart"></div></div>
+        </div>
+      </section>
+
+      <p class="updated" id="updated-at"></p>
+    </div>
+  </main>
+
+  <footer>
+    <p>ColumbiaWalks turns shared observations into a clearer picture of pedestrian life in Columbia.</p>
+    <a href="/report/">Add your voice</a>
+  </footer>
+
+  <script src="/columbiawalks-insights/vendor/leaflet/leaflet.js" defer></script>
+  <script src="/columbiawalks-insights/insights.js?v=20260821-public" defer></script>
+</body>
+</html>
+

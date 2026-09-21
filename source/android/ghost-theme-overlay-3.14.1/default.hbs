@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="{{@site.locale}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{meta_title}}</title>
+  <link rel="stylesheet" href="{{asset "css/site.css"}}">
+  <link rel="stylesheet" href="{{asset "css/ghost.css"}}">
+  {{{block "styles"}}}
+  {{ghost_head}}
+</head>
+<body class="{{body_class}}">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="{{@site.url}}"><img src="{{asset "columbiawalks-badge.svg"}}" alt=""><span>ColumbiaWalks</span></a>
+    <nav aria-label="Main navigation">
+      <a href="{{@site.url}}/#mission">Mission</a>
+      <a href="{{@site.url}}/about/">About</a>
+      <a href="{{@site.url}}/report/">Report</a>
+      <a href="{{@site.url}}/#android-app">App</a>
+      <a href="{{@site.url}}/wgal-coverage/">News</a>
+      <a href="{{@site.url}}/historic-walks/">Walking Attractions</a>
+      <a href="{{@site.url}}/page-of-shame/">Page of Shame</a>
+      <a href="{{@site.url}}/columbiawalks-insights/">Community insights</a>
+      <a href="{{@site.url}}/beta-testing/">Join the beta</a>
+    </nav>
+    <a class="header-cta" href="{{@site.url}}/report/">Make a report</a>
+  </header>
+  <main id="main">{{{body}}}</main>
+  <footer class="site-footer">
+    <div><img src="{{asset "columbiawalks-badge.svg"}}" alt=""><strong>ColumbiaWalks</strong><p>Helping make walking safer, easier, and more welcoming throughout Columbia, Pennsylvania.</p></div>
+    <div><strong>Explore</strong><a href="{{@site.url}}/page-of-shame/">Page of Shame</a><a href="{{@site.url}}/columbiawalks-insights/">Community insights</a><a href="{{@site.url}}/beta-testing/">Request iOS or Android beta access</a><a href="{{@site.url}}/report/#pedestrian-profile">Pedestrian Profile</a><a href="{{@site.url}}/report/">Safety reporting</a><a href="{{@site.url}}/wgal-coverage/">WGAL coverage</a><a href="{{@site.url}}/beta-testing/">Join Android beta testing</a><a href="https://github.com/Menethoran/ColumbiaWalks-App/releases/latest">Direct APK download</a><a href="{{@site.url}}/historic-walks/">Walking attractions</a><a href="{{@site.url}}/about/">About the project</a><a href="{{@site.url}}/privacy-policy/">Privacy policy</a></div>
+    <div><strong>Important</strong><p>For emergencies or immediate danger, call 911. ColumbiaWalks is a community reporting tool, not an emergency service.</p></div>
+    <small>Founded by Callie Jo Thompson · Information Technology: Robert Thompson · ColumbiaWalks website v3.14.1</small>
+  </footer>
+  {{ghost_foot}}
+</body>
+</html>

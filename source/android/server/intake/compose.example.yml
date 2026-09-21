@@ -1,0 +1,74 @@
+services:
+  columbiawalks-intake:
+    build:
+      context: .
+    container_name: columbiawalks-intake
+    restart: unless-stopped
+    environment:
+      DIRECTUS_URL: "http://directus:8055"
+      DIRECTUS_TOKEN_FILE: "/run/secrets/directus_token"
+      MAX_PHOTO_BYTES: "6291456"
+      OVERPASS_URL: "https://overpass-api.de/api/interpreter"
+      # Backend-only Open-Meteo lookup. The provider receives only the report
+      # hour and coordinates rounded to 2 decimals; an outage never blocks save.
+      WEATHER_ENRICHMENT_ENABLED: "${WEATHER_ENRICHMENT_ENABLED:-true}"
+      WEATHER_TIMEOUT_MS: "${WEATHER_TIMEOUT_MS:-3000}"
+      # Start fail-closed. Use review after recipient verification; use
+      # automatic only after mounting all three OAuth secrets below.
+      OFFICIAL_EMAIL_MODE: "${OFFICIAL_EMAIL_MODE:-disabled}"
+      # Version 3.15 defaults to interception by one ColumbiaWalks-controlled
+      # test mailbox. Example format: field-test@example.invalid. A real
+      # server-side value is required before review/automatic use.
+      OFFICIAL_EMAIL_DESTINATION_MODE: "${OFFICIAL_EMAIL_DESTINATION_MODE:-test}"
+      OFFICIAL_EMAIL_TEST_RECIPIENT: "${OFFICIAL_EMAIL_TEST_RECIPIENT:-}"
+      OFFICIAL_EMAIL_SENDER: "columbiawalks@gmail.com"
+      OFFICIAL_EMAIL_POLICE_CHIEF: "${OFFICIAL_EMAIL_POLICE_CHIEF:-}"
+      OFFICIAL_EMAIL_MAYOR: "${OFFICIAL_EMAIL_MAYOR:-}"
+      OFFICIAL_EMAIL_CODES: "${OFFICIAL_EMAIL_CODES:-}"
+      OFFICIAL_EMAIL_DAILY_CAP: "${OFFICIAL_EMAIL_DAILY_CAP:-25}"
+      OFFICIAL_EMAIL_MAX_ATTEMPTS: "5"
+      OFFICIAL_EMAIL_WORKER_INTERVAL_MS: "15000"
+      OFFICIAL_EMAIL_LEASE_MS: "120000"
+      # GMAIL_OAUTH_CLIENT_ID_FILE: "/run/secrets/gmail_oauth_client_id"
+      # GMAIL_OAUTH_CLIENT_SECRET_FILE: "/run/secrets/gmail_oauth_client_secret"
+      # GMAIL_OAUTH_REFRESH_TOKEN_FILE: "/run/secrets/gmail_oauth_refresh_token"
+    secrets:
+      - directus_token
+      # Uncomment only when OFFICIAL_EMAIL_MODE=automatic and the files exist.
+      # - gmail_oauth_client_id
+      # - gmail_oauth_client_secret
+      # - gmail_oauth_refresh_token
+    networks:
+      - proxy
+      - directus_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.columbiawalks-intake.rule=((Host(`directus.rndtech.org`) || Host(`www.columbiawalks.com`)) && (PathPrefix(`/columbiawalks-api`) || PathPrefix(`/columbiawalks-admin`) || PathPrefix(`/columbiawalks-insights`) || PathPrefix(`/beta-testing`))) || (Host(`www.columbiawalks.com`) && (Path(`/privacy-policy`) || PathPrefix(`/privacy-policy/`)))"
+      - "traefik.http.routers.columbiawalks-intake.entrypoints=websecure"
+      - "traefik.http.routers.columbiawalks-intake.tls=true"
+      - "traefik.http.routers.columbiawalks-intake.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.columbiawalks-intake.priority=200"
+      - "traefik.http.routers.columbiawalks-intake.middlewares=columbiawalks-limit,columbiawalks-body"
+      - "traefik.http.middlewares.columbiawalks-limit.ratelimit.average=10"
+      - "traefik.http.middlewares.columbiawalks-limit.ratelimit.period=1m"
+      - "traefik.http.middlewares.columbiawalks-limit.ratelimit.burst=20"
+      - "traefik.http.middlewares.columbiawalks-body.buffering.maxRequestBodyBytes=6500000"
+      - "traefik.http.services.columbiawalks-intake.loadbalancer.server.port=8080"
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-St_Peter}"
+
+secrets:
+  directus_token:
+    file: ./secrets/directus_token.txt
+  # gmail_oauth_client_id:
+  #   file: ./secrets/gmail_oauth_client_id.txt
+  # gmail_oauth_client_secret:
+  #   file: ./secrets/gmail_oauth_client_secret.txt
+  # gmail_oauth_refresh_token:
+  #   file: ./secrets/gmail_oauth_refresh_token.txt
+
+networks:
+  proxy:
+    external: true
+    name: "${TRAEFIK_NETWORK:-St_Peter}"
+  directus_internal:
+    external: true

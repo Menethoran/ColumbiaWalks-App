@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cw_blue">#1E5A7A</color>
+    <color name="cw_blue_dark">#123E55</color>
+    <color name="cw_green">#276E48</color>
+    <color name="cw_green_light">#DDF3E7</color>
+    <color name="cw_gold">#F2B544</color>
+    <color name="cw_surface">#FBFDFC</color>
+    <color name="cw_surface_variant">#E8F0ED</color>
+    <color name="cw_text">#10181C</color>
+    <color name="cw_text_secondary">#3D4B52</color>
+    <color name="cw_outline">#5D6B71</color>
+    <color name="cw_error">#B3261E</color>
+    <color name="cw_error_surface">#FDE7E5</color>
+    <color name="white">#FFFFFF</color>
+</resources>

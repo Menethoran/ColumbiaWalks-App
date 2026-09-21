@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      ColumbiaWalks intentionally uses one high-contrast light presentation.
+      A DayNight parent combined device-dark colors with the app's fixed pale
+      surfaces, making labels and hints look washed out on some phones.
+    -->
+    <style name="ColumbiaWalksBaseTheme"
+        parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/cw_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/cw_green</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">@color/cw_surface</item>
+        <item name="colorOnSurface">@color/cw_text</item>
+        <item name="colorSurfaceVariant">@color/cw_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/cw_text_secondary</item>
+        <item name="colorOutline">@color/cw_outline</item>
+        <item name="colorError">@color/cw_error</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:windowBackground">@color/cw_surface</item>
+        <item name="android:colorBackground">@color/cw_surface</item>
+        <item name="android:textColorPrimary">@color/cw_text</item>
+        <item name="android:textColorSecondary">@color/cw_text_secondary</item>
+        <item name="android:textColorHint">@color/cw_text_secondary</item>
+        <item name="android:colorAccent">@color/cw_green</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.ColumbiaWalks"
+        parent="@style/ColumbiaWalksBaseTheme" />
+
+    <style name="Widget.ColumbiaWalks.TextInputLayout"
+        parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="boxStrokeColor">@color/cw_outline</item>
+        <item name="hintTextColor">@color/cw_text_secondary</item>
+        <item name="helperTextTextColor">@color/cw_text_secondary</item>
+        <item name="counterTextColor">@color/cw_text_secondary</item>
+        <item name="android:textColor">@color/cw_text</item>
+        <item name="android:textColorHint">@color/cw_text_secondary</item>
+    </style>
+</resources>

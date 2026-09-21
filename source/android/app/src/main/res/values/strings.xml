@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ColumbiaWalks</string>
+    <string name="app_tagline">Safer streets, one report at a time</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_report">Report</string>
+    <string name="nav_saved">Saved</string>
+    <string name="nav_feedback">Community</string>
+    <string name="continuous_title">Repeat reporting</string>
+    <string name="continuous_open_description">Open continuous repeat reporting</string>
+    <string name="continuous_reporting_title">Continuous reporting</string>
+    <string name="continuous_session_initial">Session ready • Next report #1</string>
+    <string name="continuous_session_format">Session ready • Next report #%1$d</string>
+    <string name="continuous_intro">Choose a report type once. After each successful submission, the form returns to the camera while preserving that type.</string>
+    <string name="continuous_safety_warning">Stop somewhere safe before taking a picture. Do not photograph while crossing or standing near moving traffic, and never approach or follow a vehicle. Report only what you can safely observe.</string>
+    <string name="continuous_open_from_report">Open continuous reporting</string>
+    <string name="continuous_step_hierarchy">1. What are you reporting?</string>
+    <string name="continuous_hierarchy_description">Reporting hierarchy</string>
+    <string name="continuous_step_photo">2. Add a picture</string>
+    <string name="continuous_photo_gps_intro">Photo GPS is used automatically when available.</string>
+    <string name="continuous_take_picture">Take picture</string>
+    <string name="continuous_take_picture_description">Take a picture for this report</string>
+    <string name="continuous_select_picture">Select existing picture</string>
+    <string name="continuous_preparing_picture">Preparing picture and checking GPS…</string>
+    <string name="continuous_restoring_session">Restoring the reporting session…</string>
+    <string name="continuous_selected_picture_description">Selected report picture</string>
+    <string name="continuous_remove_picture">Remove picture</string>
+    <string name="continuous_picture_required">A picture is required for continuous reporting.</string>
+    <string name="continuous_step_location">3. Confirm location</string>
+    <string name="continuous_location_waiting_short">Waiting for picture GPS or device GPS</string>
+    <string name="continuous_use_device_gps">Use device GPS</string>
+    <string name="continuous_enter_coordinates">Enter coordinates</string>
+    <string name="continuous_location_required">Add a location using picture GPS, device GPS, or manual coordinates.</string>
+    <string name="continuous_missing_sidewalk">Missing sidewalk</string>
+    <string name="continuous_sidewalk_lip_optional">Sidewalk lip height (optional)</string>
+    <string name="continuous_sidewalk_lip_description">Optional sidewalk lip height</string>
+    <string name="continuous_vehicle_issue_optional">Vehicle issue (optional)</string>
+    <string name="continuous_vehicle_issue_description">Optional vehicle issue type</string>
+    <string name="continuous_license_plate_optional">License plate (optional)</string>
+    <string name="continuous_plate_state_optional">Plate state or jurisdiction (optional)</string>
+    <string name="continuous_vehicle_identification_helper">Enter only what you safely observed. Never approach or follow a vehicle.</string>
+    <string name="continuous_official_email_disclosure_police_mayor">3.16 field-test email: by submitting this report, you authorize ColumbiaWalks to send the uploaded report only to a ColumbiaWalks-controlled test mailbox. The subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A picture and confirmed location within 5 km of Columbia Borough center are required; the test email includes the picture, location, comments, and any license-plate information. This is not emergency reporting and does not guarantee delivery, a response, or enforcement.</string>
+    <string name="continuous_official_email_disclosure_codes">3.16 field-test email: by submitting this report, you authorize ColumbiaWalks to send the uploaded report only to a ColumbiaWalks-controlled test mailbox. The subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A picture and confirmed location within 5 km of Columbia Borough center are required; the test email includes the picture, location, comments, and optional lip height. This is not emergency reporting and does not guarantee delivery, a response, or correction.</string>
+    <string name="continuous_comments_optional">Comments (optional)</string>
+    <string name="continuous_comments_helper">What else should this report include? Add only useful details the picture does not show. You can submit without typing.</string>
+    <string name="continuous_submit_next">Submit &amp; report next</string>
+    <string name="continuous_submit_next_description">Submit this report and prepare the next report</string>
+    <string name="continuous_submit_email_next">Submit [TEST] email &amp; report next</string>
+    <string name="continuous_submit_email_next_description">Submit this report, authorize the disclosed field-test email to the ColumbiaWalks-controlled test mailbox, and prepare the next report</string>
+    <string name="continuous_ready_hint">After submission, this screen immediately resets for the next issue.</string>
+    <string name="continuous_camera_unavailable">The camera could not be opened. You can select a picture instead.</string>
+    <string name="continuous_picture_prepare_failed">That picture could not be prepared. Please try another picture.</string>
+    <string name="continuous_finding_current_location">Finding current location…</string>
+    <string name="continuous_no_location">No location selected</string>
+    <string name="continuous_checking_device_gps">Checking device GPS as a fallback</string>
+    <string name="continuous_location_waiting">Waiting for picture GPS, device GPS, or manual coordinates</string>
+    <string name="continuous_coordinate_pair_format">%1$.6f, %2$.6f</string>
+    <string name="continuous_location_photo">Location read from picture GPS metadata</string>
+    <string name="continuous_location_device_override">Picture location overridden with device GPS</string>
+    <string name="continuous_location_device">Location from this device\'s GPS</string>
+    <string name="continuous_location_manual_override">Automatic location manually overridden</string>
+    <string name="continuous_location_manual_coordinates">Coordinates entered manually</string>
+    <string name="continuous_location_map_override">Automatic location overridden on the map</string>
+    <string name="continuous_location_map">Location selected on the map</string>
+    <string name="continuous_location_source_unavailable">Location source unavailable</string>
+    <string name="continuous_location_permission_denied">Location permission was not granted. Picture GPS and manual coordinates still work.</string>
+    <string name="continuous_device_location_unavailable">Device location is unavailable. Enter coordinates manually or use a geotagged picture.</string>
+    <string name="continuous_finding_gps">Finding GPS…</string>
+    <string name="continuous_current_gps_unavailable">A current GPS location could not be found.</string>
+    <string name="continuous_latitude_hint">Latitude (−90 to 90)</string>
+    <string name="continuous_longitude_hint">Longitude (−180 to 180)</string>
+    <string name="continuous_single_coordinate_format">%1$.6f</string>
+    <string name="continuous_coordinate_dialog_title">Enter report coordinates</string>
+    <string name="continuous_coordinate_dialog_message">These coordinates override picture or device GPS for this report only.</string>
+    <string name="continuous_use_coordinates">Use coordinates</string>
+    <string name="continuous_coordinate_required">Required</string>
+    <string name="continuous_coordinate_range_error">Enter a value from %1$.0f to %2$.0f</string>
+    <string name="continuous_coordinate_invalid">Enter a valid decimal coordinate</string>
+    <string name="continuous_observed_time_pattern">MMM d, yyyy h:mm a</string>
+    <string name="continuous_saving_report_format">Saving report #%1$d…</string>
+    <string name="continuous_report_save_error">The report could not be saved. Please try again.</string>
+    <string name="continuous_not_specified">Not specified</string>
+    <string name="continuous_report_saved_format">Report #%1$d saved. Ready for the next issue.</string>
+    <string name="continuous_report_saved_email_format">Report #%1$d saved and queued for upload. If accepted, ColumbiaWalks will process the authorized [TEST] email only to its controlled test mailbox; delivery is not confirmed. Ready for the next issue.</string>
+    <string name="continuous_report_saved_locally_format">Report #%1$d saved locally. It will upload when service is available.</string>
+    <string name="continuous_report_save_retry_with_picture">The report could not be saved. Your picture is still here; please try again.</string>
+    <string name="continuous_report_save_retry_picture_lost">The report could not be saved. Please retake the picture and try again.</string>
+    <string name="continuous_details_rapid_format">Rapid report kind: %1$s [%2$s]</string>
+    <string name="continuous_details_lip_format">\nSidewalk lip height: %1$s [%2$s]</string>
+    <string name="continuous_details_missing_sidewalk">\nSidewalk issue: Missing sidewalk [missing_sidewalk]</string>
+    <string name="continuous_details_vehicle_format">\nVehicle issue type: %1$s [%2$s]</string>
+    <string name="continuous_details_comments_format">\n\nComments:\n%1$s</string>
+    <string-array name="continuous_hierarchy_labels">
+        <item>Sidewalk issue</item>
+        <item>Vehicle issue</item>
+        <item>Crosswalk issue</item>
+        <item>Trip hazard</item>
+        <item>Lighting / visibility</item>
+        <item>Accessibility / ADA</item>
+        <item>School route</item>
+        <item>Police response</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="continuous_sidewalk_lip_labels">
+        <item>Not selected — optional</item>
+        <item>1/4 inch or less</item>
+        <item>More than 1/4 inch</item>
+        <item>More than 1/2 inch</item>
+        <item>More than 1 inch</item>
+        <item>In excess of 2 inches</item>
+    </string-array>
+    <string-array name="continuous_vehicle_issue_labels">
+        <item>Not selected — optional</item>
+        <item>Aggressive driving</item>
+        <item>Crosswalk incursion</item>
+        <item>Illegal U-turn</item>
+        <item>Speeding</item>
+        <item>Failure to yield</item>
+        <item>Red-light violation</item>
+        <item>Stop-sign violation</item>
+        <item>Blocked crosswalk or sidewalk</item>
+        <item>Illegal parking</item>
+        <item>Distracted driving</item>
+        <item>Other</item>
+    </string-array>
+    <string name="nav_walk">Walk</string>
+    <string name="walk_title">Walking distance</string>
+    <string name="walk_intro">Start a walk to measure distance while ColumbiaWalks is in the background, or import walking sessions from Health Connect.</string>
+    <string name="walk_status_ready">Ready to track a walk</string>
+    <string name="walk_status_active">Walk in progress</string>
+    <string name="walk_distance_format">%1$.2f miles</string>
+    <string name="walk_start">Start tracking</string>
+    <string name="walk_stop">Stop and share summary</string>
+    <string name="walk_consent">I agree to share the walk distance, duration, time range, source, and app version with ColumbiaWalks.</string>
+    <string name="walk_privacy">A persistent notification appears while tracking. Raw route coordinates and device identifiers are never uploaded.</string>
+    <string name="walk_health_title">Import from Health Connect</string>
+    <string name="walk_health_intro">With your permission, ColumbiaWalks can total walking exercise sessions added by compatible health apps since your last import.</string>
+    <string name="walk_health_import">Import walking sessions</string>
+    <string name="walk_consent_required">Check the sharing agreement first.</string>
+    <string name="walk_location_denied">Location permission is required to track a walk.</string>
+    <string name="walk_started">Walk tracking started. You can leave the app open or put it in the background.</string>
+    <string name="walk_stopped">Walk summary saved and queued for secure sharing.</string>
+    <string name="walk_health_requires_android_14">Health Connect import requires Android 14 or newer. You can still track walks directly.</string>
+    <string name="walk_health_permission_denied">Health Connect permission was not granted.</string>
+    <string name="walk_health_importing">Reading walking sessions…</string>
+    <string name="walk_health_empty">No new walking sessions were found.</string>
+    <string name="walk_health_queued">Walking sessions imported and queued for secure sharing.</string>
+    <string name="walk_health_error">Health Connect could not provide walking distance right now.</string>
+    <string name="walk_queue_error">The walking summary could not be saved. Try again.</string>
+    <string name="walk_notification_channel">Active walk tracking</string>
+    <string name="walk_notification_title">ColumbiaWalks is tracking your walk</string>
+    <string name="walk_notification_text">Tap to view distance. Raw route data stays on this phone.</string>
+    <string name="walk_notification_stop">Stop walk</string>
+    <string name="health_permissions_title">Health Connect permissions</string>
+    <string name="health_permissions_body">ColumbiaWalks reads only walking exercise sessions and their aggregate distance when you press Import. The app sends distance, duration, time range, source, and app version after you explicitly agree. It does not upload routes, health records unrelated to walking, or device identifiers. You can revoke access in Health Connect at any time.</string>
+
+    <string name="map_title">Choose a location</string>
+    <string name="map_hint">Tap the map to place the report pin, or use your current location.</string>
+    <string name="map_location_default">Report pin: Columbia, PA center</string>
+    <string name="map_location_format">Report pin: %1$.6f, %2$.6f</string>
+    <string name="use_my_location">Use my location</string>
+    <string name="report_this_spot">Report this spot</string>
+    <string name="location_permission_explanation">ColumbiaWalks uses your location only while the map is open, so you can place a safety report accurately.</string>
+    <string name="location_permission_denied">Location permission was not granted. You can still tap the map to choose a location.</string>
+    <string name="location_unavailable">A current GPS fix is unavailable. Check that Location is enabled, or tap the map.</string>
+    <string name="finding_location">Finding your location…</string>
+    <string name="outside_columbia_warning">This point appears to be outside the Columbia area. You may still save it.</string>
+    <string name="map_attribution">Map © OpenStreetMap contributors · OpenFreeMap</string>
+
+    <string name="report_title">Safety report</string>
+    <string name="report_intro">Select every issue that applies. The report saves on this device first, then submits securely when a network is available.</string>
+    <string name="emergency_notice">If someone is in immediate danger or needs urgent medical help, call 911. This app does not contact emergency services.</string>
+    <string name="issue_types">What happened?</string>
+    <string name="sidewalk_safety">Sidewalk safety</string>
+    <string name="vehicle_safety">Vehicle safety</string>
+    <string name="crosswalk_safety">Crosswalk safety</string>
+    <string name="trip_hazards">Trip hazards</string>
+    <string name="aggressive_drivers">Aggressive drivers</string>
+    <string name="police_response">Police response</string>
+    <string name="lighting_visibility">Lighting or visibility</string>
+    <string name="accessibility">Accessibility / ADA</string>
+    <string name="school_route_safety">School route safety</string>
+    <string name="other_issue">Not included elsewhere</string>
+    <string name="other_issue_details_label">Describe what is not included elsewhere</string>
+    <string name="other_issue_details_helper">Briefly describe the issue, concern, or observation. This description is kept with the report details.</string>
+    <string name="report_path_title">Choose a report path</string>
+    <string name="report_path_intro">Quick Report is selected by default and has no required fields. Choose Full Report for every category and its related questions.</string>
+    <string name="quick_report">Quick Report</string>
+    <string name="quick_report_hint">Fast complaint, live GPS, optional vehicle details and photo</string>
+    <string name="full_report">Full Report</string>
+    <string name="full_report_hint">All categories and targeted follow-up questions</string>
+    <string name="quick_complaint_optional">Quick complaint types (optional)</string>
+    <string name="quick_complaint_intro">Choose every complaint that applies, or submit without selecting one.</string>
+    <string name="quick_crosswalk_encroachment">Crosswalk Encroachment</string>
+    <string name="quick_missing_sidewalk">Missing Sidewalk</string>
+    <string name="quick_speeding">Speeding</string>
+    <string name="quick_illegal_u_turn">Illegal U-Turn</string>
+    <string name="quick_trip_hazard">Trip Hazard</string>
+    <string name="quick_other">Other — open the full report list</string>
+    <string name="severity">Urgency</string>
+    <string name="severity_low">Low — inconvenient</string>
+    <string name="severity_medium">Medium — could cause injury</string>
+    <string name="severity_high">High — immediate danger</string>
+    <string name="police_response_question">If police responded to a separate incident</string>
+    <string name="police_not_involved">Not applicable</string>
+    <string name="police_good">Good response</string>
+    <string name="police_bad">Poor response</string>
+    <string name="police_mixed">Mixed response</string>
+    <string name="observed_time">When did it happen?</string>
+    <string name="details_label">Additional information</string>
+    <string name="additional_information_toggle">Add additional information</string>
+    <string name="details_hint">Describe the condition, direction of travel, vehicle description, nearby address or landmark, and anything else that would help.</string>
+    <string name="photo_optional">Photo (optional)</string>
+    <string name="photo_required_for_official_email">Photo (required for the 3.16 field-test email)</string>
+    <string name="photo_privacy_notice">Use a photo only when it can be taken safely. If the photo contains GPS coordinates, ColumbiaWalks uses them for the report location, then removes embedded metadata from the saved and uploaded picture.</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_photo">Choose photo</string>
+    <string name="remove_photo">Remove</string>
+    <string name="photo_preview">Selected report photo</string>
+    <string name="report_photo">Safety report photo</string>
+    <string name="photo_prepare_failed">That photo could not be prepared. Try another image.</string>
+    <string name="photo_camera_unavailable">A camera app is not available right now.</string>
+    <string name="report_location">Location</string>
+    <string name="choose_on_map">Review or override on map</string>
+    <string name="location_source_waiting">Waiting for photo GPS, device GPS, or a manual map pin.</string>
+    <string name="location_source_photo">Location read from the photo’s GPS metadata.</string>
+    <string name="location_source_device">Location from this device’s GPS.</string>
+    <string name="location_source_device_override">Photo location overridden with device GPS.</string>
+    <string name="location_source_manual_map">Location selected manually on the map.</string>
+    <string name="location_source_manual_coordinates">Coordinates entered manually.</string>
+    <string name="location_source_manual_override">Automatic photo or device location manually overridden.</string>
+    <string name="location_source_unknown">Location source was not recorded.</string>
+    <string name="pos_gps_photo_format">Photo GPS · %1$s</string>
+    <string name="pos_gps_overridden_format">Photo GPS overridden · %1$s</string>
+    <string name="save_report">Save &amp; submit report</string>
+    <string name="save_submit_and_email">Save, submit &amp; send [TEST] email</string>
+    <string name="official_email_disclosure_police_mayor">3.16 field-test email: by tapping “Save, submit &amp; send [TEST] email,” you authorize ColumbiaWalks to send the uploaded report only to a ColumbiaWalks-controlled test mailbox. The subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A photo and confirmed location within 5 km of Columbia Borough center are required; the test email includes the photo, location, report details, comments, and any vehicle or license-plate information. This is not emergency reporting and does not guarantee delivery, a response, or enforcement.</string>
+    <string name="official_email_disclosure_codes">3.16 field-test email: by tapping “Save, submit &amp; send [TEST] email,” you authorize ColumbiaWalks to send the uploaded report only to a ColumbiaWalks-controlled test mailbox. The subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A photo and confirmed location within 5 km of Columbia Borough center are required; the test email includes the photo, location, report details, comments, and optional lip height. This is not emergency reporting and does not guarantee delivery, a response, or correction.</string>
+    <string name="official_email_disclosure_police_mayor_codes">3.16 field-test emails: by tapping “Save, submit &amp; send [TEST] email,” you authorize ColumbiaWalks to send the applicable uploaded report information only to a ColumbiaWalks-controlled test mailbox. Each subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A photo and confirmed location within 5 km of Columbia Borough center are required; the test emails include the photo, location, report details, comments, and any vehicle or license-plate information. This is not emergency reporting and does not guarantee delivery, a response, enforcement, or correction.</string>
+    <string name="official_email_photo_required">Add a photo before authorizing this 3.16 field-test email.</string>
+    <string name="official_email_location_required">Confirm the report location before authorizing this 3.16 field-test email.</string>
+    <string name="official_email_location_outside_area">The 3.16 field-test email is limited to reports within 5 km of Columbia Borough center. Correct or manually override this report’s location before submitting. To save an ordinary report outside that area, clear the qualifying issue selection.</string>
+    <string name="select_issue_error">Select at least one issue type.</string>
+    <string name="details_required_error">Add a short description for Not included elsewhere.</string>
+    <string name="saved_confirmation">Report saved locally and queued for secure submission.</string>
+    <string name="saved_and_official_email_confirmation">Report saved and queued for secure upload. If accepted, ColumbiaWalks will process the authorized [TEST] email only to its controlled test mailbox; delivery is not confirmed.</string>
+    <string name="report_save_failed">The report could not be saved. Your picture and form are still here; please try again.</string>
+    <string name="detailed_checklist_title">Questions for selected issues (optional)</string>
+    <string name="detailed_checklist_intro">Only follow-up questions related to the issue types selected above are shown. Answer only what you can observe.</string>
+    <string name="detailed_checklist_empty">Select an issue type above to see its related questions. Not included elsewhere can be described in Additional information without a checklist.</string>
+    <string name="checklist_header_format">%1$s · %2$d</string>
+    <plurals name="checklist_expand">
+        <item quantity="one">Open %1$s, %2$d check</item>
+        <item quantity="other">Open %1$s, %2$d checks</item>
+    </plurals>
+    <plurals name="checklist_collapse">
+        <item quantity="one">Close %1$s, %2$d check</item>
+        <item quantity="other">Close %1$s, %2$d checks</item>
+    </plurals>
+    <string name="checklist_question_content_description">%1$s response</string>
+    <string name="checklist_not_answered">Not answered</string>
+    <string name="checklist_ok">OK</string>
+    <string name="checklist_needs_attention">Needs attention</string>
+    <string name="checklist_not_applicable">Not applicable</string>
+    <string name="checklist_unavailable">The detailed checklist could not be loaded. You can still use the quick report fields.</string>
+
+    <string name="identification_title">Identify the reported person or vehicle (optional)</string>
+    <string name="identification_notice">Enter only details you safely observed. Do not approach or follow a vehicle to obtain information.</string>
+    <string name="reported_party_question">Who is being reported?</string>
+    <string name="reported_party_unknown">Unknown / not observed</string>
+    <string name="reported_party_civilian">Civilian driver</string>
+    <string name="reported_party_police">Police officer</string>
+    <string name="reported_party_government">Other government or agency driver</string>
+    <string name="reported_party_commercial">Commercial driver</string>
+    <string name="vehicle_involved">A vehicle was involved</string>
+    <string name="vehicle_identification_title">Vehicle identification</string>
+    <string name="license_plate">License plate</string>
+    <string name="plate_state">Plate state or jurisdiction</string>
+    <string name="vehicle_year">Year</string>
+    <string name="vehicle_make">Make</string>
+    <string name="vehicle_model">Model</string>
+    <string name="vehicle_color">Color</string>
+    <string name="vehicle_body_style">Body style</string>
+    <string name="vehicle_unit_number">Fleet or unit number</string>
+    <string name="vehicle_vin">VIN</string>
+    <string name="visible_damage">Dents, damage, stickers, or distinguishing marks</string>
+    <string name="vehicle_description">Additional vehicle description</string>
+    <string name="emergency_lights_status">Emergency lights</string>
+    <string name="siren_status">Siren</string>
+    <string name="status_unknown">Unknown / not observed</string>
+    <string name="status_on">Active / audible</string>
+    <string name="status_off">Not active / not audible</string>
+    <string name="police_interaction_title">Police interaction or complaint</string>
+    <string name="police_observation_notice">Check only what you personally observed. Use the narrative box for names, badge numbers, sequence of events, and context.</string>
+    <string name="police_observations_title">Observed actions or response</string>
+    <string name="police_observation_red_signal">Entered an intersection against a red signal</string>
+    <string name="police_observation_stop_sign">Did not stop at a stop sign</string>
+    <string name="police_observation_speed">Speed appeared unsafe for the conditions</string>
+    <string name="police_observation_yield">Did not yield to a pedestrian</string>
+    <string name="police_observation_blocked">Stopped or parked in a crosswalk or sidewalk</string>
+    <string name="police_observation_aggressive">Aggressive, intimidating, or threatening conduct observed</string>
+    <string name="police_observation_not_taken">Complaint or incident report was not taken</string>
+    <string name="police_observation_identification">Requested officer name or badge number was not provided</string>
+    <string name="police_observation_follow_up">No follow-up was provided or observed</string>
+    <string name="police_observation_helpful">Professional or helpful response observed</string>
+    <string name="police_complaint_details">Police complaint or interaction details</string>
+    <string name="nearest_intersection_title">Closest intersection estimate</string>
+    <string name="nearest_intersection_waiting">Waiting for GPS or a dropped pin</string>
+    <string name="nearest_intersection_checking">Checking nearby roads…</string>
+    <string name="nearest_intersection_unknown">Not determined</string>
+    <string name="intersection_optional_note">Optional: drop or move the pin on the map, or name the roadway/intersection later in Additional information.</string>
+    <string name="no_report_pin">No report pin set. Quick Report can still be submitted.</string>
+    <string name="choose_report_path_error">Choose Quick Report or Full Report to continue.</string>
+
+    <string name="saved_title">Saved reports</string>
+    <string name="saved_intro">Tap a report to review, retry submission, share, or delete it.</string>
+    <string name="saved_empty_title">No saved reports yet</string>
+    <string name="saved_empty_body">Choose a location on the map and complete a safety report.</string>
+    <string name="new_report">New report</string>
+    <string name="share_report">Share</string>
+    <string name="delete_report">Delete</string>
+    <string name="close">Close</string>
+    <string name="delete_title">Delete this report?</string>
+    <string name="delete_message">This removes the local copy and cancels queued submission. It cannot remove a report already received by the server.</string>
+    <string name="cancel">Cancel</string>
+    <string name="report_deleted">Report deleted.</string>
+    <string name="share_chooser">Share safety report</string>
+    <string name="no_details">No additional information provided.</string>
+    <string name="details_dialog_title">Safety report details</string>
+    <string name="retry_submission">Retry submission</string>
+    <string name="submission_requeued">Report queued for another submission attempt.</string>
+    <string name="submission_error_format">Last submission result: %1$s</string>
+    <string name="official_email_authorized_status">[TEST] email to the ColumbiaWalks-controlled test mailbox authorized after upload</string>
+
+    <string name="feedback_title">App feedback</string>
+    <string name="feedback_intro">Help improve ColumbiaWalks. Feedback is anonymous by default, and no separate subject is needed.</string>
+    <string name="feedback_reason_label">Reason for feedback</string>
+    <string name="feedback_reason_prompt">Select a reason…</string>
+    <string name="feedback_reason_app">App Feedback</string>
+    <string name="feedback_reason_feature">Feature Request</string>
+    <string name="feedback_reason_bug">Bug Report</string>
+    <string name="feedback_reason_other">Other</string>
+    <string name="feedback_text_label">Your feedback</string>
+    <string name="feedback_text_hint">Tell us what worked, what did not, or what you would like to see.</string>
+    <string name="feedback_text_helper">Required after a reason is selected. Tell us what worked, what did not, or what you would like to see.</string>
+    <string name="feedback_contact_question">Would you like to provide contact information?</string>
+    <string name="feedback_contact_optional">Every contact field is optional.</string>
+    <string name="feedback_contact_no">No, submit anonymously</string>
+    <string name="feedback_contact_yes">Yes, show the optional contact fields</string>
+    <string name="feedback_name">Name (optional)</string>
+    <string name="feedback_phone">Phone number (optional)</string>
+    <string name="feedback_email">Email address (optional)</string>
+    <string name="feedback_address">Street address (optional)</string>
+    <string name="feedback_contact_notes">Additional contact details or notes (optional)</string>
+    <string name="feedback_consent">I consent to being contacted about this feedback.</string>
+    <string name="feedback_privacy">Contact information stays hidden unless you opt in. Providing it does not grant permission to contact you unless you also select the consent box. Reports go first to ColumbiaWalks. Only a qualifying Crosswalk Encroachment or Missing Sidewalk report can authorize a [TEST] email to the ColumbiaWalks-controlled test mailbox. This 3.16 field-test build does not send those emails to the Police Chief, Mayor, Codes, or any other government recipient; all other reports and feedback remain within ColumbiaWalks unless disclosure is required by law or needed to protect people, rights, or the service.</string>
+    <string name="privacy_policy_link">Privacy policy: https://www.columbiawalks.com/privacy-policy/</string>
+    <string name="submit_feedback">Submit feedback</string>
+    <string name="feedback_reason_error">Select a reason for your feedback.</string>
+    <string name="feedback_text_error">Enter your feedback before submitting.</string>
+    <string name="feedback_queued_confirmation">Feedback saved privately and queued for secure submission.</string>
+    <string name="feedback_queue_error">The feedback could not be saved. Please try again.</string>
+
+    <string-array name="feedback_reason_labels">
+        <item>@string/feedback_reason_prompt</item>
+        <item>@string/feedback_reason_app</item>
+        <item>@string/feedback_reason_feature</item>
+        <item>@string/feedback_reason_bug</item>
+        <item>@string/feedback_reason_other</item>
+    </string-array>
+
+    <string name="back_to_community">← Community</string>
+    <string name="required_field">Required</string>
+    <string name="phone_app_unavailable">A phone app is not available on this device.</string>
+    <string name="browser_unavailable">A web browser is not available on this device.</string>
+
+    <string name="community_title">Community</string>
+    <string name="community_intro">Choose the destination that matches what you want to do. Each option explains where the information goes before you continue.</string>
+    <string name="community_police_heading">Columbia Borough Police</string>
+    <string name="community_police_body">Prepare text locally for a past, non-active anonymous tip, then finish it on the Police Department’s official website. ColumbiaWalks does not receive the tip or media.</string>
+    <string name="community_police_action">Prepare an Anonymous Police Tip</string>
+    <string name="community_trash_heading">Trash cans</string>
+    <string name="community_trash_body">Comment on a public trash can, or send ColumbiaWalks a separate private can complaint.</string>
+    <string name="community_trash_action">Trash Can Comments &amp; Complaints</string>
+    <string name="community_feedback_heading">ColumbiaWalks app feedback</string>
+    <string name="community_feedback_body">Send an anonymous app comment, feature request, or bug report to ColumbiaWalks.</string>
+    <string name="community_feedback_action">Open App Feedback</string>
+
+    <string name="police_tip_title">Prepare an Anonymous Police Tip</string>
+    <string name="police_tip_local_only_intro">This tool only prepares text on your phone. It does not send a tip, upload a license-plate image, video, audio, document, or other media, or transmit anything to ColumbiaWalks. You will open and complete the Police Department’s official form yourself.</string>
+    <string name="police_tip_emergency_heading">Emergency or incident in progress?</string>
+    <string name="police_tip_emergency_body">Call 911 now. Do not use an online form when someone is in danger, urgent help is needed, or an incident is happening now.</string>
+    <string name="police_tip_call_911">Call 911</string>
+    <string name="police_tip_phone_heading">Non-emergency phone options</string>
+    <string name="police_tip_call_dispatch">Lancaster County dispatch: 717-664-1180</string>
+    <string name="police_tip_call_dispatch_toll_free">Dispatch toll-free: 1-800-957-2677</string>
+    <string name="police_tip_call_station">Columbia Borough Police station: 717-684-7735</string>
+    <string name="police_tip_inactive_confirmation">I confirm this is a past or non-active matter and no immediate response is needed.</string>
+    <string name="police_tip_details_heading">Prepare the tip text</string>
+    <string name="police_tip_required_helper">Subject, observed date/time, location, and your firsthand observation are required. Enter only what you personally observed; do not guess.</string>
+    <string name="police_tip_subject_label">Subject *</string>
+    <string name="police_tip_observed_time_label">Observed date and time *</string>
+    <string name="police_tip_observed_time_helper">Use plain text, for example: September 18, 2026 around 3:15 PM.</string>
+    <string name="police_tip_location_label">Location or nearest address *</string>
+    <string name="police_tip_direction_label">Direction of travel (optional)</string>
+    <string name="police_tip_plate_label">License plate (optional)</string>
+    <string name="police_tip_plate_state_label">State (optional)</string>
+    <string name="police_tip_vehicle_label">Vehicle description (optional)</string>
+    <string name="police_tip_observation_label">What you personally observed *</string>
+    <string name="police_tip_observation_helper">Describe only your firsthand observation. Include actions and identifying details without stating guesses as facts.</string>
+    <string name="police_tip_evidence_label">Evidence notes (optional)</string>
+    <string name="police_tip_evidence_helper">List the original photos, plate shots, video, audio, or documents you can attach later. Media stays on your device and is not uploaded by ColumbiaWalks.</string>
+    <string name="police_tip_prepare_action">Prepare Subject &amp; Narrative</string>
+    <string name="police_tip_prepared_heading">Prepared for the official form</string>
+    <string name="police_tip_not_submitted_warning">NOT SUBMITTED YET — copying or opening the website does not send a tip.</string>
+    <string name="police_tip_subject_output_label">Subject</string>
+    <string name="police_tip_narrative_output_label">Narrative</string>
+    <string name="police_tip_copy_action">Copy Subject &amp; Narrative</string>
+    <string name="police_tip_official_steps">On the official Police Department page: (1) choose Anonymous, (2) choose Other, (3) paste the prepared subject and narrative, (4) attach original evidence if appropriate — JPG, JPEG, PNG, TXT, PDF, AVI, MOV, MP4, MP3, or WAV, (5) personally read and make the required attestation, (6) complete reCAPTCHA, and (7) press the website’s Submit button. Review the text and attachments yourself before submitting.</string>
+    <string name="police_tip_open_official_action">Open Official Anonymous Tip Form</string>
+    <string name="police_tip_other_forms_heading">Other official Police Department forms</string>
+    <string name="police_tip_formal_report_action">Formal Incident Report</string>
+    <string name="police_tip_officer_conduct_action">Officer Conduct — Citizen Complaint Form</string>
+    <string name="police_tip_confirm_inactive_error">Confirm that this is a past or non-active matter. Call 911 for an emergency or incident in progress.</string>
+    <string name="police_tip_field_too_long">One or more fields are too long. Shorten the text and try again.</string>
+    <string name="police_tip_prepared_not_submitted">Text prepared locally. Nothing has been submitted.</string>
+    <string name="police_tip_opening_not_submitted">Opening the official Police Department site. Your tip is not submitted yet.</string>
+    <string name="police_tip_clipboard_label">Anonymous police tip draft</string>
+    <string name="police_tip_copied">Subject and narrative copied. Nothing has been submitted.</string>
+    <string name="police_tip_copy_failed">The prepared text could not be copied.</string>
+
+    <string name="trash_can_title">Trash Can Comments &amp; Complaints</string>
+    <string name="trash_can_intro">Use Public Comment for a public trash can. Use Can Complaint for a separate private submission to ColumbiaWalks.</string>
+    <string name="trash_can_mode_label">What would you like to send?</string>
+    <string name="trash_can_public_comment">Public trash-can comment</string>
+    <string name="trash_can_private_complaint">Can complaint (private)</string>
+    <string name="trash_can_public_disclosure">PUBLIC COMMENT: This submission is sent to ColumbiaWalks for moderation and may be published. It is always marked as a public trash-can asset. Do not include private or sensitive personal information.</string>
+    <string name="trash_can_complaint_disclosure">PRIVATE COMPLAINT: This submission is sent privately to ColumbiaWalks and is not published. ColumbiaWalks does not automatically forward it to Columbia Borough or any government agency. This is not an emergency or service-request guarantee.</string>
+    <string name="trash_can_category_label">Category *</string>
+    <string name="trash_can_category_prompt">Select a category…</string>
+    <string name="trash_can_comment_label">Comment *</string>
+    <string name="trash_can_comment_helper">Required, 3–2,000 characters. Describe the condition and what action would help.</string>
+    <string name="trash_can_address_label">Location or address *</string>
+    <string name="trash_can_address_helper">Required. Enter the nearest street address, intersection, park, or landmark.</string>
+    <string name="trash_can_scope_label">Trash-can asset scope</string>
+    <string name="trash_can_scope_helper">This describes the can or requested location, not who can see your submission. Public comments are locked to Public trash can.</string>
+    <string name="trash_can_scope_public">Public trash can</string>
+    <string name="trash_can_scope_private">Can on private property</string>
+    <string name="trash_can_scope_unknown">Unknown</string>
+    <string name="trash_can_pin_heading">Confirmed map pin (optional)</string>
+    <string name="trash_can_no_pin">No confirmed map pin is available. The typed location is still required.</string>
+    <string name="trash_can_pin_format">Available pin: %1$.6f, %2$.6f</string>
+    <string name="trash_can_use_pin">Include this confirmed latitude and longitude</string>
+    <string name="trash_can_choose_pin">Choose or Confirm a Pin on Map</string>
+    <string name="trash_can_submit">Save &amp; Queue Submission</string>
+    <string name="trash_can_queue_privacy">The JSON submission is first stored in the app’s no-backup local queue, then securely retried when a network is available. This form does not attach photos or other media.</string>
+    <string name="trash_can_category_error">Select a category.</string>
+    <string name="trash_can_comment_error">Enter at least 3 characters, up to 2,000.</string>
+    <string name="trash_can_address_error">Enter the trash can’s location or address.</string>
+    <string name="trash_can_validation_error">Review the form values and try again.</string>
+    <string name="trash_can_public_queued">Public comment saved and queued for moderation. It may be published after review.</string>
+    <string name="trash_can_complaint_queued">Private can complaint saved and queued to ColumbiaWalks. It is not automatically forwarded to the Borough.</string>
+    <string name="trash_can_queue_error">The trash-can submission could not be saved. Please try again.</string>
+
+    <string-array name="trash_can_public_category_labels">
+        <item>@string/trash_can_category_prompt</item>
+        <item>Clean / well maintained</item>
+        <item>Needs cleaning</item>
+        <item>Full or overflowing</item>
+        <item>Damaged</item>
+        <item>Hard to access</item>
+        <item>Poor location</item>
+        <item>Request a new can</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="trash_can_complaint_category_labels">
+        <item>@string/trash_can_category_prompt</item>
+        <item>Full or overflowing</item>
+        <item>Damaged</item>
+        <item>Missing</item>
+        <item>Odor or pests</item>
+        <item>Illegal dumping</item>
+        <item>Unsafe or obstructing</item>
+        <item>Missed service</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="trash_can_scope_labels">
+        <item>@string/trash_can_scope_public</item>
+        <item>@string/trash_can_scope_private</item>
+        <item>@string/trash_can_scope_unknown</item>
+    </string-array>
+    <string name="update_available_title">ColumbiaWalks update available</string>
+    <string name="update_available_message">Version %1$s is ready.\n\n%2$s</string>
+    <string name="update_download">Download update</string>
+    <string name="update_later">Later</string>
+    <string name="update_release_page">Release details</string>
+    <string name="update_no_release_notes">This release includes improvements and fixes.</string>
+    <string name="update_downloading_title">Downloading update</string>
+    <string name="update_downloading_message">ColumbiaWalks will verify the download before opening Android’s installer.</string>
+    <string name="update_permission_title">Allow ColumbiaWalks updates</string>
+    <string name="update_permission_message">Android needs your permission to install updates downloaded by ColumbiaWalks. Enable “Allow from this source,” then return to the app.</string>
+    <string name="update_open_settings">Open settings</string>
+    <string name="update_permission_not_granted">Installation permission was not enabled. You can try again on the next update prompt.</string>
+    <string name="update_failed">The update could not be verified or opened. Please try again later.</string>
+</resources>
