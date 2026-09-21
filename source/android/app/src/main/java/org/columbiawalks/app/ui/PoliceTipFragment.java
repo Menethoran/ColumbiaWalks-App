@@ -28,6 +28,19 @@ import org.columbiawalks.app.R;
 import org.columbiawalks.app.domain.PoliceTipDraft;
 
 public final class PoliceTipFragment extends Fragment {
+    public static final String REPORT_HANDOFF_REQUEST =
+            "police_tip_report_handoff";
+    private static final String STATE_SOURCE_WAS_CW =
+            "police_tip_source_was_cw";
+    private static final String HANDOFF_SOURCE_WAS_CW = "source_was_cw";
+    private static final String HANDOFF_SUBJECT = "subject";
+    private static final String HANDOFF_OBSERVED_TIME = "observed_time";
+    private static final String HANDOFF_LOCATION = "location";
+    private static final String HANDOFF_LICENSE_PLATE = "license_plate";
+    private static final String HANDOFF_PLATE_STATE = "plate_state";
+    private static final String HANDOFF_VEHICLE = "vehicle";
+    private static final String HANDOFF_OBSERVATION = "observation";
+    private static final String HANDOFF_EVIDENCE = "evidence";
     private static final String OFFICIAL_TIP_URL =
             "https://crimewatch.net/us/pa/lancaster/"
                     + "columbia-boro-pd/10552/submit-tip";
@@ -52,11 +65,42 @@ public final class PoliceTipFragment extends Fragment {
     private TextInputEditText vehicleDescription;
     private TextInputEditText observation;
     private TextInputEditText evidenceNotes;
+    private TextView privacyIntro;
     private View preparedContainer;
     private TextView preparedSubject;
     private TextView preparedNarrative;
     @Nullable
     private PoliceTipDraft.PreparedTip preparedTip;
+    private boolean sourceWasSubmittedToColumbiaWalks;
+
+    static Bundle newReportHandoff(
+            String subject,
+            String observedTime,
+            String location,
+            String licensePlate,
+            String plateState,
+            String vehicleDescription,
+            String observation,
+            String evidenceNotes
+    ) {
+        Bundle handoff = new Bundle();
+        handoff.putBoolean(HANDOFF_SOURCE_WAS_CW, true);
+        handoff.putString(HANDOFF_SUBJECT, subject);
+        handoff.putString(HANDOFF_OBSERVED_TIME, observedTime);
+        handoff.putString(HANDOFF_LOCATION, location);
+        handoff.putString(HANDOFF_LICENSE_PLATE, licensePlate);
+        handoff.putString(HANDOFF_PLATE_STATE, plateState);
+        handoff.putString(HANDOFF_VEHICLE, vehicleDescription);
+        handoff.putString(HANDOFF_OBSERVATION, observation);
+        handoff.putString(HANDOFF_EVIDENCE, evidenceNotes);
+        return handoff;
+    }
+
+    public static Bundle newStandaloneRequest() {
+        Bundle request = new Bundle();
+        request.putBoolean(HANDOFF_SOURCE_WAS_CW, false);
+        return request;
+    }
 
     @Nullable
     @Override
@@ -98,6 +142,16 @@ public final class PoliceTipFragment extends Fragment {
         );
         observation = view.findViewById(R.id.police_tip_observation);
         evidenceNotes = view.findViewById(R.id.police_tip_evidence_notes);
+        privacyIntro = view.findViewById(R.id.police_tip_privacy_intro);
+        if (savedInstanceState != null) {
+            sourceWasSubmittedToColumbiaWalks = savedInstanceState.getBoolean(
+                    STATE_SOURCE_WAS_CW,
+                    false
+            );
+            privacyIntro.setText(sourceWasSubmittedToColumbiaWalks
+                    ? R.string.police_tip_cw_handoff_intro
+                    : R.string.police_tip_local_only_intro);
+        }
         preparedContainer = view.findViewById(
                 R.id.police_tip_prepared_container
         );
@@ -182,6 +236,11 @@ public final class PoliceTipFragment extends Fragment {
         inactiveConfirmation.setOnCheckedChangeListener(
                 (button, checked) -> invalidatePreparedTip()
         );
+        getParentFragmentManager().setFragmentResultListener(
+                REPORT_HANDOFF_REQUEST,
+                getViewLifecycleOwner(),
+                (requestKey, handoff) -> applyReportHandoff(handoff)
+        );
     }
 
     private boolean prepareTip() {
@@ -197,6 +256,8 @@ public final class PoliceTipFragment extends Fragment {
                 .setVehicleDescription(value(vehicleDescription))
                 .setFirsthandObservation(value(observation))
                 .setEvidenceNotes(value(evidenceNotes))
+                .setSourceWasSubmittedToColumbiaWalks(
+                        sourceWasSubmittedToColumbiaWalks)
                 .build();
         PoliceTipDraft.ValidationResult validation = draft.validate();
         if (validation != PoliceTipDraft.ValidationResult.VALID) {
@@ -295,6 +356,59 @@ public final class PoliceTipFragment extends Fragment {
         if (preparedContainer != null) {
             preparedContainer.setVisibility(View.GONE);
         }
+    }
+
+    private void applyReportHandoff(Bundle handoff) {
+        boolean submittedToCw = handoff.getBoolean(
+                HANDOFF_SOURCE_WAS_CW,
+                false
+        );
+        if (!submittedToCw) {
+            if (sourceWasSubmittedToColumbiaWalks) {
+                clearDraftFields();
+                sourceWasSubmittedToColumbiaWalks = false;
+                privacyIntro.setText(R.string.police_tip_local_only_intro);
+                invalidatePreparedTip();
+            }
+            return;
+        }
+        clearDraftFields();
+        sourceWasSubmittedToColumbiaWalks = true;
+        subject.setText(handoff.getString(HANDOFF_SUBJECT, ""));
+        observedTime.setText(handoff.getString(
+                HANDOFF_OBSERVED_TIME, ""));
+        location.setText(handoff.getString(HANDOFF_LOCATION, ""));
+        licensePlate.setText(handoff.getString(
+                HANDOFF_LICENSE_PLATE, ""));
+        plateState.setText(handoff.getString(HANDOFF_PLATE_STATE, ""));
+        vehicleDescription.setText(handoff.getString(HANDOFF_VEHICLE, ""));
+        observation.setText(handoff.getString(HANDOFF_OBSERVATION, ""));
+        evidenceNotes.setText(handoff.getString(HANDOFF_EVIDENCE, ""));
+        inactiveConfirmation.setChecked(false);
+        privacyIntro.setText(R.string.police_tip_cw_handoff_intro);
+        invalidatePreparedTip();
+    }
+
+    private void clearDraftFields() {
+        subject.setText("");
+        observedTime.setText("");
+        location.setText("");
+        direction.setText("");
+        licensePlate.setText("");
+        plateState.setText("");
+        vehicleDescription.setText("");
+        observation.setText("");
+        evidenceNotes.setText("");
+        inactiveConfirmation.setChecked(false);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(
+                STATE_SOURCE_WAS_CW,
+                sourceWasSubmittedToColumbiaWalks
+        );
     }
 
     private void dial(String number) {

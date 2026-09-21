@@ -1,6 +1,6 @@
-# Google Play data-safety answers for 3.16.0
+# Google Play data-safety answers for 3.16.1
 
-These answers describe the Android 3.16.0 `playRelease` field-test bundle and
+These answers describe the Android 3.16.1 `playRelease` field-test bundle and
 the matching ColumbiaWalks intake configuration. Delivery defaults to disabled
 and destination defaults to test. Eligible messages authorized specifically
 for testing go only to a server-configured ColumbiaWalks test mailbox with a
@@ -12,15 +12,15 @@ official destination requires a later disclosure and Data Safety review.
 ## Security and account access
 
 - Data is encrypted in transit: Yes (HTTPS)
-- Users can request deletion: Yes, through Community > App Feedback
+- Users can request deletion: Yes, through Community > Contact Us
 - Account creation: Not supported or required
 - Independent security review: No
 - Android backup of ColumbiaWalks private local data: Disabled
 
-The Community tab adds two independently handled features. Police-tip drafts
-are prepared locally and copied to the clipboard; ColumbiaWalks does not
-collect that text or the evidence the user later chooses on the external
-Police Department site. Trash-can comments and complaints are collected by
+The Community tab adds independently handled features. Standalone police-tip
+drafts are prepared locally and copied to the clipboard. A draft prepared after
+Submit to CW & Notify CBPD uses fields from the CW report already saved, but
+ColumbiaWalks does not send the draft or evidence to CBPD. Trash-can comments and complaints are collected by
 ColumbiaWalks without account or contact fields and are queued in Android's
 no-backup storage until upload succeeds.
 
@@ -31,8 +31,9 @@ public-records obligations.
 
 ## Data collected and shared
 
-Reports are received by ColumbiaWalks first. A user can authorize field-test
-email only for these exact report types:
+Reports are received by ColumbiaWalks first. The field-test control is
+collapsed and off by default. A user can opt in only for these exact report
+types:
 
 - `crosswalk_encroachment`, or Repeat Reporting `crosswalk_incursion`, to the
   the police-and-mayor logical route;
@@ -40,7 +41,7 @@ email only for these exact report types:
 
 Both logical routes are intercepted by the one configured ColumbiaWalks test
 mailbox in this build; Cc is empty and `[TEST]` is the first subject token. No
-other report type generates email. Feedback contact submissions, walking
+other report type generates email. Contact Us submissions, walking
 summaries, and Health Connect summaries are not forwarded through this feature.
 The Android app contains neither Gmail credentials nor any mailbox address.
 
@@ -49,11 +50,11 @@ The Android app contains neither Gmail credentials nor any mailbox address.
 - Approximate location: optional, collected and shared with Open-Meteo for app
   functionality after server-side rounding to two decimal places
 - Precise location: optional, collected for app functionality
-- Shared with a government recipient through 3.16 field-test email: **No**
+- Shared with a government recipient through 3.16.1 field-test email: **No**
 
 Location is attached when the user selects or confirms a report location.
-Automatic official email requires a confirmed report location within 5 km of
-Columbia Borough center.
+The optional field-test email requires a confirmed report location within 5 km
+of Columbia Borough center. Standard CW reports remain usable without it.
 For an authorized eligible field-test report, the report location is sent only
 to the configured ColumbiaWalks test mailbox.
 
@@ -82,19 +83,20 @@ server-side processing.
 ### Photos and videos
 
 - Photos: optional, collected for app functionality
-- Shared with a government recipient through 3.16 field-test email: **No**
+- Shared with a government recipient through 3.16.1 field-test email: **No**
 
 The app removes embedded photo metadata before saving or uploading a processed
-report photo. Automatic official email requires a stored report photo, and the
-processed photo is attached to an authorized eligible official email.
+report photo. A standard report photo is optional. The separate field-test
+opt-in requires a stored report photo, which is attached if the eligible test
+message is processed.
 
 A photo and optional description submitted through the Page of Shame path may
 be published only after the user chooses that path and a ColumbiaWalks
 administrator approves the sanitized copy. That separate path is not an
-automatic official email.
+optional field-test email.
 
-The 3.16 mobile trash-can form does not accept photos or video. The local
-police-tip assistant does not select, read, or upload evidence; if the user
+The 3.16 mobile trash-can form does not accept photos or video. The
+police-tip assistant does not select, read, or upload evidence to CBPD; if the user
 continues, evidence is chosen directly on the external Police Department form
 under that site's handling and privacy terms.
 
@@ -119,16 +121,16 @@ included in official email.
 - Address: optional, collected for developer communications
 - Other information supplied by the user: optional, collected for app
   functionality and developer communications
-- Shared with third parties through automatic official email: No
+- Shared with third parties through the optional field-test email: No
 
 These contact fields appear only when a user chooses to offer contact
-information in Feedback. Permission to contact the user is a separate opt-in.
-Feedback contact information is not included in automatic official email.
+information in Contact Us feedback. Permission to contact the user is a
+separate opt-in. Contact information is not included in field-test email.
 
 ### User-generated content
 
 - Other user-generated content: collected for app functionality
-- Shared with a government recipient through 3.16 field-test email: **No**
+- Shared with a government recipient through 3.16.1 field-test email: **No**
 
 This includes safety-report selections, narratives, comments, observed vehicle
 information, pedestrian-profile answers, and police-interaction observations.
@@ -144,7 +146,9 @@ when linked to a verified active public-can inventory item. The raw comment,
 submitted address or coordinates, submission identifier, and source metadata
 are not published. Can complaints use a separate private collection and are
 not automatically forwarded to Columbia Borough or another government agency.
-Police-tip draft text is not collected by ColumbiaWalks.
+A standalone police-tip draft is not collected by ColumbiaWalks. A handoff
+draft can be derived from a CW report that was already collected, but the draft
+is not sent to CBPD by ColumbiaWalks.
 
 ## Data not collected by the Play build
 
@@ -187,8 +191,8 @@ Before rollout, verify that the Play Console form matches this file:
 - Police-tip drafts and police-tip evidence: not collected by ColumbiaWalks;
   final entry, attachment, attestation, reCAPTCHA, and submission occur on the
   external official Police Department site.
-- Feedback contact fields: collected for developer communications and not
-  shared through the automatic official-email feature.
+- Contact Us feedback fields: collected for developer communications and not
+  shared through the optional field-test-email feature.
 - Health and fitness aggregates: collected and not shared.
 - Open-Meteo processing is server-side, is not used for advertising or
   tracking, adds no phone permission, and cannot block report acceptance.

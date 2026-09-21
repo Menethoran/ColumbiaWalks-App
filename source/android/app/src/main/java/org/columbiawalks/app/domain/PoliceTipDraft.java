@@ -33,6 +33,7 @@ public final class PoliceTipDraft {
     private final String vehicleDescription;
     private final String firsthandObservation;
     private final String evidenceNotes;
+    private final boolean sourceWasSubmittedToColumbiaWalks;
 
     private PoliceTipDraft(Builder builder) {
         pastOrInactiveConfirmed = builder.pastOrInactiveConfirmed;
@@ -45,6 +46,8 @@ public final class PoliceTipDraft {
         vehicleDescription = clean(builder.vehicleDescription);
         firsthandObservation = clean(builder.firsthandObservation);
         evidenceNotes = clean(builder.evidenceNotes);
+        sourceWasSubmittedToColumbiaWalks =
+                builder.sourceWasSubmittedToColumbiaWalks;
     }
 
     public ValidationResult validate() {
@@ -107,10 +110,12 @@ public final class PoliceTipDraft {
         );
         sections.add("Firsthand observation:\n" + firsthandObservation);
         addIfPresent(sections, "Evidence available:\n", evidenceNotes);
-        sections.add(
-                "Prepared locally in ColumbiaWalks. No tip text or media "
-                        + "was sent to ColumbiaWalks."
-        );
+        sections.add(sourceWasSubmittedToColumbiaWalks
+                ? "This report was saved to ColumbiaWalks. ColumbiaWalks "
+                + "did not send this draft or media to CBPD; I am "
+                + "submitting it personally through the official form."
+                : "Prepared locally in ColumbiaWalks. No tip text or media "
+                + "was sent to ColumbiaWalks or CBPD.");
 
         String narrative = String.join("\n\n", sections);
         return new PreparedTip(
@@ -183,6 +188,7 @@ public final class PoliceTipDraft {
         private String vehicleDescription;
         private String firsthandObservation;
         private String evidenceNotes;
+        private boolean sourceWasSubmittedToColumbiaWalks;
 
         public Builder setPastOrInactiveConfirmed(boolean confirmed) {
             pastOrInactiveConfirmed = confirmed;
@@ -231,6 +237,11 @@ public final class PoliceTipDraft {
 
         public Builder setEvidenceNotes(String value) {
             evidenceNotes = value;
+            return this;
+        }
+
+        public Builder setSourceWasSubmittedToColumbiaWalks(boolean value) {
+            sourceWasSubmittedToColumbiaWalks = value;
             return this;
         }
 

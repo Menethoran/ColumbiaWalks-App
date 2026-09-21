@@ -11,6 +11,7 @@ struct PoliceTipDraft: Equatable {
     var firsthandObservation = ""
     var evidenceNotes = ""
     var isPastAndNotInProgress = false
+    var sourceWasSubmittedToColumbiaWalks = false
 }
 
 struct PreparedPoliceTip: Equatable {
@@ -91,7 +92,9 @@ enum PoliceTipDraftBuilder {
             "Vehicle description:\n\(valueOrNotProvided(draft.vehicleDescription))",
             "Firsthand observation:\n\(valueOrNotProvided(draft.firsthandObservation))",
             "Evidence notes:\n\(valueOrNotProvided(draft.evidenceNotes))",
-            "Local-only privacy note: This draft and any media were not sent to ColumbiaWalks."
+            draft.sourceWasSubmittedToColumbiaWalks
+                ? "Handoff note: This report was saved to ColumbiaWalks. ColumbiaWalks did not send this draft or any media to CBPD; I am submitting it personally through the official form."
+                : "Local-only privacy note: This draft and any media were not sent to ColumbiaWalks or CBPD."
         ].joined(separator: "\n\n")
     }
 

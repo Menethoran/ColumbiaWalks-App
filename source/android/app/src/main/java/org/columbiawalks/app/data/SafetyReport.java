@@ -644,7 +644,7 @@ public final class SafetyReport {
         if (OFFICIAL_EMAIL_DESTINATION_OFFICIAL.equals(
                 officialEmailDestinationMode)) {
             return "server-reported official-recipient email "
-                    + "(unexpected in this 3.16 field test)";
+                    + "(unexpected in this 3.16.1 field test)";
         }
         return "[TEST] email to the ColumbiaWalks-controlled test mailbox";
     }

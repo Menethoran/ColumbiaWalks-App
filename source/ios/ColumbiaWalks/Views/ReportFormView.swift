@@ -25,7 +25,13 @@ struct ReportFormView: View {
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
     @State private var showCamera = false
+    @State private var showLocationDetails = false
+    @State private var showIdentificationDetails = false
     @State private var showCoordinateEditor = false
+    @State private var showTestEmailDetails = false
+    @State private var testEmailOptIn = false
+    @State private var showAuthoritiesHandoff = false
+    @State private var authoritiesDraft = PoliceTipDraft()
     @State private var manualLatitude = ""
     @State private var manualLongitude = ""
     @State private var errorMessage: String?
@@ -62,11 +68,8 @@ struct ReportFormView: View {
                     checklistSection
                 }
 
-                if !officialEmailDestinations.isEmpty {
-                    OfficialEmailDisclosure(destinations: officialEmailDestinations)
-                }
-
                 locationSection
+
                 identificationSection
 
                 if showPoliceSection {
@@ -91,6 +94,15 @@ struct ReportFormView: View {
 
                 photoSection
 
+                if !officialEmailDestinations.isEmpty {
+                    OfficialEmailDisclosure(
+                        destinations: officialEmailDestinations,
+                        isOptedIn: $testEmailOptIn,
+                        isExpanded: $showTestEmailDetails,
+                        requirementsMet: testEmailRequirementsMet
+                    )
+                }
+
                 if let errorMessage {
                     Section {
                         Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -100,18 +112,38 @@ struct ReportFormView: View {
 
                 Section {
                     Button {
-                        saveReport()
+                        saveReport(notifyAuthorities: false)
                     } label: {
-                        Label(submitButtonLabel, systemImage: "paperplane.fill")
+                        Label("Submit complaint to CW", systemImage: "paperplane.fill")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
+
+                    Button {
+                        saveReport(notifyAuthorities: true)
+                    } label: {
+                        Label("Submit to CW & Notify CBPD", systemImage: "building.columns.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                } header: {
+                    Text("Submit")
                 } footer: {
-                    Text("No Directus credential is stored in this app. The server validates and processes the report through the public intake endpoint.")
+                    Text("The second option saves the CW report, then opens a prepared anonymous-tip draft. You must review and submit it yourself on CBPD's official site; opening that site is not delivery.")
                 }
 
-                Section("Photo-first report") {
+                Section("More reporting options") {
+                    NavigationLink {
+                        PoliceTipView()
+                    } label: {
+                        Label("Notify the Authorities", systemImage: "building.columns")
+                    }
+                    Text("Prepare an anonymous tip without first submitting a CW report. ColumbiaWalks does not automatically send it to police.")
+                        .font(.footnote)
+                        .foregroundStyle(Color.cwTextSecondary)
+
                     NavigationLink {
                         PageOfShameView()
                     } label: {
@@ -133,6 +165,8 @@ struct ReportFormView: View {
                 } else {
                     quickTypes.removeAll()
                 }
+                testEmailOptIn = false
+                showTestEmailDetails = false
             }
             .onChange(of: reportedParty) { _, party in
                 if party == .policeOfficer { categories.insert(.policeResponse) }
@@ -144,8 +178,23 @@ struct ReportFormView: View {
                 guard let item else { return }
                 loadPhoto(item)
             }
+            .onChange(of: appState.reportLocation) { _, _ in
+                if testEmailOptIn && !testEmailRequirementsMet {
+                    testEmailOptIn = false
+                }
+            }
             .sheet(isPresented: $showCamera) {
                 CameraCaptureSheet(onImage: applyCameraPhoto)
+            }
+            .sheet(isPresented: $showAuthoritiesHandoff) {
+                NavigationStack {
+                    PoliceTipView(initialDraft: authoritiesDraft)
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Close") { showAuthoritiesHandoff = false }
+                            }
+                        }
+                }
             }
             .task {
                 guard !requestedInitialLocation, mode == .quick, !appState.locationConfirmed else { return }
@@ -158,7 +207,7 @@ struct ReportFormView: View {
 
     private var quickSection: some View {
         Section("Quick complaint types (optional)") {
-            Text("Choose every complaint that applies, or submit without selecting one. The 3.16 test email is available only when Crosswalk encroachment or Missing sidewalk is the single selected type.")
+            Text("Choose every complaint that applies, or submit without selecting one. An optional test-email control appears only when Crosswalk encroachment or Missing sidewalk is the single selected type.")
                 .font(.footnote)
                 .foregroundStyle(Color.cwTextSecondary)
             ForEach(QuickReportType.allCases) { type in
@@ -167,13 +216,17 @@ struct ReportFormView: View {
                     if type == .crosswalkEncroachment, quickTypes.contains(type) {
                         vehicleInvolved = true
                     }
+                    if officialEmailDestinations.isEmpty {
+                        testEmailOptIn = false
+                        showTestEmailDetails = false
+                    }
                 }
             }
             if quickTypes.count > 1,
                quickTypes.contains(.crosswalkEncroachment) ||
                quickTypes.contains(.missingSidewalk) {
                 Label(
-                    "Multiple selections will be saved as an ordinary report without field-test email authorization.",
+                    "Multiple selections are saved as an ordinary CW report; the optional test-email control is unavailable.",
                     systemImage: "info.circle.fill"
                 )
                 .font(.footnote.weight(.semibold))
@@ -229,70 +282,74 @@ struct ReportFormView: View {
     }
 
     private var locationSection: some View {
-        Section("Location") {
-            if appState.locationConfirmed {
-                LabeledContent("Report pin") {
-                    Text(String(
-                        format: "%.6f, %.6f",
-                        appState.reportCoordinate.latitude,
-                        appState.reportCoordinate.longitude
-                    ))
-                    .monospacedDigit()
-                }
-                LabeledContent("Closest intersection") {
-                    if appState.intersectionLookupInProgress {
-                        ProgressView()
-                    } else {
-                        Text(appState.nearestIntersection?.label ?? "Not determined")
-                    }
-                }
-                if !ColumbiaArea.contains(appState.reportCoordinate) {
-                    Label("This point appears outside the Columbia area.", systemImage: "exclamationmark.triangle")
-                        .foregroundStyle(Color.cwWarning)
-                }
-                LabeledContent("Location source", value: appState.reportLocation.source.label)
-                if let photoCoordinate = appState.reportLocation.photoCoordinate {
-                    LabeledContent("Original photo GPS") {
+        Section("Location (optional for Quick Report)") {
+            DisclosureGroup(isExpanded: $showLocationDetails) {
+                if appState.locationConfirmed {
+                    LabeledContent("Report pin") {
                         Text(String(
                             format: "%.6f, %.6f",
-                            photoCoordinate.latitude,
-                            photoCoordinate.longitude
+                            appState.reportCoordinate.latitude,
+                            appState.reportCoordinate.longitude
                         ))
                         .monospacedDigit()
                     }
+                    LabeledContent("Closest intersection") {
+                        if appState.intersectionLookupInProgress {
+                            ProgressView()
+                        } else {
+                            Text(appState.nearestIntersection?.label ?? "Not determined")
+                        }
+                    }
+                    if !ColumbiaArea.contains(appState.reportCoordinate) {
+                        Label("This point appears outside the Columbia area.", systemImage: "exclamationmark.triangle")
+                            .foregroundStyle(Color.cwWarning)
+                    }
+                    LabeledContent("Location source", value: appState.reportLocation.source.label)
+                    if let photoCoordinate = appState.reportLocation.photoCoordinate {
+                        LabeledContent("Original photo GPS") {
+                            Text(String(
+                                format: "%.6f, %.6f",
+                                photoCoordinate.latitude,
+                                photoCoordinate.longitude
+                            ))
+                            .monospacedDigit()
+                        }
+                    }
+                } else {
+                    Text("No report pin set. Quick Report can still be submitted; Repeat and Page of Shame reports require a confirmed location.")
+                        .foregroundStyle(Color.cwTextSecondary)
                 }
-            } else {
-                Text(officialEmailDestinations.isEmpty
-                     ? "No report pin set. Quick Report can still be submitted; Repeat and Page of Shame reports require a confirmed location."
-                     : "A confirmed report location is required to authorize this 3.16 test-mailbox email after upload.")
-                    .foregroundStyle(Color.cwTextSecondary)
-            }
-            Button("Use current device GPS") {
-                location.requestLocation { appState.selectLocation($0, source: .deviceGPS) }
-            }
-            .disabled(location.isLocating)
-            Button("Choose or change on map") { appState.selectedTab = .map }
-            DisclosureGroup("Enter coordinates manually", isExpanded: $showCoordinateEditor) {
-                TextField("Latitude", text: $manualLatitude)
-                    .keyboardType(.numbersAndPunctuation)
-                TextField("Longitude", text: $manualLongitude)
-                    .keyboardType(.numbersAndPunctuation)
-                Button("Use these coordinates") { applyManualCoordinates() }
+                Button("Use current device GPS") {
+                    location.requestLocation { appState.selectLocation($0, source: .deviceGPS) }
+                }
+                .disabled(location.isLocating)
+                Button("Choose or change on map") { appState.selectedTab = .map }
+                DisclosureGroup("Enter coordinates manually", isExpanded: $showCoordinateEditor) {
+                    TextField("Latitude", text: $manualLatitude)
+                        .keyboardType(.numbersAndPunctuation)
+                    TextField("Longitude", text: $manualLongitude)
+                        .keyboardType(.numbersAndPunctuation)
+                    Button("Use these coordinates") { applyManualCoordinates() }
+                }
+            } label: {
+                Label(locationSummary, systemImage: "mappin.and.ellipse")
             }
         }
     }
 
     private var identificationSection: some View {
-        Section("Identify the person or vehicle (optional)") {
-            Text("Enter only details you safely observed. Do not approach or follow a vehicle.")
-                .font(.footnote)
-                .foregroundStyle(Color.cwTextSecondary)
-            Picker("Who is being reported?", selection: $reportedParty) {
-                ForEach(ReportedParty.allCases) { Text($0.label).tag($0) }
-            }
-            Toggle("A vehicle was involved", isOn: $vehicleInvolved.animation())
-            if vehicleInvolved {
-                VehicleFields(vehicle: $vehicle)
+        Section("People and vehicles (optional)") {
+            DisclosureGroup("Identification details", isExpanded: $showIdentificationDetails) {
+                Text("Enter only details you safely observed. Do not approach or follow a vehicle.")
+                    .font(.footnote)
+                    .foregroundStyle(Color.cwTextSecondary)
+                Picker("Who is being reported?", selection: $reportedParty) {
+                    ForEach(ReportedParty.allCases) { Text($0.label).tag($0) }
+                }
+                Toggle("A vehicle was involved", isOn: $vehicleInvolved.animation())
+                if vehicleInvolved {
+                    VehicleFields(vehicle: $vehicle)
+                }
             }
         }
     }
@@ -316,10 +373,8 @@ struct ReportFormView: View {
     }
 
     private var photoSection: some View {
-        Section(officialEmailDestinations.isEmpty ? "Photo (optional)" : "Photo (required for field-test email)") {
-            Text(officialEmailDestinations.isEmpty
-                 ? "Use a photo only when it is safe. If it contains GPS metadata, ColumbiaWalks uses those coordinates for the report, records the source, then removes the embedded metadata from the saved and uploaded JPEG."
-                 : "A relevant photo is required for this qualifying report. If the server processes the authorized [TEST]-subject email to the ColumbiaWalks-controlled test mailbox after upload, it includes the normalized photo; embedded metadata is removed from the saved and uploaded JPEG.")
+        Section("Photo (optional)") {
+            Text("A photo is never required for this CW report. If you add one with GPS metadata, ColumbiaWalks uses those coordinates for the report, records the source, then removes the embedded metadata from the saved and uploaded JPEG. A photo is needed only to enable the separate optional test-email control.")
                 .font(.footnote)
                 .foregroundStyle(Color.cwTextSecondary)
             HStack {
@@ -345,6 +400,7 @@ struct ReportFormView: View {
                     invalidatePhotoLoad()
                     self.photoData = nil
                     photoItem = nil
+                    testEmailOptIn = false
                     appState.removePhotoProvenance()
                 }
             }
@@ -362,13 +418,17 @@ struct ReportFormView: View {
         )
     }
 
-    private var submitButtonLabel: String {
-        officialEmailDestinations.isEmpty
-            ? "Save & submit report"
-            : "Save, submit & authorize test email"
+    private var testEmailRequirementsMet: Bool {
+        guard photoData != nil, appState.locationConfirmed else { return false }
+        return OfficialEmailPolicy.isWithinServiceArea(appState.reportCoordinate)
     }
 
-    private func saveReport() {
+    private var locationSummary: String {
+        guard appState.locationConfirmed else { return "Add or review location" }
+        return appState.nearestIntersection?.label ?? appState.reportLocation.source.label
+    }
+
+    private func saveReport(notifyAuthorities: Bool) {
         errorMessage = nil
         let selectedCategories = mode == .quick
             ? Set(quickTypes.map(\.category))
@@ -395,20 +455,7 @@ struct ReportFormView: View {
             errorMessage = validationError
             return
         }
-        let emailDestinations = officialEmailDestinations
-        if !emailDestinations.isEmpty, photoData == nil {
-            errorMessage = "Add a relevant photo before authorizing this field-test email."
-            return
-        }
-        if !emailDestinations.isEmpty, !appState.locationConfirmed {
-            errorMessage = "Confirm the report location before authorizing this field-test email."
-            return
-        }
-        if !emailDestinations.isEmpty,
-           !OfficialEmailPolicy.isWithinServiceArea(appState.reportCoordinate) {
-            errorMessage = "The 3.16 field-test email is limited to reports within 5 km of Columbia Borough center. Review the picture GPS, use device GPS, or override the coordinates before saving. To save an ordinary report outside that area, remove the qualifying issue selection."
-            return
-        }
+        let officialEmailAuthorized = testEmailOptIn && testEmailRequirementsMet
 
         let reportID = UUID()
         let photoFilename: String?
@@ -444,8 +491,8 @@ struct ReportFormView: View {
             photoLongitude: appState.reportLocation.photoLongitude,
             locationOverridden: appState.reportLocation.locationOverridden,
             photoFilename: photoFilename,
-            officialEmailAuthorized: !emailDestinations.isEmpty,
-            officialEmailDestinationAuthorized: emailDestinations.isEmpty
+            officialEmailAuthorized: officialEmailAuthorized,
+            officialEmailDestinationAuthorized: !officialEmailAuthorized
                 ? nil
                 : "test",
             submissionStatus: .pending,
@@ -463,8 +510,19 @@ struct ReportFormView: View {
             errorMessage = "The report could not be saved securely on this iPhone. Check available storage and try again."
             return
         }
+        let handoffDraft = makeAuthoritiesDraft(
+            reportID: reportID,
+            selectedCategories: selectedCategories,
+            combinedDetails: combinedDetails,
+            hadPhoto: photoData != nil
+        )
         resetForm()
-        appState.selectedTab = .saved
+        if notifyAuthorities {
+            authoritiesDraft = handoffDraft
+            showAuthoritiesHandoff = true
+        } else {
+            appState.selectedTab = .saved
+        }
     }
 
     private func resetForm() {
@@ -486,8 +544,62 @@ struct ReportFormView: View {
         invalidatePhotoLoad()
         photoItem = nil
         photoData = nil
+        testEmailOptIn = false
+        showTestEmailDetails = false
         appState.removePhotoProvenance()
         errorMessage = nil
+    }
+
+    private func makeAuthoritiesDraft(
+        reportID: UUID,
+        selectedCategories: Set<IssueCategory>,
+        combinedDetails: String,
+        hadPhoto: Bool
+    ) -> PoliceTipDraft {
+        let issueLabels = mode == .quick
+            ? quickTypes.sorted { $0.rawValue < $1.rawValue }.map(\.label)
+            : selectedCategories.sorted { $0.rawValue < $1.rawValue }.map(\.label)
+        let subject = issueLabels.first.map { "Pedestrian safety: \($0)" }
+            ?? "Pedestrian safety concern"
+        let observation = [
+            issueLabels.isEmpty ? "" : "Issue type(s): \(issueLabels.joined(separator: ", "))",
+            combinedDetails,
+            policeDetails.trimmed
+        ].filter { !$0.isEmpty }.joined(separator: "\n\n")
+        let locationText: String
+        if let intersection = appState.nearestIntersection?.label {
+            locationText = intersection
+        } else if appState.locationConfirmed {
+            locationText = String(
+                format: "%.6f, %.6f",
+                appState.reportCoordinate.latitude,
+                appState.reportCoordinate.longitude
+            )
+        } else {
+            locationText = ""
+        }
+        let vehicleDescription = [
+            vehicle.year,
+            vehicle.color,
+            vehicle.make,
+            vehicle.model,
+            vehicle.bodyStyle,
+            vehicle.description
+        ].map(\.trimmed).filter { !$0.isEmpty }.joined(separator: " ")
+
+        return PoliceTipDraft(
+            subject: String(subject.prefix(128)),
+            observedAt: observedAt,
+            location: locationText,
+            licensePlate: vehicle.licensePlate,
+            plateState: vehicle.plateState,
+            vehicleDescription: vehicleDescription,
+            firsthandObservation: observation,
+            evidenceNotes: hadPhoto
+                ? "CW report \(reportID.uuidString.lowercased()) includes a photo. Attach the original relevant file yourself on the official CBPD form."
+                : "CW report \(reportID.uuidString.lowercased()) did not include a photo.",
+            sourceWasSubmittedToColumbiaWalks: true
+        )
     }
 
     private func loadPhoto(_ item: PhotosPickerItem) {
@@ -576,34 +688,53 @@ struct ReportFormView: View {
 
 struct OfficialEmailDisclosure: View {
     let destinations: [OfficialEmailDestination]
+    @Binding var isOptedIn: Bool
+    @Binding var isExpanded: Bool
+    let requirementsMet: Bool
 
     var body: some View {
-        Section("3.16 field-test email") {
-            Label(destinationHeading, systemImage: "envelope.fill")
-                .font(.headline)
-                .foregroundStyle(Color.cwText)
-            Text("Submitting authorizes the ColumbiaWalks server to attempt a field-test email for the \(rulePhrase) after a successful upload. In version 3.16, that message is addressed only to a ColumbiaWalks-controlled test mailbox and has [TEST] in its subject. It is not sent to Police, the Mayor, or Codes.")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(Color.cwText)
-            Text("This test route is limited to a confirmed report location within 5 km of Columbia Borough center. If processed, the message includes the report photo, confirmed location, and details.")
-                .font(.footnote)
-                .foregroundStyle(Color.cwTextSecondary)
-            if destinations.contains(.policeChiefAndMayor) {
-                Text("For the crosswalk field test, any license plate and plate state you enter are included and prominently identified in the message sent to the test mailbox.")
+        Section("Optional test email") {
+            DisclosureGroup(isExpanded: $isExpanded) {
+                Text("This is a separate field test for the \(rulePhrase). It is off unless you turn it on. In version 3.16.1, the server addresses any resulting [TEST]-subject message only to a ColumbiaWalks-controlled test mailbox, not Police, the Mayor, or Codes.")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(Color.cwText)
+                Text("The optional test needs a photo and a confirmed report location within 5 km of Columbia Borough center. Those items remain optional for the CW report itself.")
                     .font(.footnote)
                     .foregroundStyle(Color.cwTextSecondary)
+                if destinations.contains(.policeChiefAndMayor) {
+                    Text("For the crosswalk test, any license plate and plate state you enter are included and prominently identified in the test-mailbox message.")
+                        .font(.footnote)
+                        .foregroundStyle(Color.cwTextSecondary)
+                }
+                Text("Authorization does not confirm delivery. Nothing is sent from your personal email account.")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(Color.cwText)
+
+                Toggle("Opt in to the [TEST] email", isOn: $isOptedIn)
+                    .tint(.cwGreen)
+                    .disabled(!requirementsMet)
+                    .accessibilityHint("This optional control does not affect whether the CW report can be submitted.")
+
+                if !requirementsMet {
+                    Label(
+                        "Add a photo and a confirmed in-area location to enable this optional test. You can submit to CW without either one.",
+                        systemImage: "info.circle"
+                    )
+                    .font(.footnote)
+                    .foregroundStyle(Color.cwTextSecondary)
+                }
+            } label: {
+                Label(destinationHeading, systemImage: "envelope.badge")
             }
-            Text("Authorization does not confirm delivery; server delivery safeguards still apply. Nothing is sent from your personal email account.")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(Color.cwText)
         }
     }
 
     private var destinationHeading: String {
         let uniqueDestinations = Set(destinations)
-        if uniqueDestinations == [.policeChiefAndMayor] { return "Crosswalk rule — test mailbox only" }
-        if uniqueDestinations == [.codes] { return "Missing-sidewalk rule — test mailbox only" }
-        return "Two qualifying rules — test mailbox only"
+        let status = isOptedIn ? "on" : "off"
+        if uniqueDestinations == [.policeChiefAndMayor] { return "Crosswalk test email (\(status))" }
+        if uniqueDestinations == [.codes] { return "Missing-sidewalk test email (\(status))" }
+        return "Qualifying test email (\(status))"
     }
 
     private var rulePhrase: String {

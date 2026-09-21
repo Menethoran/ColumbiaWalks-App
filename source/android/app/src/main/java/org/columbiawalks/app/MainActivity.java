@@ -482,6 +482,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void navigateToPoliceTip() {
+        getSupportFragmentManager().setFragmentResult(
+                PoliceTipFragment.REPORT_HANDOFF_REQUEST,
+                PoliceTipFragment.newStandaloneRequest()
+        );
+        showCommunityChild(TAG_POLICE_TIP);
+    }
+
+    public void navigateToPoliceTip(Bundle reportHandoff) {
+        getSupportFragmentManager().setFragmentResult(
+                PoliceTipFragment.REPORT_HANDOFF_REQUEST,
+                reportHandoff
+        );
         showCommunityChild(TAG_POLICE_TIP);
     }
 

@@ -3,9 +3,13 @@ import UIKit
 
 struct PoliceTipView: View {
     @Environment(\.openURL) private var openURL
-    @State private var draft = PoliceTipDraft()
+    @State private var draft: PoliceTipDraft
     @State private var errorMessage: String?
     @State private var showHandoffAlert = false
+
+    init(initialDraft: PoliceTipDraft = PoliceTipDraft()) {
+        _draft = State(initialValue: initialDraft)
+    }
 
     private static let tipURL = URL(
         string: "https://crimewatch.net/us/pa/lancaster/columbia-boro-pd/10552/submit-tip"
@@ -25,7 +29,9 @@ struct PoliceTipView: View {
                     subtitle: "Prepare a local-only draft for the official Columbia Borough Police form"
                 )
                 Label {
-                    Text("Nothing entered here is uploaded to or stored by ColumbiaWalks. No media is selected in this app.")
+                    Text(draft.sourceWasSubmittedToColumbiaWalks
+                         ? "This draft was prepared from the CW report you just saved. ColumbiaWalks has not sent it or any media to CBPD."
+                         : "Nothing entered here is uploaded to or stored by ColumbiaWalks. No media is selected in this app.")
                         .fixedSize(horizontal: false, vertical: true)
                 } icon: {
                     Image(systemName: "lock.shield.fill")
@@ -190,7 +196,9 @@ struct PoliceTipView: View {
             }
 
             Section {
-                Text("Privacy check: the draft and any media were not sent to ColumbiaWalks.")
+                Text(draft.sourceWasSubmittedToColumbiaWalks
+                     ? "Handoff check: your CW report was saved, but this police tip and any media have not been sent to CBPD."
+                     : "Privacy check: the draft and any media were not sent to ColumbiaWalks or CBPD.")
                     .font(.footnote.bold())
                     .foregroundStyle(Color.cwBlueDark)
                     .fixedSize(horizontal: false, vertical: true)
@@ -205,7 +213,7 @@ struct PoliceTipView: View {
             }
             Button("Not Now", role: .cancel) {}
         } message: {
-            Text("Your Subject and Message are on the clipboard. The draft and any media were not sent to ColumbiaWalks. You must finish and submit the tip on the official police site.")
+            Text("Your Subject and Message are on the clipboard. ColumbiaWalks has not submitted anything to CBPD. You must finish and submit the tip on the official police site.")
         }
     }
 

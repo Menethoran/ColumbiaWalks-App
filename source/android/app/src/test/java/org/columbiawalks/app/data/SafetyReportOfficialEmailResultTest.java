@@ -55,7 +55,7 @@ public final class SafetyReportOfficialEmailResultTest {
         ).getOfficialEmailResultForDisplay();
 
         assertTrue(display.contains("server-reported official-recipient email"));
-        assertTrue(display.contains("unexpected in this 3.16 field test"));
+        assertTrue(display.contains("unexpected in this 3.16.1 field test"));
         assertTrue(display.contains("delivery not confirmed"));
     }
 

@@ -81,8 +81,8 @@ def verify_identity_and_navigation() -> None:
     require(
         android_gradle,
         (
-            "versionCode = 31600",
-            'versionName = "3.16.0"',
+            "versionCode = 31601",
+            'versionName = "3.16.1"',
             '"TRASH_CAN_ENDPOINT"',
             TRASH_ENDPOINT,
         ),
@@ -90,7 +90,7 @@ def verify_identity_and_navigation() -> None:
     )
     require(
         ios_project,
-        ('MARKETING_VERSION: "3.16.0"', 'CURRENT_PROJECT_VERSION: "31600"'),
+        ('MARKETING_VERSION: "3.16.1"', 'CURRENT_PROJECT_VERSION: "31601"'),
         "iOS 3.16 identity",
     )
 
@@ -108,7 +108,7 @@ def verify_identity_and_navigation() -> None:
         ("CommunityView()", 'Label("Community"', ".preferredColorScheme(.light)"),
         "iOS Community navigation",
     )
-    print("PASS 3.16 identities and Community navigation")
+    print("PASS 3.16.1 identities and Community navigation")
 
 
 def verify_police_handoff() -> None:
@@ -284,16 +284,57 @@ def verify_storage_and_migration() -> None:
     print("PASS private queues, backup-first migration, and privacy copy")
 
 
+def verify_simplified_reporting_and_contact() -> None:
+    android_report = read(
+        ANDROID / "java/org/columbiawalks/app/ui/ReportFragment.java"
+    )
+    android_strings = read(ANDROID / "res/values/strings.xml")
+    android_community = read(
+        ANDROID / "java/org/columbiawalks/app/ui/CommunityFragment.java"
+    )
+    ios_report = read(IOS / "Views/ReportFormView.swift")
+    ios_community = read(IOS / "Views/CommunityView.swift")
+    website = read(ROOT / "android/ghost-theme-overlay-3.14.1/index.hbs")
+    report_page = read(
+        ROOT / "android/ghost-theme-overlay-3.14.1/page-report.hbs"
+    )
+    combined = "\n".join(
+        (
+            android_report,
+            android_strings,
+            android_community,
+            ios_report,
+            ios_community,
+            website,
+            report_page,
+        )
+    )
+    require(
+        combined,
+        (
+            "Submit complaint to CW",
+            "Submit to CW &amp; Notify CBPD",
+            "Opt in to the [TEST] email",
+            "(717) 466-9069",
+            "7174669069",
+            "#contact-us",
+        ),
+        "simplified report and Contact Us contract",
+    )
+    print("PASS two report choices, opt-in test email, and Contact Us paths")
+
+
 def main() -> int:
     try:
         verify_identity_and_navigation()
         verify_police_handoff()
         verify_trash_contract()
         verify_storage_and_migration()
+        verify_simplified_reporting_and_contact()
     except AssertionError as error:
         print(f"FAIL {error}", file=sys.stderr)
         return 1
-    print("ColumbiaWalks 3.16 Community-tools verification passed.")
+    print("ColumbiaWalks 3.16.1 Community-tools verification passed.")
     return 0
 
 

@@ -54,32 +54,32 @@ def verify_versions_and_appearance() -> None:
     pbx = (IOS / "ColumbiaWalks.xcodeproj" / "project.pbxproj").read_text(
         encoding="utf-8"
     )
-    if 'MARKETING_VERSION: "3.16.0"' not in project:
-        fail("project.yml is not versioned as 3.16.0.")
-    if 'CURRENT_PROJECT_VERSION: "31600"' not in project:
-        fail("project.yml is not build 31600.")
+    if 'MARKETING_VERSION: "3.16.1"' not in project:
+        fail("project.yml is not versioned as 3.16.1.")
+    if 'CURRENT_PROJECT_VERSION: "31601"' not in project:
+        fail("project.yml is not build 31601.")
     if project.count("UIUserInterfaceStyle: Light") != 1:
         fail("XcodeGen must explicitly generate a light-only application.")
     if "<key>UIUserInterfaceStyle</key>" not in info or "<string>Light</string>" not in info:
         fail("The committed Info.plist must explicitly select Light appearance.")
-    if pbx.count("MARKETING_VERSION = 3.16.0;") != 2:
+    if pbx.count("MARKETING_VERSION = 3.16.1;") != 2:
         fail("The generated Xcode project has stale marketing versions.")
-    if pbx.count("CURRENT_PROJECT_VERSION = 31600;") != 2:
+    if pbx.count("CURRENT_PROJECT_VERSION = 31601;") != 2:
         fail("The generated Xcode project has stale build versions.")
-    if 'static let version = "3.16.0"' not in api_client:
+    if 'static let version = "3.16.1"' not in api_client:
         fail("The API payload and User-Agent version are stale.")
 
     required_handoff_copy = {
-        "AppStore/README.md": ("3.16.0", "31600", "Community"),
-        "AppStore/submission-checklist.md": ("3.16.0 (31600)", "build 31600"),
-        "AppStore/physical-device-recording.md": ("3.16.0 (31600)", "Community"),
+        "AppStore/README.md": ("3.16.1", "31601", "Community"),
+        "AppStore/submission-checklist.md": ("3.16.1 (31601)", "build 31601"),
+        "AppStore/physical-device-recording.md": ("3.16.1 (31601)", "Community"),
     }
     for relative_path, required_values in required_handoff_copy.items():
         source = (IOS / relative_path).read_text(encoding="utf-8")
         for value in required_values:
             if value not in source:
                 fail(f"{relative_path} is missing release identity {value}.")
-    print("PASS unique iOS identity 3.16.0 (31600) and explicit Light appearance")
+    print("PASS unique iOS identity 3.16.1 (31601) and explicit Light appearance")
 
 
 def verify_palette() -> None:
@@ -120,7 +120,7 @@ def verify_views() -> None:
         fail("The shared pale scroll-surface modifier is missing.")
 
     required_modifier_counts = {
-        "CommunityView.swift": 1,
+        "CommunityView.swift": 2,
         "ReportFormView.swift": 1,
         "FeedbackView.swift": 1,
         "PoliceTipView.swift": 1,
@@ -154,6 +154,12 @@ def verify_community_contract() -> None:
     police_view = (APP / "Views" / "PoliceTipView.swift").read_text(
         encoding="utf-8"
     )
+    report_view = (APP / "Views" / "ReportFormView.swift").read_text(
+        encoding="utf-8"
+    )
+    community_view = (APP / "Views" / "CommunityView.swift").read_text(
+        encoding="utf-8"
+    )
     trash_model = (APP / "Models" / "TrashCanModels.swift").read_text(
         encoding="utf-8"
     )
@@ -169,7 +175,7 @@ def verify_community_contract() -> None:
         "Community root": "CommunityView()",
         "police past confirmation model": "isPastAndNotInProgress = false",
         "police past confirmation copy": "Past / not currently in progress",
-        "police local-only closing line": "This draft and any media were not sent to ColumbiaWalks.",
+        "police delivery boundary": "did not send this draft or any media to CBPD",
         "labeled clipboard text": '"Subject:\\n\\(subject)\\n\\nMessage:\\n\\(narrative)"',
         "clipboard handoff": "UIPasteboard.general.string = prepared.clipboardText",
         "official police tip URL": "columbia-boro-pd/10552/submit-tip",
@@ -190,9 +196,23 @@ def verify_community_contract() -> None:
         "trash contract test": "testCategoryKeysExactlyMatchThe316Contract",
         "trash encoding test": "testJSONEncodingUsesExactTrashCanContractKeysAndValues",
         "police builder test": "testBuilderProducesDeterministicLabeledClipboardText",
+        "two CW submit choices": "Submit to CW & Notify CBPD",
+        "optional test email": "Opt in to the [TEST] email",
+        "Contact Us phone": "(717) 466-9069",
     }
     combined = "\n".join(
-        (root, app, api, police_model, police_view, trash_model, trash_view, tests)
+        (
+            root,
+            app,
+            api,
+            police_model,
+            police_view,
+            report_view,
+            community_view,
+            trash_model,
+            trash_view,
+            tests,
+        )
     )
     for purpose, value in required.items():
         if value not in combined:
@@ -307,11 +327,12 @@ def verify_official_email_contract() -> None:
         "duplicate-preserving selection policy": "let quickTypes = Array(quickReportTypes)",
         "exact standard Quick shape": "guard quickTypes.count == 1 else { return [] }",
         "Repeat vehicle zero-Quick shape": "quickTypes.isEmpty",
-        "mixed-selection UI notice": "Multiple selections will be saved as an ordinary report without field-test email authorization.",
-        "persistent disclosure": 'Section("3.16 field-test email")',
+        "mixed-selection UI notice": "Multiple selections are saved as an ordinary CW report; the optional test-email control is unavailable.",
+        "collapsed optional disclosure": 'Section("Optional test email")',
+        "explicit test-email opt-in": 'Toggle("Opt in to the [TEST] email"',
         "test mailbox disclosure": "ColumbiaWalks-controlled test mailbox",
         "test subject disclosure": "[TEST]",
-        "no officials disclosure": "It is not sent to Police, the Mayor, or Codes.",
+        "no officials disclosure": "not Police, the Mayor, or Codes.",
         "5 km policy radius": "static let serviceAreaRadiusMeters: CLLocationDistance = 5_000",
         "service-area policy gate": "OfficialEmailPolicy.isWithinServiceArea",
         "Repeat plate field": 'TextField("License plate (optional)"',

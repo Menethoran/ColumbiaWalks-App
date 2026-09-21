@@ -2,14 +2,14 @@
 set -euo pipefail
 
 readonly EXPECTED_PACKAGE="org.columbiawalks.app"
-readonly EXPECTED_VERSION_NAME="3.16.0"
-readonly EXPECTED_VERSION_CODE="31600"
+readonly EXPECTED_VERSION_NAME="3.16.1"
+readonly EXPECTED_VERSION_CODE="31601"
 readonly EXPECTED_CERT_SHA256="a0c9e5abc99caec8d2ec31181c75c577d00963e0af3f654aca19bb3f7355dcc4"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source_dir="$(cd "$script_dir/.." && pwd)"
 artifact_dir="${CW_ANDROID_ARTIFACT_DIR:-$source_dir/../artifacts}"
-production_apk="$artifact_dir/ColumbiaWalks-3.16.0.apk"
+production_apk="$artifact_dir/ColumbiaWalks-3.16.1.apk"
 
 usage() {
     echo "Usage: $0 /absolute/path/to/app-release.apk [--stage]" >&2

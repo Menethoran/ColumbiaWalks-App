@@ -99,6 +99,8 @@ public final class ContinuousReportFragment extends Fragment
             "continuous_prepared_photo_needs_application";
     private static final String STATE_SAVE_COMPLETION_PENDING =
             "continuous_save_completion_pending";
+    private static final String STATE_TEST_EMAIL_OPT_IN =
+            "continuous_test_email_opt_in";
 
     private static final String[] HIERARCHY_VALUES = {
             "sidewalk",
@@ -179,7 +181,11 @@ public final class ContinuousReportFragment extends Fragment
     private TextInputEditText licensePlate;
     private TextInputEditText plateState;
     private View officialEmailNoticeContainer;
+    private View officialEmailDetails;
     private TextView officialEmailNotice;
+    private TextView officialEmailRequirements;
+    private CheckBox officialEmailOptIn;
+    private MaterialButton officialEmailToggleButton;
     private TextInputEditText comments;
     private MaterialButton takePhotoButton;
     private MaterialButton choosePhotoButton;
@@ -275,8 +281,16 @@ public final class ContinuousReportFragment extends Fragment
                 R.id.continuous_plate_state);
         officialEmailNoticeContainer = root.findViewById(
                 R.id.continuous_official_email_notice_container);
+        officialEmailDetails = root.findViewById(
+                R.id.continuous_official_email_details);
         officialEmailNotice = root.findViewById(
                 R.id.continuous_official_email_notice);
+        officialEmailRequirements = root.findViewById(
+                R.id.continuous_official_email_requirements);
+        officialEmailOptIn = root.findViewById(
+                R.id.continuous_official_email_opt_in);
+        officialEmailToggleButton = root.findViewById(
+                R.id.toggle_continuous_official_email_details);
         comments = root.findViewById(R.id.continuous_comments);
         takePhotoButton = root.findViewById(
                 R.id.take_continuous_photo_button);
@@ -395,6 +409,10 @@ public final class ContinuousReportFragment extends Fragment
                 ""
         ));
         comments.setText(savedInstanceState.getString(STATE_COMMENTS, ""));
+        officialEmailOptIn.setChecked(savedInstanceState.getBoolean(
+                STATE_TEST_EMAIL_OPT_IN,
+                false
+        ));
     }
 
     private void initializeOperations(@Nullable Bundle savedInstanceState) {
@@ -456,6 +474,11 @@ public final class ContinuousReportFragment extends Fragment
         overrideCoordinatesButton.setOnClickListener(button ->
                 showCoordinateDialog());
         submitButton.setOnClickListener(button -> saveAndReportNext());
+        officialEmailToggleButton.setOnClickListener(button ->
+                setOfficialEmailDetailsExpanded(
+                        officialEmailDetails.getVisibility() != View.VISIBLE));
+        officialEmailOptIn.setOnCheckedChangeListener(
+                (button, checked) -> updateOfficialEmailToggleLabel());
         missingSidewalkCheckbox.setOnCheckedChangeListener(
                 (button, checked) -> updateOfficialEmailUi());
     }
@@ -551,7 +574,7 @@ public final class ContinuousReportFragment extends Fragment
     private void updateOfficialEmailUi() {
         if (officialEmailNoticeContainer == null
                 || officialEmailNotice == null
-                || submitButton == null) {
+                || officialEmailOptIn == null) {
             return;
         }
         OfficialEmailPolicy.Routing routing = OfficialEmailPolicy.classify(
@@ -559,22 +582,74 @@ public final class ContinuousReportFragment extends Fragment
                 selectedHierarchy(),
                 selectedVehicleIssue()
         );
-        boolean automatic = routing != OfficialEmailPolicy.Routing.NONE;
+        boolean eligible = routing != OfficialEmailPolicy.Routing.NONE;
         officialEmailNoticeContainer.setVisibility(
-                automatic ? View.VISIBLE : View.GONE);
-        if (automatic) {
+                eligible ? View.VISIBLE : View.GONE);
+        if (eligible) {
             officialEmailNotice.setText(routing
                     == OfficialEmailPolicy.Routing.CODES
                     ? R.string.continuous_official_email_disclosure_codes
                     : R.string
                     .continuous_official_email_disclosure_police_mayor);
+        } else {
+            officialEmailOptIn.setChecked(false);
+            setOfficialEmailDetailsExpanded(false);
         }
-        submitButton.setText(automatic
-                ? R.string.continuous_submit_email_next
-                : R.string.continuous_submit_next);
-        submitButton.setContentDescription(getString(automatic
-                ? R.string.continuous_submit_email_next_description
-                : R.string.continuous_submit_next_description));
+        boolean requirementsMet = eligible
+                && officialEmailRequirementsMet();
+        officialEmailOptIn.setEnabled(requirementsMet);
+        if (!requirementsMet) {
+            officialEmailOptIn.setChecked(false);
+        }
+        if (officialEmailRequirements != null) {
+            officialEmailRequirements.setText(requirementsMet
+                    ? R.string.official_email_ready
+                    : R.string.continuous_official_email_requirements);
+        }
+        submitButton.setText(R.string.continuous_submit_next);
+        submitButton.setContentDescription(getString(
+                R.string.continuous_submit_next_description));
+        updateOfficialEmailToggleLabel();
+    }
+
+    private boolean officialEmailRequirementsMet() {
+        if (operations == null || !isAdded()) {
+            return false;
+        }
+        String selectedPhotoPath = operations.getSelectedPhotoPath();
+        boolean hasPhoto = selectedPhotoPath != null
+                && new File(selectedPhotoPath).isFile();
+        MainActivity activity = (MainActivity) requireActivity();
+        return hasPhoto
+                && activity.isContinuousReportLocationConfirmed()
+                && OfficialEmailPolicy.isOfficialEmailLocationEligible(
+                activity.getContinuousReportLatitude(),
+                activity.getContinuousReportLongitude()
+        );
+    }
+
+    private void updateOfficialEmailToggleLabel() {
+        if (officialEmailToggleButton == null || officialEmailOptIn == null) {
+            return;
+        }
+        officialEmailToggleButton.setText(officialEmailOptIn.isChecked()
+                ? R.string.official_email_optional_title_on
+                : R.string.official_email_optional_title);
+    }
+
+    private void setOfficialEmailDetailsExpanded(boolean expanded) {
+        if (officialEmailDetails == null
+                || officialEmailToggleButton == null) {
+            return;
+        }
+        officialEmailDetails.setVisibility(
+                expanded ? View.VISIBLE : View.GONE);
+        officialEmailToggleButton.setIconResource(expanded
+                ? android.R.drawable.arrow_up_float
+                : android.R.drawable.arrow_down_float);
+        officialEmailToggleButton.setContentDescription(getString(expanded
+                ? R.string.official_email_collapse
+                : R.string.official_email_expand));
     }
 
     @Nullable
@@ -761,6 +836,7 @@ public final class ContinuousReportFragment extends Fragment
         } else {
             photoPreview.setImageDrawable(null);
         }
+        updateOfficialEmailUi();
     }
 
     private void refreshLocation() {
@@ -779,6 +855,7 @@ public final class ContinuousReportFragment extends Fragment
                             ? R.string.continuous_checking_device_gps
                             : R.string.continuous_location_waiting
             );
+            updateOfficialEmailUi();
             return;
         }
         locationLabel.setText(String.format(
@@ -792,6 +869,7 @@ public final class ContinuousReportFragment extends Fragment
                 activity.isContinuousReportLocationOverridden()
         ));
         locationError.setVisibility(View.GONE);
+        updateOfficialEmailUi();
     }
 
     private String locationSourceDescription(
@@ -1203,23 +1281,16 @@ public final class ContinuousReportFragment extends Fragment
         String vehicleDetails = vehicleDetailsJson();
         boolean missingSidewalk = quickReportTypes.contains(
                 "missing_sidewalk");
-        boolean officialEmailAuthorized =
+        boolean officialEmailEligible =
                 OfficialEmailPolicy.isAutomaticEmailEligible(
                         quickReportTypes,
                         hierarchy,
                         vehicleIssue
                 );
-        if (officialEmailAuthorized
-                && !OfficialEmailPolicy.isOfficialEmailLocationEligible(
-                activity.getContinuousReportLatitude(),
-                activity.getContinuousReportLongitude())) {
-            locationError.setText(
-                    R.string.official_email_location_outside_area);
-            locationError.setVisibility(View.VISIBLE);
-            locationError.announceForAccessibility(locationError.getText());
-            useDeviceLocationButton.requestFocus();
-            return;
-        }
+        boolean officialEmailAuthorized = officialEmailEligible
+                && officialEmailOptIn != null
+                && officialEmailOptIn.isChecked()
+                && officialEmailRequirementsMet();
         String details = backwardCompatibleDetails(
                 hierarchy,
                 lipHeight,
@@ -1467,6 +1538,8 @@ public final class ContinuousReportFragment extends Fragment
 
     private void resetForNextReport() {
         sidewalkLipSpinner.setSelection(0);
+        officialEmailOptIn.setChecked(false);
+        setOfficialEmailDetailsExpanded(false);
         comments.setText("");
         licensePlate.setText("");
         plateState.setText("");
@@ -1751,6 +1824,10 @@ public final class ContinuousReportFragment extends Fragment
         outState.putString(STATE_LICENSE_PLATE, textValue(licensePlate));
         outState.putString(STATE_PLATE_STATE, textValue(plateState));
         outState.putString(STATE_COMMENTS, textValue(comments));
+        outState.putBoolean(
+                STATE_TEST_EMAIL_OPT_IN,
+                officialEmailOptIn != null && officialEmailOptIn.isChecked()
+        );
         if (cameraCaptureFile != null) {
             outState.putString(
                     STATE_CAMERA_PATH,

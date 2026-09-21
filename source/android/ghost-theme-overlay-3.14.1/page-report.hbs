@@ -5,9 +5,9 @@
                 <p class="cw-eyebrow">Safer streets, one report at a time</p>
                 <h2>Help make every walk through Columbia safer.</h2>
                 <p>
-                    A Quick Report takes four short steps: category, photo,
-                    optional comment, and GPS. Full Report remains available
-                    when you need to document more.
+                    Quick Report keeps photos and extra details optional.
+                    Full Report remains available when you need targeted
+                    questions or additional documentation.
                 </p>
                 <p>
                     <a class="cw-button" href="{{@site.url}}/beta-testing/">Join Android beta testing</a>
@@ -56,7 +56,7 @@
                     aria-selected="false"
                     aria-controls="cw-feedback-view"
                 >
-                    Feedback
+                    Contact Us
                 </button>
                 <button
                     class="cw-app-switch-button"
@@ -959,17 +959,27 @@
             >
                 <form class="cw-panel cw-form cw-feedback-form" id="cw-feedback-form" novalidate>
                     <div class="cw-panel-heading cw-feedback-heading">
-                        <p class="cw-eyebrow cw-eyebrow-dark">Help improve ColumbiaWalks</p>
-                        <h3>Send feedback</h3>
+                        <p class="cw-eyebrow cw-eyebrow-dark">Contact ColumbiaWalks</p>
+                        <h3>Contact Us</h3>
                         <p>
-                            Feedback is anonymous by default. Select a reason to
-                            open the message box; no separate subject is needed.
+                            Robert is the current ColumbiaWalks contact. Call or
+                            text directly, or send a private message below.
                         </p>
                     </div>
 
+                    <section class="cw-section" aria-labelledby="cw-contact-robert-heading">
+                        <h3 id="cw-contact-robert-heading">Robert · (717) 466-9069</h3>
+                        <p>For report follow-up, app help, or a ColumbiaWalks project question.</p>
+                        <p>
+                            <a class="cw-button cw-button-primary" href="tel:7174669069">Call Robert</a>
+                            <a class="cw-button cw-button-secondary" href="sms:7174669069">Text Robert</a>
+                        </p>
+                        <p class="cw-privacy">ColumbiaWalks is independent from Columbia Borough and CBPD. Calling, texting, or using this form does not dispatch emergency services or file a police report.</p>
+                    </section>
+
                     <div class="cw-fields cw-feedback-fields">
                         <label class="cw-field-full">
-                            <span>Reason for feedback</span>
+                            <span>Reason for contact</span>
                             <select id="cw-feedback-category" required>
                                 <option value="">Select a reason…</option>
                                 <option value="app_feedback">App Feedback</option>
@@ -980,11 +990,11 @@
                         </label>
 
                         <label class="cw-field-full" id="cw-feedback-text-field" hidden>
-                            <span>Your feedback</span>
+                            <span>Your message</span>
                             <textarea
                                 id="cw-feedback-text"
                                 maxlength="5000"
-                                placeholder="Tell us what worked, what did not, or what you would like to see."
+                                placeholder="Ask a question, follow up on a report, or tell us what worked, what did not, or what you would like to see."
                             ></textarea>
                             <small>Required after a reason is selected.</small>
                         </label>
@@ -1051,7 +1061,7 @@
 
                     <p class="cw-message" id="cw-feedback-message" hidden></p>
                     <button class="cw-button cw-button-primary" id="cw-feedback-submit" type="submit">
-                        Submit feedback
+                        Send private message
                     </button>
                     <p class="cw-privacy">
                         Contact information is hidden unless you opt in. Providing
@@ -1062,4 +1072,20 @@
             </section>
         </div>
 
-<script>window.ColumbiaWalksConfig={"version":"3.14.1","catalogUrl":"{{asset "data/checklist_catalog.json"}}","reportEndpoint":"/columbiawalks-api/reports","policeComplaintEndpoint":"/columbiawalks-api/police-complaints","feedbackEndpoint":"/columbiawalks-api/feedback","intersectionEndpoint":"/columbiawalks-api/intersection"};</script><script src="{{asset "vendor/leaflet/leaflet.js"}}"></script><script src="{{asset "js/reporter.js"}}"></script><script src="{{asset "js/police-interaction.js"}}"></script><script src="{{asset "js/pos-reporter.js"}}"></script><script src="{{asset "js/pedestrian-profile.js"}}"></script>
+<script>window.ColumbiaWalksConfig={"version":"3.16.1","catalogUrl":"{{asset "data/checklist_catalog.json"}}","reportEndpoint":"/columbiawalks-api/reports","policeComplaintEndpoint":"/columbiawalks-api/police-complaints","feedbackEndpoint":"/columbiawalks-api/feedback","intersectionEndpoint":"/columbiawalks-api/intersection"};</script><script src="{{asset "vendor/leaflet/leaflet.js"}}"></script><script src="{{asset "js/reporter.js"}}"></script><script src="{{asset "js/police-interaction.js"}}"></script><script src="{{asset "js/pos-reporter.js"}}"></script><script src="{{asset "js/pedestrian-profile.js"}}"></script>
+<script>
+(function () {
+    function openContactTab() {
+        if (window.location.hash !== "#contact-us") return;
+        var tab = document.getElementById("cw-feedback-tab");
+        var panel = document.getElementById("cw-feedback-view");
+        if (!tab || !panel) return;
+        tab.click();
+        window.setTimeout(function () {
+            panel.scrollIntoView({behavior: "smooth", block: "start"});
+        }, 0);
+    }
+    window.addEventListener("hashchange", openContactTab);
+    window.addEventListener("DOMContentLoaded", openContactTab);
+}());
+</script>

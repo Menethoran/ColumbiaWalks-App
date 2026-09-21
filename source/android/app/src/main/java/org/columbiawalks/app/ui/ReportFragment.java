@@ -196,14 +196,23 @@ public class ReportFragment extends Fragment implements LocationListener {
     private LinearLayout quickExpandedContainer;
     private TextView reportPathError;
     private View officialEmailNoticeContainer;
+    private View officialEmailDetails;
     private TextView officialEmailNotice;
+    private TextView officialEmailRequirements;
     private TextView officialEmailError;
+    private CheckBox officialEmailOptIn;
     private TextView photoHeading;
+    private View locationDetails;
+    private View identificationDetails;
+    private MaterialButton locationToggleButton;
+    private MaterialButton identificationToggleButton;
+    private MaterialButton officialEmailToggleButton;
     private MaterialButton quickReportButton;
     private MaterialButton fullReportButton;
     private MaterialButton takePhotoButton;
     private MaterialButton choosePhotoButton;
     private MaterialButton saveReportButton;
+    private MaterialButton saveReportNotifyButton;
     private ReportDatabaseHelper databaseHelper;
     private LocationManager locationManager;
     private ExecutorService intersectionExecutor;
@@ -300,16 +309,32 @@ public class ReportFragment extends Fragment implements LocationListener {
         reportPathError = view.findViewById(R.id.report_path_error);
         officialEmailNoticeContainer = view.findViewById(
                 R.id.official_email_notice_container);
+        officialEmailDetails = view.findViewById(R.id.official_email_details);
         officialEmailNotice = view.findViewById(
                 R.id.official_email_notice);
+        officialEmailRequirements = view.findViewById(
+                R.id.official_email_requirements);
         officialEmailError = view.findViewById(
                 R.id.official_email_error);
+        officialEmailOptIn = view.findViewById(
+                R.id.official_email_opt_in);
         photoHeading = view.findViewById(R.id.report_photo_heading);
+        locationDetails = view.findViewById(R.id.report_location_details);
+        identificationDetails = view.findViewById(
+                R.id.identification_details);
+        locationToggleButton = view.findViewById(
+                R.id.toggle_report_location);
+        identificationToggleButton = view.findViewById(
+                R.id.toggle_identification_details);
+        officialEmailToggleButton = view.findViewById(
+                R.id.toggle_official_email_details);
         quickReportButton = view.findViewById(R.id.quick_report_button);
         fullReportButton = view.findViewById(R.id.full_report_button);
         takePhotoButton = view.findViewById(R.id.take_photo_button);
         choosePhotoButton = view.findViewById(R.id.choose_photo_button);
         saveReportButton = view.findViewById(R.id.save_report_button);
+        saveReportNotifyButton = view.findViewById(
+                R.id.save_report_notify_button);
         additionalInformationToggle = view.findViewById(
                 R.id.additional_information_toggle);
         createOtherDetailsField();
@@ -387,11 +412,29 @@ public class ReportFragment extends Fragment implements LocationListener {
         view.findViewById(R.id.change_map_button)
                 .setOnClickListener(button ->
                         ((MainActivity) requireActivity()).navigateToMap());
+        locationToggleButton.setOnClickListener(button ->
+                setLocationDetailsExpanded(
+                        locationDetails.getVisibility() != View.VISIBLE));
+        identificationToggleButton.setOnClickListener(button ->
+                setIdentificationDetailsExpanded(
+                        identificationDetails.getVisibility()
+                                != View.VISIBLE));
+        officialEmailToggleButton.setOnClickListener(button ->
+                setOfficialEmailDetailsExpanded(
+                        officialEmailDetails.getVisibility() != View.VISIBLE));
+        officialEmailOptIn.setOnCheckedChangeListener(
+                (button, checked) -> updateOfficialEmailToggleLabel());
         view.findViewById(R.id.open_continuous_report_button)
                 .setOnClickListener(button ->
                         ((MainActivity) requireActivity())
                                 .navigateToContinuousReport());
-        saveReportButton.setOnClickListener(button -> saveReport());
+        saveReportButton.setOnClickListener(button -> saveReport(false));
+        saveReportNotifyButton.setOnClickListener(
+                button -> saveReport(true));
+        view.findViewById(R.id.notify_authorities_button)
+                .setOnClickListener(button ->
+                        ((MainActivity) requireActivity())
+                                .navigateToPoliceTip());
         takePhotoButton.setOnClickListener(button -> takePhoto());
         choosePhotoButton.setOnClickListener(button -> choosePhoto());
         view.findViewById(R.id.remove_photo_button)
@@ -894,7 +937,7 @@ public class ReportFragment extends Fragment implements LocationListener {
     private void updateOfficialEmailUi() {
         if (officialEmailNoticeContainer == null
                 || officialEmailNotice == null
-                || saveReportButton == null) {
+                || officialEmailOptIn == null) {
             return;
         }
         OfficialEmailPolicy.Routing routing = OfficialEmailPolicy.classify(
@@ -904,10 +947,10 @@ public class ReportFragment extends Fragment implements LocationListener {
                 null,
                 null
         );
-        boolean automatic = routing != OfficialEmailPolicy.Routing.NONE;
+        boolean eligible = routing != OfficialEmailPolicy.Routing.NONE;
         officialEmailNoticeContainer.setVisibility(
-                automatic ? View.VISIBLE : View.GONE);
-        if (automatic) {
+                eligible ? View.VISIBLE : View.GONE);
+        if (eligible) {
             int disclosure = routing
                     == OfficialEmailPolicy.Routing.POLICE_AND_MAYOR
                     ? R.string.official_email_disclosure_police_mayor
@@ -915,18 +958,95 @@ public class ReportFragment extends Fragment implements LocationListener {
                     ? R.string.official_email_disclosure_codes
                     : R.string.official_email_disclosure_police_mayor_codes;
             officialEmailNotice.setText(disclosure);
+        } else {
+            officialEmailOptIn.setChecked(false);
+            setOfficialEmailDetailsExpanded(false);
         }
-        if (officialEmailError != null && !automatic) {
+        if (officialEmailError != null) {
             officialEmailError.setVisibility(View.GONE);
         }
         if (photoHeading != null) {
-            photoHeading.setText(automatic
-                    ? R.string.photo_required_for_official_email
-                    : R.string.photo_optional);
+            photoHeading.setText(R.string.photo_optional);
         }
-        saveReportButton.setText(automatic
-                ? R.string.save_submit_and_email
-                : R.string.save_report);
+        boolean requirementsMet = eligible
+                && officialEmailRequirementsMet();
+        officialEmailOptIn.setEnabled(requirementsMet);
+        if (!requirementsMet) {
+            officialEmailOptIn.setChecked(false);
+        }
+        if (officialEmailRequirements != null) {
+            officialEmailRequirements.setText(requirementsMet
+                    ? R.string.official_email_ready
+                    : R.string.official_email_opt_in_requirements);
+        }
+        updateOfficialEmailToggleLabel();
+    }
+
+    private boolean officialEmailRequirementsMet() {
+        if (!isAdded()) {
+            return false;
+        }
+        boolean hasPhoto = selectedPhotoPath != null
+                && new File(selectedPhotoPath).isFile();
+        MainActivity activity = (MainActivity) requireActivity();
+        return hasPhoto
+                && activity.isSelectedLocationConfirmed()
+                && OfficialEmailPolicy.isOfficialEmailLocationEligible(
+                activity.getSelectedLatitude(),
+                activity.getSelectedLongitude()
+        );
+    }
+
+    private void updateOfficialEmailToggleLabel() {
+        if (officialEmailToggleButton == null || officialEmailOptIn == null) {
+            return;
+        }
+        officialEmailToggleButton.setText(officialEmailOptIn.isChecked()
+                ? R.string.official_email_optional_title_on
+                : R.string.official_email_optional_title);
+    }
+
+    private void setLocationDetailsExpanded(boolean expanded) {
+        if (locationDetails == null || locationToggleButton == null) {
+            return;
+        }
+        locationDetails.setVisibility(expanded ? View.VISIBLE : View.GONE);
+        locationToggleButton.setIconResource(expanded
+                ? android.R.drawable.arrow_up_float
+                : android.R.drawable.arrow_down_float);
+        locationToggleButton.setContentDescription(getString(expanded
+                ? R.string.report_location_collapse
+                : R.string.report_location_expand));
+    }
+
+    private void setIdentificationDetailsExpanded(boolean expanded) {
+        if (identificationDetails == null
+                || identificationToggleButton == null) {
+            return;
+        }
+        identificationDetails.setVisibility(
+                expanded ? View.VISIBLE : View.GONE);
+        identificationToggleButton.setIconResource(expanded
+                ? android.R.drawable.arrow_up_float
+                : android.R.drawable.arrow_down_float);
+        identificationToggleButton.setContentDescription(getString(expanded
+                ? R.string.identification_collapse
+                : R.string.identification_expand));
+    }
+
+    private void setOfficialEmailDetailsExpanded(boolean expanded) {
+        if (officialEmailDetails == null
+                || officialEmailToggleButton == null) {
+            return;
+        }
+        officialEmailDetails.setVisibility(
+                expanded ? View.VISIBLE : View.GONE);
+        officialEmailToggleButton.setIconResource(expanded
+                ? android.R.drawable.arrow_up_float
+                : android.R.drawable.arrow_down_float);
+        officialEmailToggleButton.setContentDescription(getString(expanded
+                ? R.string.official_email_collapse
+                : R.string.official_email_expand));
     }
 
     @Nullable
@@ -1029,6 +1149,7 @@ public class ReportFragment extends Fragment implements LocationListener {
     }
 
     private void resetIdentificationFields() {
+        setIdentificationDetailsExpanded(false);
         if (reportedPartySpinner != null
                 && reportedPartySpinner.getSelectedItemPosition() != 0) {
             reportedPartySpinner.setSelection(0);
@@ -1432,6 +1553,7 @@ public class ReportFragment extends Fragment implements LocationListener {
             nearestIntersectionLabel.setText(
                     R.string.nearest_intersection_waiting);
             nearestIntersectionJson = null;
+            updateOfficialEmailUi();
             return;
         }
         locationLabel.setText(getString(
@@ -1460,6 +1582,7 @@ public class ReportFragment extends Fragment implements LocationListener {
         } else {
             showNearestIntersection();
         }
+        updateOfficialEmailUi();
     }
 
     private void requestCurrentLocation() {
@@ -1691,7 +1814,7 @@ public class ReportFragment extends Fragment implements LocationListener {
         }
     }
 
-    private void saveReport() {
+    private void saveReport(boolean notifyAuthorities) {
         if (preparingPhoto) {
             return;
         }
@@ -1715,12 +1838,16 @@ public class ReportFragment extends Fragment implements LocationListener {
         String selectedQuickReportTypes = "quick".equals(submissionMode)
                 ? quickReportTypesJson()
                 : "[]";
-        boolean officialEmailAuthorized =
+        boolean officialEmailEligible =
                 OfficialEmailPolicy.isAutomaticEmailEligible(
                         selectedQuickReportTypes,
                         null,
                         null
                 );
+        boolean officialEmailAuthorized = officialEmailEligible
+                && officialEmailOptIn != null
+                && officialEmailOptIn.isChecked()
+                && officialEmailRequirementsMet();
 
         ReportValidator.ValidationResult result =
                 ReportValidator.validate(
@@ -1743,35 +1870,6 @@ public class ReportFragment extends Fragment implements LocationListener {
         detailsLayout.setError(null);
 
         MainActivity activity = (MainActivity) requireActivity();
-        if (officialEmailAuthorized) {
-            boolean hasPhoto = selectedPhotoPath != null
-                    && new File(selectedPhotoPath).isFile();
-            boolean hasConfirmedLocation =
-                    activity.isSelectedLocationConfirmed();
-            boolean locationEligible = hasConfirmedLocation
-                    && OfficialEmailPolicy.isOfficialEmailLocationEligible(
-                    activity.getSelectedLatitude(),
-                    activity.getSelectedLongitude()
-            );
-            if (!hasPhoto || !hasConfirmedLocation || !locationEligible) {
-                if (officialEmailError != null) {
-                    officialEmailError.setText(!hasPhoto
-                            ? R.string.official_email_photo_required
-                            : !hasConfirmedLocation
-                            ? R.string.official_email_location_required
-                            : R.string.official_email_location_outside_area);
-                    officialEmailError.setVisibility(View.VISIBLE);
-                    officialEmailError.announceForAccessibility(
-                            officialEmailError.getText());
-                }
-                if (!hasPhoto) {
-                    takePhotoButton.requestFocus();
-                } else {
-                    locationLabel.requestFocus();
-                }
-                return;
-            }
-        }
         if (officialEmailError != null) {
             officialEmailError.setVisibility(View.GONE);
         }
@@ -1877,9 +1975,25 @@ public class ReportFragment extends Fragment implements LocationListener {
                         : R.string.saved_confirmation,
                 Toast.LENGTH_LONG
         ).show();
+        Bundle policeHandoff = notifyAuthorities
+                ? buildPoliceHandoff(
+                clientReportId,
+                observedText,
+                categories,
+                detailsText,
+                policeComplaintText,
+                vehicleDetails,
+                committedPhotoPath != null,
+                activity
+        )
+                : null;
         clearForm();
         activity.clearSelectedLocation();
-        activity.navigateToSavedReports();
+        if (policeHandoff != null) {
+            activity.navigateToPoliceTip(policeHandoff);
+        } else {
+            activity.navigateToSavedReports();
+        }
     }
 
     private String combinedDetails(
@@ -1900,6 +2014,114 @@ public class ReportFragment extends Fragment implements LocationListener {
             combined.append(additionalDetailsText);
         }
         return combined.toString();
+    }
+
+    private Bundle buildPoliceHandoff(
+            String clientReportId,
+            String observedText,
+            List<String> categories,
+            String detailsText,
+            String policeComplaintText,
+            String vehicleDetailsJson,
+            boolean hadPhoto,
+            MainActivity activity
+    ) {
+        List<String> issueLabels = new ArrayList<>();
+        for (String category : categories) {
+            issueLabels.add(humanizeSlug(category));
+        }
+        String issueSummary = String.join(", ", issueLabels);
+        String subjectText = issueLabels.isEmpty()
+                ? "Pedestrian safety concern"
+                : "Pedestrian safety: " + issueLabels.get(0);
+        if (subjectText.length() > 128) {
+            subjectText = subjectText.substring(0, 128);
+        }
+        StringBuilder observationText = new StringBuilder();
+        if (!issueSummary.isEmpty()) {
+            observationText.append("Issue type(s): ").append(issueSummary);
+        }
+        appendParagraph(observationText, detailsText);
+        appendParagraph(observationText, policeComplaintText);
+
+        String locationText = nearestIntersectionLabel == null
+                ? ""
+                : nearestIntersectionLabel.getText().toString().trim();
+        if (nearestIntersectionJson == null
+                || locationText.equals(getString(
+                R.string.nearest_intersection_unknown))) {
+            locationText = activity.isSelectedLocationConfirmed()
+                    ? String.format(
+                    Locale.US,
+                    "%.6f, %.6f",
+                    activity.getSelectedLatitude(),
+                    activity.getSelectedLongitude()
+            )
+                    : "";
+        }
+
+        String licensePlateText = "";
+        String plateStateText = "";
+        String vehicleDescriptionText = "";
+        try {
+            JSONObject vehicle = new JSONObject(vehicleDetailsJson);
+            licensePlateText = vehicle.optString("license_plate", "");
+            plateStateText = vehicle.optString("plate_state", "");
+            List<String> descriptionParts = new ArrayList<>();
+            for (String key : new String[]{
+                    "year", "color", "make", "model", "body_style",
+                    "description"
+            }) {
+                String value = vehicle.optString(key, "").trim();
+                if (!value.isEmpty()) {
+                    descriptionParts.add(value);
+                }
+            }
+            vehicleDescriptionText = String.join(" ", descriptionParts);
+        } catch (JSONException ignored) {
+            // The CW report remains saved even if optional prefill is absent.
+        }
+
+        String evidenceText = hadPhoto
+                ? "CW report " + clientReportId
+                + " includes a photo. Attach the original relevant file "
+                + "yourself on the official CBPD form."
+                : "CW report " + clientReportId
+                + " did not include a photo.";
+        return PoliceTipFragment.newReportHandoff(
+                subjectText,
+                observedText,
+                locationText,
+                licensePlateText,
+                plateStateText,
+                vehicleDescriptionText,
+                observationText.toString(),
+                evidenceText
+        );
+    }
+
+    private static void appendParagraph(
+            StringBuilder destination,
+            String value
+    ) {
+        if (value == null || value.trim().isEmpty()) {
+            return;
+        }
+        if (destination.length() > 0) {
+            destination.append("\n\n");
+        }
+        destination.append(value.trim());
+    }
+
+    private static String humanizeSlug(String slug) {
+        String normalized = slug == null
+                ? ""
+                : slug.replace('_', ' ').trim();
+        if (normalized.isEmpty()) {
+            return normalized;
+        }
+        return normalized.substring(0, 1).toUpperCase(Locale.US)
+                + normalized.substring(1);
     }
 
     @Nullable
@@ -1940,6 +2162,12 @@ public class ReportFragment extends Fragment implements LocationListener {
         clearVehicleDetails();
         clearPoliceFields();
         selectedPhotoPath = null;
+        if (officialEmailOptIn != null) {
+            officialEmailOptIn.setChecked(false);
+        }
+        setOfficialEmailDetailsExpanded(false);
+        setLocationDetailsExpanded(false);
+        setIdentificationDetailsExpanded(false);
         refreshPhotoPreview();
         issueError.setVisibility(View.GONE);
         otherDetailsLayout.setError(null);
@@ -2109,6 +2337,9 @@ public class ReportFragment extends Fragment implements LocationListener {
         if (saveReportButton != null) {
             saveReportButton.setEnabled(!value);
         }
+        if (saveReportNotifyButton != null) {
+            saveReportNotifyButton.setEnabled(!value);
+        }
     }
 
     private void refreshPhotoPreview() {
@@ -2125,6 +2356,7 @@ public class ReportFragment extends Fragment implements LocationListener {
         } else {
             photoPreview.setImageDrawable(null);
         }
+        updateOfficialEmailUi();
     }
 
     @Override

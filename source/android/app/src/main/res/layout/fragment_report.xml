@@ -328,13 +328,28 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toggle_identification_details"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/identification_title"
+                android:contentDescription="@string/identification_expand"
+                android:gravity="start|center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/identification_collapsed"
+                android:textAllCaps="false"
                 android:textColor="@color/cw_blue_dark"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                app:icon="@android:drawable/arrow_down_float"
+                app:iconGravity="textEnd"
+                app:iconTint="@color/cw_blue_dark" />
+
+            <LinearLayout
+                android:id="@+id/identification_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
@@ -599,6 +614,7 @@
                         android:maxLength="1000"
                         android:minLines="4" />
                 </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -838,42 +854,57 @@
                 android:textAllCaps="false" />
         </FrameLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/toggle_report_location"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:text="@string/report_location"
+            android:contentDescription="@string/report_location_expand"
+            android:gravity="start|center_vertical"
+            android:minHeight="48dp"
+            android:text="@string/report_location_collapsed"
+            android:textAllCaps="false"
             android:textColor="@color/cw_blue_dark"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            app:icon="@android:drawable/arrow_down_float"
+            app:iconGravity="textEnd"
+            app:iconTint="@color/cw_blue_dark" />
 
-        <TextView
-            android:id="@+id/report_location_label"
+        <LinearLayout
+            android:id="@+id/report_location_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="@string/map_location_default"
-            android:textColor="@color/cw_text"
-            android:textIsSelectable="true"
-            android:textSize="15sp" />
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/report_location_source_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:text="@string/location_source_waiting"
-            android:textColor="@color/cw_text_secondary"
-            android:textSize="12sp" />
+            <TextView
+                android:id="@+id/report_location_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/map_location_default"
+                android:textColor="@color/cw_text"
+                android:textIsSelectable="true"
+                android:textSize="15sp" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:cardBackgroundColor="#F3F7F8"
-            app:cardCornerRadius="10dp"
-            app:strokeColor="#D7E1E6"
-            app:strokeWidth="1dp">
+            <TextView
+                android:id="@+id/report_location_source_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/location_source_waiting"
+                android:textColor="@color/cw_text_secondary"
+                android:textSize="12sp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="#F3F7F8"
+                app:cardCornerRadius="8dp"
+                app:strokeColor="#D7E1E6"
+                app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -907,16 +938,17 @@
                     android:textColor="@color/cw_text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/change_map_button"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/choose_on_map"
-            android:textAllCaps="false" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/change_map_button"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/choose_on_map"
+                android:textAllCaps="false" />
+        </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/official_email_notice_container"
@@ -926,18 +958,66 @@
             android:importantForAccessibility="yes"
             android:visibility="gone"
             app:cardBackgroundColor="@color/cw_green_light"
-            app:cardCornerRadius="10dp"
+            app:cardCornerRadius="8dp"
             app:strokeColor="@color/cw_green"
             app:strokeWidth="1dp">
 
-            <TextView
-                android:id="@+id/official_email_notice"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:text="@string/official_email_disclosure_codes"
-                android:textColor="@color/cw_text"
-                android:textSize="14sp" />
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/toggle_official_email_details"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/official_email_expand"
+                    android:gravity="start|center_vertical"
+                    android:minHeight="48dp"
+                    android:text="@string/official_email_optional_title"
+                    android:textAllCaps="false"
+                    android:textColor="@color/cw_text"
+                    app:icon="@android:drawable/arrow_down_float"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@color/cw_text" />
+
+                <LinearLayout
+                    android:id="@+id/official_email_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="8dp"
+                    android:paddingBottom="8dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/official_email_notice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/official_email_disclosure_codes"
+                        android:textColor="@color/cw_text"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/official_email_opt_in"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:minHeight="48dp"
+                        android:text="@string/official_email_opt_in" />
+
+                    <TextView
+                        android:id="@+id/official_email_requirements"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/official_email_opt_in_requirements"
+                        android:textColor="@color/cw_text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -955,10 +1035,37 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="22dp"
-            android:layout_marginBottom="24dp"
-            android:text="@string/save_report"
+            android:text="@string/submit_to_cw"
             android:textAllCaps="false"
             android:textSize="17sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/save_report_notify_button"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/submit_to_cw_and_notify_cbpd"
+            android:textAllCaps="false"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/submit_notify_cbpd_disclosure"
+            android:textColor="@color/cw_text_secondary"
+            android:textSize="12sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/notify_authorities_button"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"
+            android:text="@string/notify_authorities"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 </ScrollView>

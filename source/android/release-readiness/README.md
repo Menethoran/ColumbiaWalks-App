@@ -1,4 +1,4 @@
-# ColumbiaWalks Android 3.16.0 release readiness
+# ColumbiaWalks Android 3.16.1 release readiness
 
 This directory contains non-secret release tooling. It does **not** contain a
 keystore, passwords, an environment file, or a production APK.
@@ -16,7 +16,7 @@ Created:  2026-08-19 12:39:05 America/New_York
 
 The 3.13.0 APK has one signer and APK Signature Scheme v2/v3 signatures. It
 does not have a v3.1 proof-of-rotation lineage. Android therefore permits an
-in-place 3.16.0 update only when the original 3.13.0 private key signs it.
+in-place 3.16.1 update only when the original 3.13.0 private key signs it.
 
 Do not publish the debug APK and do not create a second production identity
 silently. A different signer would be rejected by installed 3.13.0 copies and
@@ -37,29 +37,29 @@ export CW_ANDROID_KEY_ALIAS=the-existing-alias
 ```
 
 The script prompts for both passwords without echoing them, confirms that the
-keystore certificate is exactly the 3.13.0 certificate, builds 3.16.0, checks
+keystore certificate is exactly the 3.13.0 certificate, builds 3.16.1, checks
 its package/version/signature, and only then stages:
 
 ```text
-/home/robert/Documents/1-Work/ColumbiaWalks/ColumbiaWalks-3.16/artifacts/ColumbiaWalks-3.16.0.apk
+/home/robert/Documents/1-Work/ColumbiaWalks/ColumbiaWalks-3.16/artifacts/ColumbiaWalks-3.16.1.apk
 ```
 
 The Play artifacts are staged privately as:
 
 ```text
-/home/robert/Documents/1-Work/ColumbiaWalks/ColumbiaWalks-3.16/artifacts/play/ColumbiaWalks-3.16.0-play.aab
-/home/robert/Documents/1-Work/ColumbiaWalks/ColumbiaWalks-3.16/artifacts/play/ColumbiaWalks-3.16.0-native-debug-symbols.zip
-/home/robert/Documents/1-Work/ColumbiaWalks/ColumbiaWalks-3.16/artifacts/play/ColumbiaWalks-3.16.0-mapping.txt
+/home/robert/Documents/1-Work/ColumbiaWalks/ColumbiaWalks-3.16/artifacts/play/ColumbiaWalks-3.16.1-play.aab
+/home/robert/Documents/1-Work/ColumbiaWalks/ColumbiaWalks-3.16/artifacts/play/ColumbiaWalks-3.16.1-native-debug-symbols.zip
+/home/robert/Documents/1-Work/ColumbiaWalks/ColumbiaWalks-3.16/artifacts/play/ColumbiaWalks-3.16.1-mapping.txt
 ```
 
 This source tree and these staging names do not prove publication. The live
 website download and Ghost version surfaces intentionally remain at 3.14.1
-until a production-signed 3.16.0 artifact has passed every gate below and is
+until a production-signed 3.16.1 artifact has passed every gate below and is
 actually published.
 
-## 3.16.0 Community and official-email deployment gates
+## 3.16.1 Community and optional-email deployment gates
 
-The current 3.16 candidate is a field-test build. Its two eligible issue rules
+The current 3.16.1 candidate is a field-test build. Its two eligible issue rules
 remain unchanged, but the Android client pins each new authorization to the
 `test` destination. Generated subjects begin with `[TEST]`, and messages go
 only to a ColumbiaWalks-controlled test mailbox—not to the Police Chief,
@@ -78,7 +78,7 @@ Complete and record each gate before building or publishing a store artifact:
    public feed exposes only approved/redacted comments tied to active canonical
    cans. Do not invent or publish an unverified can inventory.
 2. Deploy the Directus schema and durable official-email outbox before any
-   3.16.0 client can submit an email-authorized report. Confirm older clients
+   3.16.1 client can submit an email-authorized report. Confirm older clients
    and rows default to no authorization.
 3. Configure only the ColumbiaWalks-controlled mailbox for this field test.
    Keep the eventual Police Chief, Mayor, and Codes destinations disabled and
@@ -93,20 +93,21 @@ Complete and record each gate before building or publishing a store artifact:
    relevant details and comments, prominent typed license plate on police-route
    email, deterministic deduplication, bounded retry behavior, ambiguous-send
    handling, and the configured daily cap.
-7. Confirm the privacy URL serves the 3.16.0 Community-tools and
+7. Confirm the privacy URL serves the 3.16.1 Community-tools and
    limited-forwarding policy. Reconcile Play Data Safety for trash-can
    location/text and moderated publication, and state that the field-test email
    does not share location, photos, or report content with a government
    recipient.
-8. Verify the police assistant has no ColumbiaWalks network/persistence/media
-   path, preserves the not-submitted warning, opens only the official URLs, and
-   requires the user to complete anonymity selection, evidence attachment,
-   attestation, reCAPTCHA, and final submission externally.
+8. Verify the standalone police assistant has no ColumbiaWalks network or media
+   path. Verify the combined choice saves only the CW report before preparing
+   the draft. Both paths must preserve the not-submitted warning, open only the
+   official URLs, and require the user to complete anonymity selection,
+   evidence attachment, attestation, reCAPTCHA, and final submission externally.
 9. Complete Android unit, instrumentation, lint, accessibility, offline/retry,
    and physical-device QA. Complete the iOS build and UI/device QA on a Mac; a
    Linux source check is not an iOS release build.
 10. Build with the established production/upload signer, verify version name
-   `3.16.0` and version code `31600`, record hashes, and retain the mapping and
+   `3.16.1` and version code `31601`, record hashes, and retain the mapping and
    native symbols privately.
 11. Submit the production artifacts and disclosures for App Store and Google
    Play review. Publication is complete only after each intended store/channel
@@ -219,7 +220,7 @@ To audit an APK without staging it:
 The verifier enforces:
 
 - package `org.columbiawalks.app`;
-- version name `3.16.0` and version code `31600`;
+- version name `3.16.1` and version code `31601`;
 - the pinned production signer;
 - a valid v2 signature;
 - absence of an accidentally packaged keystore-like file; and

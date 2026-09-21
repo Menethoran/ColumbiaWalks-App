@@ -39,14 +39,13 @@
     <string name="continuous_license_plate_optional">License plate (optional)</string>
     <string name="continuous_plate_state_optional">Plate state or jurisdiction (optional)</string>
     <string name="continuous_vehicle_identification_helper">Enter only what you safely observed. Never approach or follow a vehicle.</string>
-    <string name="continuous_official_email_disclosure_police_mayor">3.16 field-test email: by submitting this report, you authorize ColumbiaWalks to send the uploaded report only to a ColumbiaWalks-controlled test mailbox. The subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A picture and confirmed location within 5 km of Columbia Borough center are required; the test email includes the picture, location, comments, and any license-plate information. This is not emergency reporting and does not guarantee delivery, a response, or enforcement.</string>
-    <string name="continuous_official_email_disclosure_codes">3.16 field-test email: by submitting this report, you authorize ColumbiaWalks to send the uploaded report only to a ColumbiaWalks-controlled test mailbox. The subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A picture and confirmed location within 5 km of Columbia Borough center are required; the test email includes the picture, location, comments, and optional lip height. This is not emergency reporting and does not guarantee delivery, a response, or correction.</string>
+    <string name="continuous_official_email_disclosure_police_mayor">This separate 3.16.1 crosswalk field test is off unless you opt in. If authorized after upload, ColumbiaWalks may send a [TEST]-subject message only to its controlled test mailbox, not Police, the Mayor, Codes, or another government recipient. It includes the picture, location, comments, and any license-plate information. Authorization does not confirm delivery.</string>
+    <string name="continuous_official_email_disclosure_codes">This separate 3.16.1 missing-sidewalk field test is off unless you opt in. If authorized after upload, ColumbiaWalks may send a [TEST]-subject message only to its controlled test mailbox, not Police, the Mayor, Codes, or another government recipient. It includes the picture, location, comments, and optional lip height. Authorization does not confirm delivery.</string>
+    <string name="continuous_official_email_requirements">The test can be enabled after the required Repeat picture and location are ready and within the test area. It is always optional.</string>
     <string name="continuous_comments_optional">Comments (optional)</string>
     <string name="continuous_comments_helper">What else should this report include? Add only useful details the picture does not show. You can submit without typing.</string>
     <string name="continuous_submit_next">Submit &amp; report next</string>
     <string name="continuous_submit_next_description">Submit this report and prepare the next report</string>
-    <string name="continuous_submit_email_next">Submit [TEST] email &amp; report next</string>
-    <string name="continuous_submit_email_next_description">Submit this report, authorize the disclosed field-test email to the ColumbiaWalks-controlled test mailbox, and prepare the next report</string>
     <string name="continuous_ready_hint">After submission, this screen immediately resets for the next issue.</string>
     <string name="continuous_camera_unavailable">The camera could not be opened. You can select a picture instead.</string>
     <string name="continuous_picture_prepare_failed">That picture could not be prepared. Please try another picture.</string>
@@ -211,8 +210,7 @@
     <string name="additional_information_toggle">Add additional information</string>
     <string name="details_hint">Describe the condition, direction of travel, vehicle description, nearby address or landmark, and anything else that would help.</string>
     <string name="photo_optional">Photo (optional)</string>
-    <string name="photo_required_for_official_email">Photo (required for the 3.16 field-test email)</string>
-    <string name="photo_privacy_notice">Use a photo only when it can be taken safely. If the photo contains GPS coordinates, ColumbiaWalks uses them for the report location, then removes embedded metadata from the saved and uploaded picture.</string>
+    <string name="photo_privacy_notice">A photo is optional for this CW report. If you add one with GPS coordinates, ColumbiaWalks uses them for the report location, then removes embedded metadata from the saved and uploaded picture. A photo is needed only to enable the separate optional test-email control.</string>
     <string name="take_photo">Take photo</string>
     <string name="choose_photo">Choose photo</string>
     <string name="remove_photo">Remove</string>
@@ -221,6 +219,9 @@
     <string name="photo_prepare_failed">That photo could not be prepared. Try another image.</string>
     <string name="photo_camera_unavailable">A camera app is not available right now.</string>
     <string name="report_location">Location</string>
+    <string name="report_location_collapsed">Location (optional for Quick Report)</string>
+    <string name="report_location_expand">Expand location options</string>
+    <string name="report_location_collapse">Collapse location options</string>
     <string name="choose_on_map">Review or override on map</string>
     <string name="location_source_waiting">Waiting for photo GPS, device GPS, or a manual map pin.</string>
     <string name="location_source_photo">Location read from the photo’s GPS metadata.</string>
@@ -232,18 +233,24 @@
     <string name="location_source_unknown">Location source was not recorded.</string>
     <string name="pos_gps_photo_format">Photo GPS · %1$s</string>
     <string name="pos_gps_overridden_format">Photo GPS overridden · %1$s</string>
-    <string name="save_report">Save &amp; submit report</string>
-    <string name="save_submit_and_email">Save, submit &amp; send [TEST] email</string>
-    <string name="official_email_disclosure_police_mayor">3.16 field-test email: by tapping “Save, submit &amp; send [TEST] email,” you authorize ColumbiaWalks to send the uploaded report only to a ColumbiaWalks-controlled test mailbox. The subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A photo and confirmed location within 5 km of Columbia Borough center are required; the test email includes the photo, location, report details, comments, and any vehicle or license-plate information. This is not emergency reporting and does not guarantee delivery, a response, or enforcement.</string>
-    <string name="official_email_disclosure_codes">3.16 field-test email: by tapping “Save, submit &amp; send [TEST] email,” you authorize ColumbiaWalks to send the uploaded report only to a ColumbiaWalks-controlled test mailbox. The subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A photo and confirmed location within 5 km of Columbia Borough center are required; the test email includes the photo, location, report details, comments, and optional lip height. This is not emergency reporting and does not guarantee delivery, a response, or correction.</string>
-    <string name="official_email_disclosure_police_mayor_codes">3.16 field-test emails: by tapping “Save, submit &amp; send [TEST] email,” you authorize ColumbiaWalks to send the applicable uploaded report information only to a ColumbiaWalks-controlled test mailbox. Each subject begins “[TEST]”; this field-test build does not send email to the Police Chief, Mayor, Codes, or any other government recipient. A photo and confirmed location within 5 km of Columbia Borough center are required; the test emails include the photo, location, report details, comments, and any vehicle or license-plate information. This is not emergency reporting and does not guarantee delivery, a response, enforcement, or correction.</string>
-    <string name="official_email_photo_required">Add a photo before authorizing this 3.16 field-test email.</string>
-    <string name="official_email_location_required">Confirm the report location before authorizing this 3.16 field-test email.</string>
-    <string name="official_email_location_outside_area">The 3.16 field-test email is limited to reports within 5 km of Columbia Borough center. Correct or manually override this report’s location before submitting. To save an ordinary report outside that area, clear the qualifying issue selection.</string>
+    <string name="official_email_optional_title">Test email (optional, off)</string>
+    <string name="official_email_optional_title_on">Test email (optional, on)</string>
+    <string name="official_email_expand">Expand optional test-email instructions</string>
+    <string name="official_email_collapse">Collapse optional test-email instructions</string>
+    <string name="official_email_opt_in">Opt in to the [TEST] email</string>
+    <string name="official_email_opt_in_requirements">Add a photo and a confirmed location within 5 km of Columbia Borough center to enable this optional test. You can submit the CW report without either one.</string>
+    <string name="official_email_ready">The optional test is ready. It remains off until you select the opt-in checkbox.</string>
+    <string name="official_email_disclosure_police_mayor">This separate 3.16.1 crosswalk field test is off unless you opt in. If authorized after a successful upload, ColumbiaWalks may send a [TEST]-subject message only to a ColumbiaWalks-controlled test mailbox, not Police, the Mayor, Codes, or another government recipient. It includes the photo, location, report details, comments, and any vehicle or license-plate information. Authorization does not confirm delivery.</string>
+    <string name="official_email_disclosure_codes">This separate 3.16.1 missing-sidewalk field test is off unless you opt in. If authorized after a successful upload, ColumbiaWalks may send a [TEST]-subject message only to a ColumbiaWalks-controlled test mailbox, not Police, the Mayor, Codes, or another government recipient. It includes the photo, location, report details, comments, and optional lip height. Authorization does not confirm delivery.</string>
+    <string name="official_email_disclosure_police_mayor_codes">These separate 3.16.1 field tests are off unless you opt in. If authorized after a successful upload, ColumbiaWalks may send [TEST]-subject messages only to a ColumbiaWalks-controlled test mailbox, not Police, the Mayor, Codes, or another government recipient. Authorization does not confirm delivery.</string>
     <string name="select_issue_error">Select at least one issue type.</string>
     <string name="details_required_error">Add a short description for Not included elsewhere.</string>
     <string name="saved_confirmation">Report saved locally and queued for secure submission.</string>
     <string name="saved_and_official_email_confirmation">Report saved and queued for secure upload. If accepted, ColumbiaWalks will process the authorized [TEST] email only to its controlled test mailbox; delivery is not confirmed.</string>
+    <string name="submit_to_cw">Submit complaint to CW</string>
+    <string name="submit_to_cw_and_notify_cbpd">Submit to CW &amp; Notify CBPD</string>
+    <string name="submit_notify_cbpd_disclosure">The second option saves the CW report, then opens a prepared anonymous-tip draft. You must review and submit it yourself on CBPD’s official site; opening the site is not delivery.</string>
+    <string name="notify_authorities">Notify the Authorities</string>
     <string name="report_save_failed">The report could not be saved. Your picture and form are still here; please try again.</string>
     <string name="detailed_checklist_title">Questions for selected issues (optional)</string>
     <string name="detailed_checklist_intro">Only follow-up questions related to the issue types selected above are shown. Answer only what you can observe.</string>
@@ -265,6 +272,9 @@
     <string name="checklist_unavailable">The detailed checklist could not be loaded. You can still use the quick report fields.</string>
 
     <string name="identification_title">Identify the reported person or vehicle (optional)</string>
+    <string name="identification_collapsed">People and vehicles (optional)</string>
+    <string name="identification_expand">Expand optional people and vehicle details</string>
+    <string name="identification_collapse">Collapse optional people and vehicle details</string>
     <string name="identification_notice">Enter only details you safely observed. Do not approach or follow a vehicle to obtain information.</string>
     <string name="reported_party_question">Who is being reported?</string>
     <string name="reported_party_unknown">Unknown / not observed</string>
@@ -353,7 +363,7 @@
     <string name="feedback_address">Street address (optional)</string>
     <string name="feedback_contact_notes">Additional contact details or notes (optional)</string>
     <string name="feedback_consent">I consent to being contacted about this feedback.</string>
-    <string name="feedback_privacy">Contact information stays hidden unless you opt in. Providing it does not grant permission to contact you unless you also select the consent box. Reports go first to ColumbiaWalks. Only a qualifying Crosswalk Encroachment or Missing Sidewalk report can authorize a [TEST] email to the ColumbiaWalks-controlled test mailbox. This 3.16 field-test build does not send those emails to the Police Chief, Mayor, Codes, or any other government recipient; all other reports and feedback remain within ColumbiaWalks unless disclosure is required by law or needed to protect people, rights, or the service.</string>
+    <string name="feedback_privacy">Contact information stays hidden unless you opt in. Providing it does not grant permission to contact you unless you also select the consent box. Reports go first to ColumbiaWalks. Only a qualifying Crosswalk Encroachment or Missing Sidewalk report can authorize a [TEST] email to the ColumbiaWalks-controlled test mailbox. This 3.16.1 field-test build does not send those emails to the Police Chief, Mayor, Codes, or any other government recipient; all other reports and feedback remain within ColumbiaWalks unless disclosure is required by law or needed to protect people, rights, or the service.</string>
     <string name="privacy_policy_link">Privacy policy: https://www.columbiawalks.com/privacy-policy/</string>
     <string name="submit_feedback">Submit feedback</string>
     <string name="feedback_reason_error">Select a reason for your feedback.</string>
@@ -376,6 +386,12 @@
 
     <string name="community_title">Community</string>
     <string name="community_intro">Choose the destination that matches what you want to do. Each option explains where the information goes before you continue.</string>
+    <string name="community_contact_heading">Contact Us</string>
+    <string name="community_contact_body">Robert is the current ColumbiaWalks contact. Call or text directly, or use the private ColumbiaWalks feedback path for app, project, or report follow-up.</string>
+    <string name="community_contact_phone">Robert · (717) 466-9069</string>
+    <string name="community_contact_call">Call Robert</string>
+    <string name="community_contact_text">Text Robert</string>
+    <string name="community_contact_message">Send a Private ColumbiaWalks Message</string>
     <string name="community_police_heading">Columbia Borough Police</string>
     <string name="community_police_body">Prepare text locally for a past, non-active anonymous tip, then finish it on the Police Department’s official website. ColumbiaWalks does not receive the tip or media.</string>
     <string name="community_police_action">Prepare an Anonymous Police Tip</string>
@@ -388,6 +404,7 @@
 
     <string name="police_tip_title">Prepare an Anonymous Police Tip</string>
     <string name="police_tip_local_only_intro">This tool only prepares text on your phone. It does not send a tip, upload a license-plate image, video, audio, document, or other media, or transmit anything to ColumbiaWalks. You will open and complete the Police Department’s official form yourself.</string>
+    <string name="police_tip_cw_handoff_intro">This draft was prepared from the CW report you just saved. ColumbiaWalks has not sent the draft or any media to CBPD. Review it, choose Anonymous on the official form, attach original files yourself if appropriate, and personally submit it.</string>
     <string name="police_tip_emergency_heading">Emergency or incident in progress?</string>
     <string name="police_tip_emergency_body">Call 911 now. Do not use an online form when someone is in danger, urgent help is needed, or an incident is happening now.</string>
     <string name="police_tip_call_911">Call 911</string>

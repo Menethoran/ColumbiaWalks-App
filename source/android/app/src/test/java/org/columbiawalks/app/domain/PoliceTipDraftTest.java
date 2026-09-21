@@ -78,7 +78,7 @@ public class PoliceTipDraftTest {
                         + "Evidence available:\n"
                         + "Original MP4 and two JPG files available.\n\n"
                         + "Prepared locally in ColumbiaWalks. No tip text "
-                        + "or media was sent to ColumbiaWalks.",
+                        + "or media was sent to ColumbiaWalks or CBPD.",
                 prepared.getNarrative()
         );
         assertEquals(
@@ -97,6 +97,19 @@ public class PoliceTipDraftTest {
         assertFalse(narrative.contains("Vehicle description:"));
         assertFalse(narrative.contains("Evidence available:"));
         assertTrue(narrative.contains("Firsthand observation:"));
+    }
+
+    @Test
+    public void identifiesCwReportHandoffWithoutClaimingPoliceDelivery() {
+        String narrative = validBuilder()
+                .setSourceWasSubmittedToColumbiaWalks(true)
+                .build()
+                .prepare()
+                .getNarrative();
+
+        assertTrue(narrative.contains("saved to ColumbiaWalks"));
+        assertTrue(narrative.contains("did not send this draft or media to CBPD"));
+        assertFalse(narrative.contains("No tip text or media was sent to ColumbiaWalks"));
     }
 
     private static PoliceTipDraft.Builder validBuilder() {

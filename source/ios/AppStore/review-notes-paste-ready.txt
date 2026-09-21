@@ -1,19 +1,21 @@
-ColumbiaWalks 3.16.0 (31600) needs no account, payment, invitation, or activation. Its five tabs are Map, Report, Repeat, Saved, and Community. Location permission is optional.
+ColumbiaWalks 3.16.1 (31601) needs no account, payment, invitation, or activation. Its five tabs are Map, Report, Repeat, Saved, and Community. Location permission is optional.
 
 Suggested review:
-1. On Map, place a pin near Columbia, Pennsylvania, or use the current location.
-2. In Report, Quick Report can normally be saved without a category or location. Full Report shows all issue types. Selecting only Crosswalk encroachment or only Missing sidewalk shows a persistent field-test email disclosure and requires a relevant picture and confirmed location within 5 km. The disclosure says any eligible server-generated message goes only to a ColumbiaWalks-controlled test mailbox with [TEST] in its subject, never Police, the Mayor, or Codes. Adding a second Quick type removes that authorization. Page of Shame separately discloses administrator review before possible public use.
-3. Repeat keeps the selected hierarchy ready while per-event picture, comment, location, and vehicle identifiers reset. Missing sidewalk and Crosswalk incursion show the same limited test-mailbox disclosure when their exact eligibility rules are met. Camera and library pickers are cancellable.
-4. Saved shows local queue/submission state. Report acceptance and email status are separate; neither claims guaranteed delivery.
-5. Community has three distinct destinations:
-   - Prepare an Anonymous Police Tip creates and copies a local-only draft for a past, non-active matter. It sends nothing to ColumbiaWalks. Opening the official Police Department site is not submission; the user must select anonymous, paste, attach evidence, personally attest, complete reCAPTCHA, and submit there. Please do not file a sample police tip during review.
-   - Trash Cans separates moderated public comments from private complaints. Public comments are locked to public trash cans and may be published only after review/redaction. Private complaints are not published or automatically forwarded to the Borough. Both require a written location; a confirmed map pin is optional. Version 3.16 queues JSON and attaches no trash-can media.
-   - App Feedback remains anonymous by default; optional contact fields require a separate consent choice.
+1. On Map, place a pin near Columbia, Pennsylvania, or use current location.
+2. In Report, Quick Report can be saved without a category, location, or photo. Location and identification start collapsed. The two actions are Submit complaint to CW and Submit to CW & Notify CBPD. The second saves the CW report, then opens a prepared anonymous-tip draft; ColumbiaWalks does not send it or media to CBPD. The user must finish the official form.
+3. Selecting only Crosswalk encroachment or only Missing sidewalk reveals a collapsed test-email control that is off by default. It can be enabled only with a relevant photo and confirmed location within 5 km, but those items remain optional for the CW report. Any opted-in server message goes only to a ColumbiaWalks-controlled test mailbox with [TEST] in its subject, not to Police, the Mayor, or Codes. Adding a second Quick type removes the control. Authorization does not confirm delivery.
+4. Repeat requires its own picture and location and keeps the selected hierarchy ready while per-event fields reset. Missing sidewalk and Crosswalk incursion show the same off-by-default test-email control. Camera and library pickers are cancellable.
+5. Saved shows local queue/submission state. Report acceptance and test-email state are separate; neither claims guaranteed delivery.
+6. Community includes:
+   - Contact Us, listing Robert at (717) 466-9069 with Call, Text, and private app/project feedback paths.
+   - Prepare an Anonymous Police Tip for a past, non-active matter. A standalone draft stays local. A draft prepared after a CW report clearly states that the report was saved to CW but nothing was sent to CBPD. Opening the official site is not submission; the user must select anonymous, paste, attach evidence, personally attest, complete reCAPTCHA, and submit there. Please do not file a sample police tip during review.
+   - Trash Cans, separating moderated public comments from private complaints. Private complaints are not published or automatically forwarded to the Borough.
+   - App Feedback, anonymous by default with optional contact and separate follow-up consent.
 
 The app has no public in-app user-content feed, messaging, ads, analytics, tracking, purchases, or third-party login. It is an independent community pedestrian-safety tool, not a government, police, emergency, medical, legal, or financial service. Emergencies and incidents in progress are directed to 911.
 
-Core services are Apple MapKit, Core Location, PhotosUI, UIPasteboard, camera access, and ColumbiaWalks HTTPS endpoints at directus.rndtech.org/columbiawalks-api. The police-tip tool opens the official CRIMEWATCH site externally and has no ColumbiaWalks police-upload path. No Gmail credential or recipient address is in the app.
+Core services are Apple MapKit, Core Location, PhotosUI, UIPasteboard, camera access, and ColumbiaWalks HTTPS endpoints at directus.rndtech.org/columbiawalks-api. The police-tip tool opens the official CRIMEWATCH site externally and has no path that submits a tip or media to CBPD. No Gmail credential or recipient address is in the app.
 
-After upload, the server may request model-derived incident weather from Open-Meteo using only two-decimal incident coordinates and the incident date/hour. It sends no live phone location, precise coordinates, narrative, photo, contact, or report ID. Estimates and provenance may be stored; Open-Meteo is attributed under CC BY 4.0. The app contacts no weather service, adds no permission, and weather failure never blocks a report.
+After upload, the server may request model-derived incident weather from Open-Meteo using only two-decimal incident coordinates and the incident date/hour. It sends no live phone location, precise coordinates, narrative, photo, contact, or report ID. The app contacts no weather service, adds no permission, and weather failure never blocks a report.
 
 Physical-device recording: [DEVICE MODEL], [IOS VERSION]. Replace both placeholders and attach a recording that begins at launch and demonstrates the above without filing a police tip or entering private third-party data.

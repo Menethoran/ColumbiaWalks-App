@@ -334,7 +334,13 @@ test("serves the public privacy policy without contacting Directus", async () =>
   assert.match(response.headers["content-security-policy"], /frame-ancestors 'none'/);
   assert.match(response.body, /ColumbiaWalks/);
   assert.match(response.body, /Privacy Policy/);
-  assert.match(response.body, /Effective September 18, 2026/);
+  assert.match(response.body, /Effective September 21, 2026/);
+  assert.match(response.body, /A photo is not required for a standard Quick or Full CW report/);
+  assert.match(response.body, /eligible-report control is collapsed, off by default/);
+  assert.match(response.body, /Submit to CW &amp; Notify CBPD/);
+  assert.match(response.body, /ColumbiaWalks does not send the draft or media to CBPD/);
+  assert.match(response.body, /Contact Us/);
+  assert.match(response.body, /\(717\) 466-9069/);
   assert.match(response.body, /location metadata embedded in a camera or selected photo/);
   assert.match(response.body, /Open-Meteo/);
   assert.match(response.body, /rounds the incident coordinates to two decimal places/);
@@ -352,7 +358,7 @@ test("serves the public privacy policy without contacting Directus", async () =>
   assert.match(response.body, /do not sell personal information/);
   assert.match(response.body, /Health Connect/);
   assert.match(response.body, /disables Android backup/);
-  assert.match(response.body, /affirmatively authorize official email/);
+  assert.match(response.body, /affirmatively opt in specifically for the test destination/);
   assert.match(response.body, /defaults to field-test destination mode/);
   assert.match(response.body, /send it only to a ColumbiaWalks-controlled test mailbox/);
   assert.match(response.body, /do not receive a field-test message/);

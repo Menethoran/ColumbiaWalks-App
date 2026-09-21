@@ -23,6 +23,8 @@ Features include:
 - Repeat Reporting for fast sidewalk and vehicle observations
 - Optional sidewalk lip-height and vehicle-behavior choices
 - Quick and detailed pedestrian-safety reports
+- Two clear Quick Report actions: submit only to ColumbiaWalks, or save to CW
+  and prepare a separate anonymous CBPD tip draft
 - GPS from camera or selected photos, with device-location fallback and manual
   override
 - Optional photos with embedded metadata removed before upload
@@ -31,7 +33,8 @@ Features include:
   import
 - Camera or photo-library choice for Page of Shame reports
 - Saved reports with submission status and retry controls
-- A Community hub with private app feedback
+- A Community hub with Contact Us, Robert's listed phone number, and private app
+  feedback
 - Local-only preparation for a past, non-active anonymous police tip, followed
   by a deliberate handoff to the official Police Department website
 - Moderated public-trash-can comments and a separate private can-complaint form
@@ -44,8 +47,10 @@ or a report ID. The app requests no new permission, and an Open-Meteo outage
 never blocks the report. Weather data is attributed to Open-Meteo under CC BY
 4.0.
 
-Reports go first to ColumbiaWalks. Version 3.16.0 retains a limited email
-field test only after you authorize it on the applicable submit screen:
+Reports go first to ColumbiaWalks. Version 3.16.1 keeps a standard report photo
+optional and makes the limited email field test a collapsed, off-by-default
+opt-in. Its photo and in-area location safeguards apply only to that optional
+test:
 
 - Crosswalk Encroachment, including a Repeat Reporting Crosswalk Incursion, is
   assigned the police-and-mayor logical route.
@@ -60,7 +65,7 @@ reused for a later official destination.
 The email includes the processed photo, confirmed report location, relevant
 details, and comments. An email to the police route prominently includes any
 license plate and plate jurisdiction you typed. All other report types and all
-Feedback submissions remain within ColumbiaWalks unless disclosure is required
+Contact Us messages remain within ColumbiaWalks unless disclosure is required
 by law or needed to protect people, rights, or the service; they are not
 automatically forwarded through this feature.
 
@@ -74,7 +79,7 @@ not represent or act on behalf of Columbia Borough, its Police Department, or
 any other government entity. For official Columbia Borough information and
 public services, visit https://www.columbiapa.net/.
 
-ColumbiaWalks is not an emergency service. Automatic email is not emergency
+ColumbiaWalks is not an emergency service. Test email is not emergency
 reporting. Call 911 when someone is in immediate danger or needs urgent medical
 help.
 
@@ -84,18 +89,15 @@ Maps & Navigation
 
 ## Release name
 
-3.16.0 — Community tools
+3.16.1 — Simpler Quick Report and Contact Us
 
 ## Release notes
 
-Adds a Community hub. Prepare a local-only subject and narrative for a past,
-non-active anonymous police tip, then deliberately finish it—including evidence,
-attestation, reCAPTCHA, and final submission—on the official Police Department
-website. ColumbiaWalks does not receive that draft or media. Also adds moderated
-public-trash-can comments and a separate private can-complaint path with offline
-retry. The controlled report-email field test remains pinned to the
-ColumbiaWalks test mailbox; this build does not route those test messages to
-Police, Mayor, or Codes. The server can add best-effort, model-derived incident
-weather from Open-Meteo using only two-decimal incident coordinates and the
-incident date/hour; no new phone permission is required, and weather failure
-never blocks a report.
+Quick Report now keeps Location collapsed, makes the standard-report photo
+optional, and offers separate Submit to CW and Submit to CW & Notify CBPD
+actions. The second saves the CW report and prepares a draft that the user must
+personally review and submit on CBPD's official form; ColumbiaWalks does not
+send it to police. The test-email control is now collapsed, off by default, and
+still pinned to the ColumbiaWalks test mailbox—not Police, Mayor, or Codes.
+Contact Us lists Robert at (717) 466-9069 with call, text, and private-message
+paths.

@@ -2,9 +2,9 @@
 {{#contentFor "styles"}}
 <style>
   .cw-policy { width:min(900px,calc(100% - 32px)); margin:48px auto 72px; color:#172126; }
-  .cw-policy header { padding:38px; border-radius:24px; background:#123e55; color:#fff; }
+  .cw-policy header { padding:38px; border-radius:8px; background:#123e55; color:#fff; }
   .cw-policy header p { margin:8px 0 0; color:#dcecf3; }
-  .cw-policy section { margin-top:22px; padding:28px 32px; border:1px solid #d7e3df; border-radius:20px; background:#fff; box-shadow:0 12px 30px rgba(18,62,85,.08); }
+  .cw-policy section { margin-top:22px; padding:28px 32px; border:1px solid #d7e3df; border-radius:8px; background:#fff; box-shadow:0 12px 30px rgba(18,62,85,.08); }
   .cw-policy h1,.cw-policy h2 { margin-top:0; }
   .cw-policy p { line-height:1.7; }
 </style>
@@ -12,7 +12,7 @@
 <article class="cw-policy">
   <header>
     <h1>ColumbiaWalks Privacy Policy</h1>
-    <p>Last updated September 12, 2026</p>
+    <p>Last updated September 21, 2026</p>
   </header>
   <section>
     <h2>About this policy</h2>
@@ -20,7 +20,7 @@
   </section>
   <section>
     <h2>Information you choose to provide</h2>
-    <p>When you submit a report, ColumbiaWalks may collect the location you select or confirm, safety concerns and observations, narrative text, comments, dates and times, vehicle or agency details, and an optional photograph. When you use Feedback, you may also choose to provide a name, email address, phone number, street address, or other contact notes. Contact information is optional, and permission to contact you is a separate opt-in.</p>
+    <p>When you submit a report, ColumbiaWalks may collect the location you select or confirm, safety concerns and observations, narrative text, comments, dates and times, vehicle or agency details, and an optional photograph. A photograph is not required for a standard Quick or Full CW report. When you use Contact Us, you may also choose to provide a name, email address, phone number, street address, or other contact notes. Contact information is optional, and permission to contact you is a separate opt-in.</p>
     <p>When available, location metadata embedded in a camera or selected photo is read on your device to suggest the report location. You may review and override it manually. If the photo has no usable location, you may choose device location or enter the location manually. ColumbiaWalks removes embedded metadata from the processed photo before saving or uploading it.</p>
     <p>If you explicitly start walk tracking, ColumbiaWalks uses location while an Android foreground service and persistent notification are active to calculate distance on your device. If you explicitly choose Health Connect import on Android 14 or later, the app requests read access only to walking exercise sessions and distance. After you review and agree to submit, only aggregate distance, duration, time range, activity count, source, and app version are sent; raw routes, unrelated health records, and device identifiers are not uploaded.</p>
   </section>
@@ -31,13 +31,17 @@
     <p>Reports and feedback are not sold or shared for advertising. Authorized administrators and infrastructure providers may process information only as needed to operate ColumbiaWalks. Information may also be disclosed when required by law or to protect people, rights, or the service.</p>
   </section>
   <section>
-    <h2>Limited authorized email field test in app version 3.15.0</h2>
-    <p>When an eligible report is selected, the app shows a specific authorization notice before submission. If you submit after that notice, the report is received and stored by ColumbiaWalks first. The ColumbiaWalks server may then generate an email from the ColumbiaWalks account; the app does not contain or use Gmail credentials.</p>
-    <p>Version 3.15.0 defaults to field-test destination mode. Every otherwise eligible report that you specifically authorize for the test destination is sent only to a ColumbiaWalks-controlled test mailbox, has <code>[TEST]</code> at the start of its subject, and is not delivered to the Police Chief, Mayor, or Codes Department. The test mailbox address is server configuration and is not embedded in the app.</p>
+    <h2>Optional email field test in app version 3.16.1</h2>
+    <p>When an eligible report type is selected, the app shows a collapsed Test email control. The control is off by default and cannot be enabled until its separate photo and in-area location safeguards are satisfied. Those safeguards do not prevent the underlying CW report from being submitted without a photo. If you explicitly opt in, the report is received and stored by ColumbiaWalks first. The ColumbiaWalks server may then generate an email from the ColumbiaWalks account; the app does not contain or use Gmail credentials.</p>
+    <p>Version 3.16.1 uses field-test destination mode. Every otherwise eligible report that you specifically authorize for the test destination is sent only to a ColumbiaWalks-controlled test mailbox, has <code>[TEST]</code> at the start of its subject, and is not delivered to the Police Chief, Mayor, or Codes Department. The test mailbox address is server configuration and is not embedded in the app.</p>
     <p>Email eligibility remains limited to these exact report types: <code>crosswalk_encroachment</code>, Repeat Reporting vehicle <code>crosswalk_incursion</code>, and <code>missing_sidewalk</code>. No other report type generates an email. A separate official destination mode may later route the crosswalk types to the Police Chief and Mayor and missing sidewalk to Codes, but only after destination-specific authorization; consent for the test mailbox cannot be reused for an official send.</p>
     <p>The email includes the processed report photo, confirmed location, relevant report details, and comments. A police-route email prominently displays any license plate and plate jurisdiction typed by the user. ColumbiaWalks does not promise that a plate will be inferred from a photograph. Email eligibility requires a stored photo and confirmed location within 5 km of Columbia Borough center.</p>
-    <p>Feedback, contact information supplied through Feedback, walking summaries, and Health Connect summaries are not automatically forwarded through this feature. A later expansion of eligible report types or recipients requires updated disclosure and policy review.</p>
+    <p>Contact Us messages, contact information supplied through Contact Us, walking summaries, and Health Connect summaries are not automatically forwarded through this feature. A later expansion of eligible report types or recipients requires updated disclosure and policy review.</p>
     <p>A field-test email remains in the configured ColumbiaWalks mailbox and is not sent to a government recipient. If a separately authorized official-destination email is later enabled and delivered, it may become a government public record and may be retained or disclosed under the recipient's laws and policies. ColumbiaWalks cannot control the recipient's copy after delivery. ColumbiaWalks is not an emergency service, and email generation is not emergency reporting. It does not guarantee a response, enforcement action, investigation, or correction. Call 911 when someone is in immediate danger or needs urgent medical help.</p>
+  </section>
+  <section>
+    <h2>Optional anonymous CBPD handoff</h2>
+    <p>The app can save a report to ColumbiaWalks and then prepare a separate draft for the Columbia Borough Police Department's official anonymous-tip form. ColumbiaWalks does not automatically send that draft, a photograph, or other media to CBPD. The user must review the draft, choose the anonymous option, attach original files when appropriate, complete the official form's attestation and reCAPTCHA, and press Submit on the official site. Opening the site is not delivery, and ColumbiaWalks cannot confirm that CBPD received a tip.</p>
   </section>
   <section>
     <h2>Public display</h2>
@@ -49,7 +53,7 @@
   </section>
   <section>
     <h2>Retention, requests, and children</h2>
-    <p>Information is retained only as long as reasonably needed for the purposes described above, legal obligations, safety analysis, and service integrity. To ask about, correct, or request deletion of information you submitted, use the Feedback tab in the ColumbiaWalks app and include enough information to identify the submission. Requests are evaluated subject to legal, safety, and record-integrity requirements. A field-test message remains under ColumbiaWalks' test-mailbox controls. If a separately authorized official-destination message is later delivered, a deletion request to ColumbiaWalks cannot guarantee deletion from that government recipient's email, records, or systems.</p>
+    <p>Information is retained only as long as reasonably needed for the purposes described above, legal obligations, safety analysis, and service integrity. To ask about, correct, or request deletion of information you submitted, use Contact Us in the ColumbiaWalks app or website and include enough information to identify the submission. Robert, the current ColumbiaWalks contact, is also listed at (717) 466-9069. Requests are evaluated subject to legal, safety, and record-integrity requirements. A field-test message remains under ColumbiaWalks' test-mailbox controls. If a separately authorized official-destination message is later delivered, a deletion request to ColumbiaWalks cannot guarantee deletion from that government recipient's email, records, or systems.</p>
     <p>ColumbiaWalks is not directed to children under 13 and does not knowingly seek personal information from children under 13.</p>
   </section>
 </article>

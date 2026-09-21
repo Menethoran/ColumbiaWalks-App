@@ -57,5 +57,7 @@ release after approval.
   review, and submit the version for Apple review. Release it manually only
   after approval and all production gates pass.
 
-No 3.16.1 source or signed iOS artifact has been verified. This release uses
-the 3.16.0 source uploaded to `ColumbiaWalks-App`.
+The later 3.16.1 (31601) source update supersedes this candidate with the
+simplified Quick Report, explicit test-email opt-in, CBPD handoff, and Contact
+Us changes. No 3.16.1 signed iOS archive has been produced or uploaded, so the
+attached 3.16.0 build must not be submitted as though it contains those fixes.

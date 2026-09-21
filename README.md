@@ -13,15 +13,14 @@ ColumbiaWalks is a private community walking-safety initiative. It is not affili
 | [3.14.0](https://github.com/Menethoran/ColumbiaWalks-App/releases/tag/v3.14.0) | 31400 | Latest public Android release | Production-signed APK with Repeat Reporting, photo/GPS improvements, walking-distance tools, and Page of Shame reliability fixes. |
 | 3.14.1 | 31401 | QA candidate only | UI clarity, accessibility text, privacy-link, backup-policy, and Play-policy corrections were completed locally, but no production-signed public APK was created. |
 | 3.15.0 | 31500 | Development candidate | Added faster field-reporting work and a consent-based, test-only official-email design. The required backend deployment, production signing, store review, and physical-device QA were not completed. |
-| 3.16.0 | 31600 | Newest source/debug candidate | Adds Community tools, a local-only police-tip drafting handoff, separate public trash-can comments and private complaints, queued submissions, and server-side weather enrichment. It is not deployed or production-signed. |
+| 3.16.0 | 31600 | Superseded source candidate | Added Community tools, a local-only police-tip drafting handoff, separate public trash-can comments and private complaints, queued submissions, and server-side weather enrichment. |
+| 3.16.1 | 31601 | Newest source candidate | Simplifies Quick Report, keeps standard-report photos optional, adds two CW/CBPD choices, makes test email opt-in, and adds Contact Us. No signed 3.16.1 artifact has been produced. |
 
-There is no verified 3.16.1 source tree or build artifact in the project records currently available to the maintainers.
-
-The newest build available for development testing is 3.16.0. Its Android APK is debug-signed and must not be distributed as a public update. The newest build users can safely install from this repository remains the production-signed [3.14.0 APK](https://github.com/Menethoran/ColumbiaWalks-App/releases/download/v3.14.0/ColumbiaWalks-3.14.0.apk).
+The newest source available for development testing is 3.16.1. It does not yet have a signed Android APK, iOS archive, TestFlight build, or App Store build. The newest build users can safely install from this repository remains the production-signed [3.14.0 APK](https://github.com/Menethoran/ColumbiaWalks-App/releases/download/v3.14.0/ColumbiaWalks-3.14.0.apk).
 
 ## Path to the next public release
 
-Before 3.16.0, or a later replacement build, can be published here, the maintainers must:
+Before 3.16.1, or a later replacement build, can be published here, the maintainers must:
 
 1. Back up and migrate the Directus schema, deploy the matching intake service, and verify the public/private data boundaries with non-sensitive test submissions.
 2. Reconcile the hosted privacy policy and Google Play Data Safety disclosures with the new Community, trash-can, weather, and any enabled forwarding behavior.
@@ -43,7 +42,7 @@ The newest available source candidate is under [`source/`](source/):
 - [`source/android/`](source/android/) contains the Android application, Gradle project, release-readiness checks, shared report catalog, server intake service, migration scripts, tests, and release documentation.
 - [`source/ios/`](source/ios/) contains the SwiftUI application, Xcode project, tests, App Store documentation, and static verification script.
 
-The current source snapshot identifies itself as `3.16.0 (31600)`. It is a development candidate, not proof of a production deployment or store release.
+The current source snapshot identifies itself as `3.16.1 (31601)`. It is a development candidate, not proof of a production deployment or store release.
 
 For Android, use JDK 17 and Android SDK Platform 36 with Build Tools 36.0.0, then run the verification commands documented in [`source/android/DEVELOPMENT_3.16.md`](source/android/DEVELOPMENT_3.16.md). The server intake tests run from `source/android/server/intake/` with `npm test` after installing the locked dependencies.
 

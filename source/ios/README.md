@@ -1,6 +1,6 @@
 # ColumbiaWalks for iPhone
 
-This is the native SwiftUI ColumbiaWalks 3.16.0 app. It deliberately keeps
+This is the native SwiftUI ColumbiaWalks 3.16.1 app. It deliberately keeps
 the Android application's report identifiers, shared 84-question checklist,
 server payload, offline-first behavior, colors, and privacy rules.
 
@@ -37,6 +37,8 @@ when a user chooses device or manual coordinates instead.
 
 The fifth tab is now Community. It keeps App Feedback and adds:
 
+- Contact Us with Robert's current ColumbiaWalks phone number, system Call and
+  Text links, and the existing private feedback path;
 - a local-only structured draft for a past, non-active anonymous police tip,
   with verified call routes and an explicit handoff to the Police Department's
   official site for evidence, attestation, reCAPTCHA, and final submission;
@@ -44,19 +46,24 @@ The fifth tab is now Community. It keeps App Feedback and adds:
   complete file protection and retried on launch/foreground against the 3.16
   trash-can intake endpoint.
 
-Police-tip text is never sent to a ColumbiaWalks API. Version 3.16 does not
-attach trash-can media. The Directus 3.16 migration and intake service 1.12.0
-must be deployed before distributing this client.
+The standalone police-tip draft is never sent to a ColumbiaWalks API. Quick
+Report can first save a CW report and then prepare a separate tip draft from
+those report fields, but ColumbiaWalks does not send that draft or media to
+CBPD. The user must personally complete the official form. Version 3.16 does
+not attach trash-can media. The Directus 3.16 migration and intake service
+1.12.0 must be deployed before distributing this client.
 
-Version 3.16.0 adds a narrowly scoped, server-owned field-test email workflow.
+Version 3.16.1 makes the narrowly scoped, server-owned field-test email workflow
+an explicit opt-in that is collapsed and off by default.
 Only a Quick crosswalk-encroachment report, a Repeat vehicle report explicitly
 marked crosswalk incursion, or a missing-sidewalk report can authorize the test
 email. A standard Quick report must contain exactly one approved key; mixed or
 duplicate Quick selections are ordinary reports without email authorization.
 Repeat Vehicle requires zero Quick keys, while Repeat Sidewalk requires exactly
-one `missing_sidewalk` key. The app displays the test routing and data-sharing
-disclosure before the submit action, requires a relevant photo and a confirmed location within 5 km of
-Columbia Borough center, and sends `official_email_authorized: true` together
+one `missing_sidewalk` key. The app enables the optional control only with a
+relevant photo and a confirmed location within 5 km of Columbia Borough center.
+Those items remain optional for a standard Quick or Full CW report. Only an
+explicit opt-in sends `official_email_authorized: true` together
 with `official_email_destination_authorized: "test"`. Every authorized 3.16
 message is addressed only to a ColumbiaWalks-controlled test mailbox and uses a
 `[TEST]` subject; it is not sent to Police, the Mayor, or Codes. The server—not

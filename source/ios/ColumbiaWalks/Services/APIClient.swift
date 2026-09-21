@@ -9,7 +9,7 @@ struct ReportSubmissionResult: Equatable {
 actor APIClient {
     static let shared = APIClient()
 
-    static let version = "3.16.0"
+    static let version = "3.16.1"
     private let reportEndpoint = URL(string: "https://directus.rndtech.org/columbiawalks-api/reports")!
     private let feedbackEndpoint = URL(string: "https://directus.rndtech.org/columbiawalks-api/feedback")!
     private let trashCanEndpoint = URL(string: "https://directus.rndtech.org/columbiawalks-api/trash-can-submissions")!
@@ -263,7 +263,7 @@ struct ReportPayload: Encodable {
         try container.encodeIfPresent(report.continuousSequence, forKey: .continuousSequence)
         try container.encode(report.hasAuthorizedOfficialEmail, forKey: .officialEmailAuthorized)
         if report.hasAuthorizedOfficialEmail {
-            // Version 3.16 remains pinned to the controlled field-test destination.
+            // Version 3.16.1 remains pinned to the controlled field-test destination.
             // This client must never authorize the server's `official` mode.
             try container.encode("test", forKey: .officialEmailDestinationAuthorized)
         } else {

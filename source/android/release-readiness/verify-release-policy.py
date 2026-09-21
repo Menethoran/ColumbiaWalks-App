@@ -98,18 +98,18 @@ def verify_independence_and_app_disclosure() -> None:
     require_all(
         strings_path,
         (
-            "you authorize ColumbiaWalks to send",
+            "off unless you opt in",
             "only to a ColumbiaWalks-controlled test mailbox",
-            "subject begins “[TEST]”",
-            "does not send email to the Police Chief, Mayor, Codes",
+            "[TEST]-subject",
+            "not Police, the Mayor, Codes",
             "photo, location, report details, comments",
             "license-plate information",
-            "This is not emergency reporting",
-            "does not guarantee delivery",
+            "This app does not contact emergency services",
+            "Authorization does not confirm delivery",
             "Reports go first to ColumbiaWalks",
             "all other reports and feedback remain within ColumbiaWalks",
         ),
-        "3.16 in-app field-test email disclosure",
+        "3.16.1 in-app optional field-test email disclosure",
     )
 
     policy_path = (
@@ -252,14 +252,14 @@ def verify_limited_routing_documents() -> None:
         data_safety,
         (
             "ColumbiaWalks-controlled test mailbox",
-            "Shared with a government recipient through 3.16 field-test email: **No**",
+            "Shared with a government recipient through 3.16.1 field-test email: **No**",
             "The Android app contains neither Gmail credentials nor any mailbox address",
-            "Feedback contact information is not included in automatic official email",
+            "Contact information is not included in field-test email",
         ),
         "Play field-test data-sharing declaration",
     )
     if data_safety_text.count(
-        "shared with a government recipient through 3.16 field-test email: **no**"
+        "shared with a government recipient through 3.16.1 field-test email: **no**"
     ) < 3:
         fail(
             "play-store/DATA_SAFETY.md must mark location, photos, and "
@@ -268,11 +268,11 @@ def verify_limited_routing_documents() -> None:
     print("PASS limited routing, public-record, emergency, and Play sharing disclosures")
 
 
-def verify_website_release_stays_3141() -> None:
+def verify_website_public_download_boundary() -> None:
     website = SOURCE / "ghost-theme-overlay-3.14.1"
     required_by_file = {
         website / "default.hbs": (
-            "columbiawalks website v3.14.1",
+            "columbiawalks website v3.16.1",
             "https://github.com/menethoran/columbiawalks-app/releases/latest",
         ),
         website / "index.hbs": (
@@ -286,7 +286,7 @@ def verify_website_release_stays_3141() -> None:
             '"version": "3.14.1"',
         ),
         website / "page-report.hbs": (
-            '"version":"3.14.1"',
+            '"version":"3.16.1"',
             "https://play.google.com/apps/testing/org.columbiawalks.app",
         ),
         website / "PUBLICATION_SETTINGS.md": (
@@ -294,22 +294,23 @@ def verify_website_release_stays_3141() -> None:
         ),
     }
     for path, required in required_by_file.items():
-        content = require_all(path, required, "published 3.14.1 website fact")
-        if (
-            "3.15.0" in content
-            or "columbiawalks-3.15" in content
-            or "3.16.0" in content
-            or "columbiawalks-3.16" in content
-        ):
+        content = require_all(path, required, "published website and Android-download fact")
+    index = normalized_text(website / "index.hbs")
+    for required_download_fact in (
+        "columbiawalks-3.14.1.apk",
+        "download columbiawalks 3.14.1 apk",
+        "latest android app",
+    ):
+        if required_download_fact not in index:
             fail(
-                f"{path.relative_to(SOURCE)} must not claim an unsigned or "
-                "unpublished 3.15 or 3.16 website release."
+                "Website must keep the public Android download on verified "
+                f"3.14.1: {required_download_fact}"
             )
 
     report = normalized_text(website / "page-report.hbs")
     if "play.google.com/apps/internaltest/" in report:
         fail("Website report page still links to the obsolete Play internal-test track.")
-    print("PASS public Ghost download/version surfaces remain 3.14.1")
+    print("PASS public Android download remains 3.14.1 and web intake identifies as 3.16.1")
 
 
 def verify_privacy_and_play_boundaries() -> None:
@@ -398,8 +399,8 @@ def verify_privacy_and_play_boundaries() -> None:
 
 def verify_release_identity_and_tooling() -> None:
     gradle = normalized_text(SOURCE / "app" / "build.gradle.kts")
-    if "versioncode = 31600" not in gradle or 'versionname = "3.16.0"' not in gradle:
-        fail("Android app must be 3.16.0 (31600).")
+    if "versioncode = 31601" not in gradle or 'versionname = "3.16.1"' not in gradle:
+        fail("Android app must be 3.16.1 (31601).")
 
     android_stage = normalized_text(
         SOURCE / "release-readiness" / "verify-and-stage-android-release.sh"
@@ -408,15 +409,15 @@ def verify_release_identity_and_tooling() -> None:
         SOURCE / "release-readiness" / "verify-and-stage-play-release.sh"
     )
     for name, content in (("APK", android_stage), ("AAB", play_stage)):
-        for phrase in ('expected_version_name="3.16.0"', 'expected_version_code="31600"'):
+        for phrase in ('expected_version_name="3.16.1"', 'expected_version_code="31601"'):
             if phrase not in content:
-                fail(f"{name} staging verifier is missing 3.16.0 identity: {phrase}")
-    if "columbiawalks-3.16.0.apk" not in android_stage:
-        fail("APK staging verifier does not use the 3.16.0 artifact filename.")
+                fail(f"{name} staging verifier is missing 3.16.1 identity: {phrase}")
+    if "columbiawalks-3.16.1.apk" not in android_stage:
+        fail("APK staging verifier does not use the 3.16.1 artifact filename.")
     for filename in (
-        "columbiawalks-3.16.0-play.aab",
-        "columbiawalks-3.16.0-native-debug-symbols.zip",
-        "columbiawalks-3.16.0-mapping.txt",
+        "columbiawalks-3.16.1-play.aab",
+        "columbiawalks-3.16.1-native-debug-symbols.zip",
+        "columbiawalks-3.16.1-mapping.txt",
     ):
         if filename not in play_stage:
             fail(f"Play staging verifier is missing artifact filename: {filename}")
@@ -429,7 +430,7 @@ def verify_release_identity_and_tooling() -> None:
     ):
         if expected_cert not in normalized_text(path):
             fail(f"{path.relative_to(SOURCE)} lost the pinned production signer.")
-    print("PASS 3.16.0 staging identity and established signer pin")
+    print("PASS 3.16.1 staging identity and established signer pin")
 
 
 def main() -> int:
@@ -437,13 +438,13 @@ def main() -> int:
         verify_no_obsolete_absolute_claims()
         verify_independence_and_app_disclosure()
         verify_limited_routing_documents()
-        verify_website_release_stays_3141()
+        verify_website_public_download_boundary()
         verify_privacy_and_play_boundaries()
         verify_release_identity_and_tooling()
     except (AssertionError, ET.ParseError, OSError) as error:
         print(f"FAIL {error}", file=sys.stderr)
         return 1
-    print("Android 3.16 release-policy verification passed.")
+    print("Android 3.16.1 release-policy verification passed.")
     return 0
 
 

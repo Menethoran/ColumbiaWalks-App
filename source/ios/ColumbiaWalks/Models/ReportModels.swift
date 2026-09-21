@@ -439,9 +439,9 @@ struct OfficialEmailServerState: Codable, Equatable {
         case "test":
             "The server reports test mode: any authorized message is addressed only to a ColumbiaWalks-controlled test mailbox with [TEST] in its subject, not to Police, the Mayor, or Codes."
         case "official":
-            "ColumbiaWalks 3.16 authorizes only its controlled test-mailbox field test, but the server reported an inconsistent non-test mode. This app does not confirm any recipient or delivery."
+            "ColumbiaWalks 3.16.1 authorizes only its controlled test-mailbox field test, but the server reported an inconsistent non-test mode. This app does not confirm any recipient or delivery."
         default:
-            "ColumbiaWalks 3.16 authorizes only a [TEST]-subject message to its controlled test mailbox, never Police, the Mayor, or Codes. The server did not confirm test mode, so no recipient or delivery is confirmed."
+            "ColumbiaWalks 3.16.1 authorizes only a [TEST]-subject message to its controlled test mailbox, never Police, the Mayor, or Codes. The server did not confirm test mode, so no recipient or delivery is confirmed."
         }
     }
 

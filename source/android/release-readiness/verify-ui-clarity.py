@@ -299,7 +299,7 @@ def verify_roots_and_spinners() -> None:
     print("PASS pale screen roots and large-text-safe high-contrast spinners")
 
 
-def verify_official_email_photo_heading() -> None:
+def verify_optional_email_and_collapsed_sections() -> None:
     root = ET.parse(RES / "layout" / "fragment_report.xml").getroot()
     heading_id = "@+id/report_photo_heading"
     headings = [
@@ -328,14 +328,44 @@ def verify_official_email_photo_heading() -> None:
         fail("fragment_report.xml is missing full_report_sections.")
     if heading in set(full_sections.iter()):
         fail("report_photo_heading must remain visible in the Quick Report path.")
-    print("PASS official-email photo requirement updates the actual photo heading")
+    ids = {
+        node.attrib.get(ANDROID + "id"): node
+        for node in root.iter()
+        if node.attrib.get(ANDROID + "id")
+    }
+    required_ids = (
+        "@+id/official_email_opt_in",
+        "@+id/official_email_details",
+        "@+id/report_location_details",
+        "@+id/identification_details",
+        "@+id/save_report_button",
+        "@+id/save_report_notify_button",
+        "@+id/notify_authorities_button",
+    )
+    missing = [view_id for view_id in required_ids if view_id not in ids]
+    if missing:
+        fail("Quick Report is missing simplified controls: " + ", ".join(missing))
+    for collapsed_id in (
+        "@+id/official_email_details",
+        "@+id/report_location_details",
+        "@+id/identification_details",
+    ):
+        if ids[collapsed_id].attrib.get(ANDROID + "visibility") != "gone":
+            fail(f"{collapsed_id} must start collapsed.")
+    report_fragment = (
+        SOURCE
+        / "app/src/main/java/org/columbiawalks/app/ui/ReportFragment.java"
+    ).read_text(encoding="utf-8")
+    if "photoHeading.setText(R.string.photo_optional)" not in report_fragment:
+        fail("Quick Report must keep the standard CW photo heading optional.")
+    print("PASS optional test email, optional CW photo, two submit choices, and collapsed optional sections")
 
 
 def verify_version() -> None:
     gradle = (SOURCE / "app" / "build.gradle.kts").read_text(encoding="utf-8")
-    if "versionCode = 31600" not in gradle or 'versionName = "3.16.0"' not in gradle:
-        fail("The Community-tools build must be uniquely identified as 3.16.0 (31600).")
-    print("PASS unique Android release identity 3.16.0 (31600)")
+    if "versionCode = 31601" not in gradle or 'versionName = "3.16.1"' not in gradle:
+        fail("The simplified reporting build must be uniquely identified as 3.16.1 (31601).")
+    print("PASS unique Android release identity 3.16.1 (31601)")
 
 
 def verify_release_policy_copy() -> None:
@@ -371,7 +401,7 @@ def main() -> int:
         verify_edge_to_edge()
         verify_inputs()
         verify_roots_and_spinners()
-        verify_official_email_photo_heading()
+        verify_optional_email_and_collapsed_sections()
         verify_release_policy_copy()
     except (AssertionError, KeyError, ET.ParseError) as error:
         print(f"FAIL {error}", file=sys.stderr)

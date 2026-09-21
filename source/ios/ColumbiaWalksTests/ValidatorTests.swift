@@ -172,13 +172,24 @@ final class PoliceTipDraftTests: XCTestCase {
             Evidence notes:
             Original plate photo and MOV video are on the device.
 
-            Local-only privacy note: This draft and any media were not sent to ColumbiaWalks.
+            Local-only privacy note: This draft and any media were not sent to ColumbiaWalks or CBPD.
             """
         )
         XCTAssertEqual(
             prepared.clipboardText,
             "Subject:\nUnsafe pass near crosswalk\n\nMessage:\n\(prepared.narrative)"
         )
+    }
+
+    func testBuilderIdentifiesCwHandoffWithoutClaimingPoliceDelivery() {
+        var draft = validDraft()
+        draft.sourceWasSubmittedToColumbiaWalks = true
+
+        let narrative = PoliceTipDraftBuilder.prepare(draft).narrative
+
+        XCTAssertTrue(narrative.contains("saved to ColumbiaWalks"))
+        XCTAssertTrue(narrative.contains("did not send this draft or any media to CBPD"))
+        XCTAssertFalse(narrative.contains("not sent to ColumbiaWalks or CBPD"))
     }
 
     private func validDraft() -> PoliceTipDraft {

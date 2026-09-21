@@ -2,8 +2,8 @@
 
 This directory is the source of truth for the App Store Connect listing for bundle ID `org.columbiawalks.app`.
 
-- Marketing version: `3.16.0`
-- Build: `31600`
+- Marketing version: `3.16.1`
+- Build: `31601`
 - Platform: iPhone, iOS 17.0 or later
 - Apple Developer Team: `JKA6EGL5J2`
 - Primary language: English (U.S.)
@@ -23,15 +23,19 @@ Uploading a build, inviting testers, or submitting an app for review remains an 
 Version 3.16 replaces the Feedback tab with a Community hub while retaining
 App Feedback as a nested destination. The hub also provides a local-only police
 tip drafting handoff and separate public-comment/private-complaint trash-can
-forms. The police draft and media are not sent to ColumbiaWalks; the user must
-finish the tip on the official Police Department website. Trash-can JSON is
+forms. In 3.16.1, Quick Report can also save a CW report and prepare a separate
+police-tip draft from those fields. ColumbiaWalks never sends the draft or
+media to CBPD; the user must review and finish the tip on the official Police
+Department website. Trash-can JSON is
 queued locally and requires intake service 1.12.0 plus the 3.16 Directus schema
 before this client can be distributed.
 
-Version 3.16.0 lets users authorize a server-generated field-test email for only
+Version 3.16.1 lets users explicitly opt in to a server-generated field-test email for only
 the qualifying report types documented in `app-privacy.md` and
 `review-information.md`, and only for a confirmed location within 5 km of
-Columbia Borough center. Every 3.16 field-test message is addressed only to a
+Columbia Borough center. The control is collapsed and off by default. Its photo
+and location safeguards do not block submission of the underlying standard CW
+report. Every 3.16.1 field-test message is addressed only to a
 ColumbiaWalks-controlled test mailbox and uses a `[TEST]` subject; this build
 does not authorize email to Police, the Mayor, or Codes. Authorization after
 upload does not confirm delivery. Before release, verify the intake server,

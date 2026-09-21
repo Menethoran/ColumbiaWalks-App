@@ -1,6 +1,6 @@
 # ColumbiaWalks Privacy Policy
 
-Last updated: September 18, 2026
+Last updated: September 21, 2026
 
 ColumbiaWalks is an independent community pedestrian-safety reporting and
 analysis service focused on Columbia, Pennsylvania. ColumbiaWalks does not
@@ -12,8 +12,9 @@ app and website collect and how that information is used.
 
 When you submit a report, ColumbiaWalks may collect the location you select or
 confirm, safety concerns and observations, narrative text, comments, dates and
-times, vehicle or agency details, and an optional photograph. When you use
-Feedback, you may also choose to provide a name, email address, phone number,
+times, vehicle or agency details, and an optional photograph. A photograph is
+not required to save a standard Quick Report to ColumbiaWalks. When you use
+Contact Us, you may also choose to provide a name, email address, phone number,
 street address, or other contact notes. Contact information is optional, and
 permission to contact you is a separate opt-in.
 
@@ -23,13 +24,16 @@ can complaint. A trash-can submission includes its type, one fixed category, a
 public/private/unknown property scope where applicable, and an optional
 confirmed map pin. These forms do not ask for an account or contact details.
 
-The separate police-tip assistant prepares text only on your device. The draft
-is not uploaded to or stored by ColumbiaWalks. If you choose to continue, the
-app opens the Columbia Borough Police Department's official external form. You
-must paste and review the text, choose anonymity, attach any original evidence
-there, personally make the official attestation, complete reCAPTCHA, and press
-the external site's Submit button. That site controls its own collection,
-submission receipt, and privacy practices.
+The separate police-tip assistant prepares text only on your device. A
+standalone draft is not uploaded to or stored by ColumbiaWalks. After saving a
+Quick Report, you may choose **Submit to CW & Notify CBPD** to prepare a draft
+from that report. The report is stored by ColumbiaWalks, but ColumbiaWalks does
+not send the draft, photograph, or other media to the Columbia Borough Police
+Department. If you choose to continue, the app opens the Department's official
+external form. You must paste and review the text, choose anonymity, attach any
+original evidence there, personally make the official attestation, complete
+reCAPTCHA, and press the external site's Submit button. That site controls its
+own collection, submission receipt, and privacy practices.
 
 When available, location metadata embedded in a camera or selected photo is
 read on your device to suggest the report location. You may review and override
@@ -91,14 +95,14 @@ required by law or to protect people, rights, or the service.
 
 ## Limited authorized email field test
 
-Version 3.16.0 retains the specific authorization notice
-before submitting a report that is eligible for the email field test. If you
-submit after that notice, the report is still received and stored by
-ColumbiaWalks first. Delivery defaults to disabled and destination defaults to
-test. If field-test sending is enabled, the ColumbiaWalks server generates an
-email from the ColumbiaWalks account and sends it only to a server-configured
-ColumbiaWalks test mailbox. The app contains neither Gmail credentials nor the
-test mailbox address.
+Version 3.16.1 presents the limited email field test as a collapsed, optional
+control that is off by default. A reporter must expand the instructions and
+explicitly opt in before submitting an eligible report. The report is still
+received and stored by ColumbiaWalks first. Delivery defaults to disabled and
+destination defaults to test. If field-test sending is enabled, the
+ColumbiaWalks server generates an email from the ColumbiaWalks account and sends
+it only to a server-configured ColumbiaWalks test mailbox. The app contains
+neither Gmail credentials nor the test mailbox address.
 
 Email eligibility is limited to these exact report types:
 
@@ -116,12 +120,13 @@ matching authorization and updated release review.
 The email includes the processed report photo, confirmed location, relevant
 report selections and details, and comments. A police-route email prominently
 displays any license plate and plate jurisdiction that you typed. ColumbiaWalks
-does not promise that a plate will be inferred from a photograph. The automatic
-email requires a stored photo and confirmed location within 5 km of Columbia
-Borough center.
+does not promise that a plate will be inferred from a photograph. This optional
+email opt-in requires a stored photo and confirmed location within 5 km of
+Columbia Borough center. Those safeguards do not apply to an ordinary
+ColumbiaWalks submission, which can be saved without a photo.
 
-No other report type is automatically forwarded. Feedback, contact
-information supplied through Feedback, walking summaries, and Health Connect
+No other report type is automatically forwarded. Contact Us messages, contact
+information supplied through Contact Us, walking summaries, and Health Connect
 summaries are not automatically forwarded through this feature. A later change
 to the eligible types or recipients requires updated user-facing disclosure,
 policy review, and release verification.
@@ -181,9 +186,10 @@ Google Play build disables this self-update workflow.
 
 Information is retained only as long as reasonably needed for the purposes
 described above, legal obligations, safety analysis, and service integrity. To
-ask about, correct, or request deletion of information you submitted, use the
-App Feedback under Community in the ColumbiaWalks app and include enough information to identify
-the submission. Requests are evaluated subject to legal, safety, and
+ask about, correct, or request deletion of information you submitted, use
+**Contact Us** under Community in the ColumbiaWalks app and include enough
+information to identify the submission. You may also call or text Robert at
+(717) 466-9069. Requests are evaluated subject to legal, safety, and
 record-integrity requirements.
 
 A field-test message remains under ColumbiaWalks' test-mailbox controls. If you

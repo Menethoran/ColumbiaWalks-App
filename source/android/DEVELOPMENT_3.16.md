@@ -1,7 +1,7 @@
 # ColumbiaWalks 3.16 development handoff
 
-This directory is a development candidate for ColumbiaWalks `3.16.0`
-(`31600`). It is separate from the preserved 3.15 source tree. Nothing in this
+This directory is a development candidate for ColumbiaWalks `3.16.1`
+(`31601`). It is separate from the preserved 3.15 source tree. Nothing in this
 handoff proves a Play Store, App Store, TestFlight, website, intake-service, or
 Directus deployment.
 

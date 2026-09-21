@@ -19,24 +19,24 @@ export const PRIVACY_POLICY_HTML = `<!doctype html>
     body { margin: 0; color: var(--ink); background: #f2f6f4; font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     header, main, footer { width: min(760px, calc(100% - 32px)); margin-inline: auto; }
     header { padding: 56px 0 24px; }
-    .eyebrow { margin: 0 0 8px; color: var(--green); font-size: .82rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-    h1 { margin: 0; font-size: clamp(2.25rem, 8vw, 4rem); line-height: 1.05; letter-spacing: -.04em; }
+    .eyebrow { margin: 0 0 8px; color: var(--green); font-size: .82rem; font-weight: 800; letter-spacing: 0; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(2.25rem, 8vw, 4rem); line-height: 1.05; letter-spacing: 0; }
     .effective { margin: 14px 0 0; color: var(--muted); }
-    main { padding: 28px clamp(22px, 5vw, 48px) 42px; background: var(--paper); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 18px 50px rgba(23, 60, 80, .08); }
+    main { padding: 28px clamp(22px, 5vw, 48px) 42px; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 18px 50px rgba(23, 60, 80, .08); }
     h2 { margin: 34px 0 8px; font-size: 1.35rem; line-height: 1.3; }
     h2:first-child { margin-top: 0; }
     p, ul { margin: 0 0 16px; }
     li + li { margin-top: 8px; }
     a { color: #176848; font-weight: 700; }
     footer { padding: 28px 0 48px; color: var(--muted); font-size: .94rem; }
-    @media (max-width: 520px) { header { padding-top: 36px; } main { border-radius: 18px; } }
+    @media (max-width: 520px) { header { padding-top: 36px; } }
   </style>
 </head>
 <body>
   <header>
     <p class="eyebrow">ColumbiaWalks</p>
     <h1>Privacy Policy</h1>
-    <p class="effective">Effective September 18, 2026</p>
+    <p class="effective">Effective September 21, 2026</p>
   </header>
   <main>
     <h2>Overview</h2>
@@ -44,13 +44,13 @@ export const PRIVACY_POLICY_HTML = `<!doctype html>
 
     <h2>Information you choose to provide</h2>
     <ul>
-      <li>Safety reports may include a selected, photo-provided, or device-provided location; guided report answers; free-text details; vehicle details; an optional photo; whether you affirmatively authorized an eligible email; and the specific test or official destination you authorized.</li>
+      <li>Safety reports may include a selected, photo-provided, or device-provided location; guided report answers; free-text details; vehicle details; an optional photo; whether you affirmatively opted in to an eligible email; and the specific test or official destination you authorized. A photo is not required for a standard Quick or Full CW report.</li>
       <li>Trash-can submissions include a public-comment or private-complaint type, one to three fixed categories, a required comment, at least one location reference (a canonical public-can ID, address, or coordinates), and an optional photo. The submission record does not ask for or store a name, contact detail, account identifier, or device identifier. "Anonymous" describes that application record; it does not mean network transmission is unobservable.</li>
       <li>App feedback includes a category and message. If you open the optional contact section, it may also include contact details and whether you consent to being contacted.</li>
       <li>Beta tester requests include an iOS or Android choice, name, the Apple or Google account email used for testing access, a Columbia street name without a house number, optional comments, consent, and request status.</li>
     </ul>
     <p>The app does not require an account. Optional contact fields may be left blank.</p>
-    <p>The Community police-tip assistant is different from a ColumbiaWalks submission. Its draft stays on your device until you copy it. ColumbiaWalks does not receive or store that text or your police-tip evidence. If you continue, the app opens the Columbia Borough Police Department's external website, where you must choose anonymity, paste and review the text, attach any evidence, personally make the site's attestation, complete reCAPTCHA, and press its Submit button. The Police Department website controls its own collection, receipt, retention, and privacy practices.</p>
+    <p>The Community police-tip assistant is different from a ColumbiaWalks submission. When opened by itself, its draft stays on your device until you copy it, and ColumbiaWalks does not receive or store that text or your police-tip evidence. When you choose Submit to CW &amp; Notify CBPD, the CW report is saved first and the app prepares a separate tip draft from those report fields. In either path, ColumbiaWalks does not send the draft or media to CBPD. If you continue, the app opens the Columbia Borough Police Department's external website, where you must choose anonymity, paste and review the text, attach any evidence, personally make the site's attestation, complete reCAPTCHA, and press its Submit button. Opening the site is not delivery, and ColumbiaWalks cannot confirm receipt. The Police Department website controls its own collection, receipt, retention, and privacy practices.</p>
 
     <h2>Photos, location, and device permissions</h2>
     <ul>
@@ -74,7 +74,7 @@ export const PRIVACY_POLICY_HTML = `<!doctype html>
     <p>Ordinary safety reports, police-interaction reports, feedback, and contact information remain private by default. A report submitted through the Page of Shame path is reviewed by an administrator before its metadata-stripped photo and optional description can appear publicly. The full license plate is not published automatically.</p>
     <p>Trash-can public comments begin in a private moderation queue. Only administrator-approved or redacted public text and its fixed categories may appear in the public trash-can feed, and only when the comment is linked to an active entry in the canonical public trash-can inventory. The raw comment, photo, submitted address or coordinates, submission ID, app version, and submission source are not returned in that feed.</p>
     <p>Trash-can complaints remain in a separate private collection with a new-review status. They and their photos are never included in the public trash-can feed. Submitting a trash-can complaint does not automatically send it to Columbia Borough or another government recipient.</p>
-    <p>Reports go first to ColumbiaWalks. Version 3.16 defaults to field-test destination mode. In that mode, if you affirmatively authorize official email for a matching report specifically for the test destination, ColumbiaWalks may generate an email marked [TEST] and send it only to a ColumbiaWalks-controlled test mailbox. The Police Chief, Mayor, and Codes Department do not receive a field-test message.</p>
+    <p>Reports go first to ColumbiaWalks. Version 3.16.1 defaults to field-test destination mode. The eligible-report control is collapsed, off by default, and enabled only when its separate photo and in-area location safeguards are met. Those safeguards do not block submission of the underlying standard CW report. If you affirmatively opt in specifically for the test destination, ColumbiaWalks may generate an email marked [TEST] and send it only to a ColumbiaWalks-controlled test mailbox. The Police Chief, Mayor, and Codes Department do not receive a field-test message.</p>
     <p>A separate official destination mode may later be enabled. It still requires your destination-specific authorization and is limited to these routes: a crosswalk-encroachment or Repeat Reporting vehicle crosswalk-incursion report to the Police Chief and Mayor, or a missing-sidewalk report to the Codes Department. Authorization for the test mailbox cannot be reused for official routing, and authorization for official routing cannot be reused for testing. No other report category activates automatic official email.</p>
     <p>An eligible official email includes the reported issue, observation time, location and coordinates, reporter comments, a ColumbiaWalks report reference, and the saved metadata-stripped photo. A police-route email also prominently displays a license plate and state when the reporter supplied them; the attached photo remains the underlying evidence.</p>
     <p>Beta tester requests and trash-can complaints remain private and are not included in public maps, public insights, the public trash-can feed, or the Page of Shame.</p>
@@ -91,7 +91,7 @@ export const PRIVACY_POLICY_HTML = `<!doctype html>
     <p>ColumbiaWalks is independent and is not a government agency. Sending or authorizing an official email does not guarantee acknowledgment, investigation, correction, enforcement, or any other response. ColumbiaWalks is not an emergency service; contact 911 for an emergency.</p>
 
     <h2>Your choices</h2>
-    <p>You may delete locally saved reports from the app. To ask about access, correction, or deletion of submitted information, use the feedback channel on the <a href="https://www.columbiawalks.com/report/#feedback">ColumbiaWalks report page</a> and include enough detail to identify the submission. Some information may be retained where legally required or reasonably necessary to protect the service.</p>
+    <p>You may delete locally saved reports from the app. To ask about access, correction, or deletion of submitted information, use <a href="https://www.columbiawalks.com/report/#contact-us">Contact Us</a> and include enough detail to identify the submission. Robert, the current ColumbiaWalks contact, is also listed at <a href="tel:7174669069">(717) 466-9069</a>. Some information may be retained where legally required or reasonably necessary to protect the service.</p>
 
     <h2>Children</h2>
     <p>ColumbiaWalks is a general-audience community-safety service and is not directed to children under 13. Do not submit a child's personal contact information.</p>

@@ -34,8 +34,8 @@ android {
         applicationId = "org.columbiawalks.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 31600
-        versionName = "3.16.0"
+        versionCode = 31601
+        versionName = "3.16.1"
         buildConfigField(
             "String",
             "REPORT_ENDPOINT",

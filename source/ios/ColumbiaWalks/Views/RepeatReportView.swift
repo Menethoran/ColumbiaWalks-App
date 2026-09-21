@@ -21,6 +21,8 @@ struct RepeatReportView: View {
     @State private var savedMessage: String?
     @State private var lastSavedReportID: UUID?
     @State private var requestedInitialLocation = false
+    @State private var showTestEmailDetails = false
+    @State private var testEmailOptIn = false
 
     var body: some View {
         NavigationStack {
@@ -76,7 +78,12 @@ struct RepeatReportView: View {
                 }
 
                 if !officialEmailDestinations.isEmpty {
-                    OfficialEmailDisclosure(destinations: officialEmailDestinations)
+                    OfficialEmailDisclosure(
+                        destinations: officialEmailDestinations,
+                        isOptedIn: $testEmailOptIn,
+                        isExpanded: $showTestEmailDetails,
+                        requirementsMet: testEmailRequirementsMet
+                    )
                 }
 
                 ReportPhotoSection(
@@ -155,6 +162,13 @@ struct RepeatReportView: View {
                 errorMessage = nil
                 savedMessage = nil
                 lastSavedReportID = nil
+                testEmailOptIn = false
+                showTestEmailDetails = false
+            }
+            .onChange(of: locationDraft) { _, _ in
+                if testEmailOptIn && !testEmailRequirementsMet {
+                    testEmailOptIn = false
+                }
             }
             .task {
                 guard !requestedInitialLocation else { return }
@@ -180,9 +194,12 @@ struct RepeatReportView: View {
     }
 
     private var submitButtonLabel: String {
-        officialEmailDestinations.isEmpty
-            ? "Save report & prepare next"
-            : "Save, authorize test email & prepare next"
+        "Save report & prepare next"
+    }
+
+    private var testEmailRequirementsMet: Bool {
+        guard photoData != nil, let coordinate = locationDraft.coordinate else { return false }
+        return OfficialEmailPolicy.isWithinServiceArea(coordinate)
     }
 
     private var latestOfficialEmailServerState: OfficialEmailServerState? {
@@ -212,12 +229,7 @@ struct RepeatReportView: View {
             return
         }
 
-        let emailDestinations = officialEmailDestinations
-        if !emailDestinations.isEmpty,
-           !OfficialEmailPolicy.isWithinServiceArea(coordinate) {
-            errorMessage = "The 3.16 field-test email is limited to reports within 5 km of Columbia Borough center. Review the picture GPS, use device GPS, or override the coordinates before saving. To save an ordinary report outside that area, remove the qualifying subtype."
-            return
-        }
+        let officialEmailAuthorized = testEmailOptIn && testEmailRequirementsMet
         let quickTypes = rapidQuickTypes
 
         let reportID = UUID()
@@ -259,8 +271,8 @@ struct RepeatReportView: View {
             photoLongitude: locationDraft.photoLongitude,
             locationOverridden: locationDraft.locationOverridden,
             photoFilename: photoFilename,
-            officialEmailAuthorized: !emailDestinations.isEmpty,
-            officialEmailDestinationAuthorized: emailDestinations.isEmpty
+            officialEmailAuthorized: officialEmailAuthorized,
+            officialEmailDestinationAuthorized: !officialEmailAuthorized
                 ? nil
                 : "test",
             submissionStatus: .pending,
@@ -287,9 +299,11 @@ struct RepeatReportView: View {
         photoItem = nil
         self.photoData = nil
         locationDraft.reset()
-        savedMessage = emailDestinations.isEmpty
+        testEmailOptIn = false
+        showTestEmailDetails = false
+        savedMessage = !officialEmailAuthorized
             ? "Report #\(savedSequence) saved. Ready for the next \(kind.label.lowercased())."
-            : "Report #\(savedSequence) saved and authorized only for a [TEST]-subject email to the ColumbiaWalks-controlled test mailbox after successful upload—not Police, the Mayor, or Codes. Delivery is not confirmed. Ready for the next \(kind.label.lowercased())."
+            : "Report #\(savedSequence) saved with your optional [TEST]-email authorization to the ColumbiaWalks-controlled test mailbox after successful upload—not Police, the Mayor, or Codes. Delivery is not confirmed. Ready for the next \(kind.label.lowercased())."
         requestDeviceLocation()
     }
 
