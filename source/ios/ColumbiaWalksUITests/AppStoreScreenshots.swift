@@ -40,7 +40,7 @@ final class AppStoreScreenshots: XCTestCase {
         app.navigationBars["Contact Us"].buttons.firstMatch.tap()
         XCTAssertTrue(app.navigationBars["Community"].waitForExistence(timeout: 10))
         app.staticTexts["Prepare an Anonymous Police Tip"].firstMatch.tap()
-        XCTAssertTrue(app.navigationBars["Notify the Authorities"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars["Police Tip"].waitForExistence(timeout: 10))
         capture("06-notify-authorities")
     }
 
