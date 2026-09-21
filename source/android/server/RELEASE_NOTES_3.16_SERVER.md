@@ -1,5 +1,17 @@
 # ColumbiaWalks 3.16 server release notes
 
+## Intake service 1.12.0
+
+- Added authenticated administrator dashboard ingestion for canonical
+  trash-can inventory, pending public comments, and private complaints.
+- Added strict public-comment approve/reject operations. Approval requires
+  moderator-reviewed text and an active canonical public-can UUID; rejection
+  removes any public projection fields.
+- Added private complaint workflow updates for `new`, `in_review`, `referred`,
+  and `closed`, while forcing the privacy state to remain private.
+- Kept raw comments, submitted addresses and coordinates, photos, submission
+  UUIDs, and complaint records out of the public trash-can feed.
+
 ## Identifier-free trash-can records
 
 - Added `POST /columbiawalks-api/trash-can-submissions` for plain JSON or
@@ -65,7 +77,7 @@
 
 ## Compatibility and verification
 
-- The intake package is now version 1.11.0.
+- The intake package is now version 1.12.0.
 - Added `ios` to the existing feedback `submission_source` allowlist, matching
   the version 3.16 iOS client.
 - Added focused validation, route, image, privacy-projection, migration,

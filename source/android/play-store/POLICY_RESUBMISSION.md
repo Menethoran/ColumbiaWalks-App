@@ -122,7 +122,7 @@ credentials are server configuration and are not packaged in the Android app.
   uses the established upload certificate.
 - The trash-can and weather Directus migrations have each run from a verified
   backup, their narrow private-policy allowlists are verified, intake
-  service 1.11.0 is live, JSON comment/complaint smoke tests land in separate
+  service 1.12.0 is live, JSON comment/complaint smoke tests land in separate
   private collections, and the public feed exposes only approved/redacted text
   linked to active canonical cans.
 - Open-Meteo request inspection confirms the two-decimal coordinate and

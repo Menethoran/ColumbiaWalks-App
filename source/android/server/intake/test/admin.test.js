@@ -98,6 +98,44 @@ function fakeDirectus({ adminAccess = true } = {}) {
         }
       ] });
     }
+    if (path === "/items/public_trash_cans") {
+      return Response.json({ data: [{
+        id: 41,
+        public_trash_can_id: "b046815a-1bb7-43a2-bb8f-ddd9cd7a8c84",
+        label: "Locust Street can",
+        address: "Locust Street",
+        status: "active"
+      }] });
+    }
+    if (path === "/items/trash_can_comments") {
+      return Response.json({ data: [{
+        id: 42,
+        submission_id: "a9927f31-6d65-4bf0-8fa6-7a92481de4a1",
+        date_created: new Date().toISOString(),
+        asset_scope: "public",
+        categories: ["needs_cleaning"],
+        comment: "This can needs cleaning.",
+        address: "Locust Street",
+        app_version: "3.16.0",
+        submission_source: "ios",
+        moderation_status: "moderation_pending"
+      }] });
+    }
+    if (path === "/items/trash_can_complaints") {
+      return Response.json({ data: [{
+        id: 43,
+        submission_id: "317d55b0-bf39-4cc4-8511-1a82e793a424",
+        date_created: new Date().toISOString(),
+        asset_scope: "unknown",
+        categories: ["illegal_dumping"],
+        comment: "Dumping beside the container.",
+        address: "Third Street",
+        app_version: "3.16.0",
+        submission_source: "android",
+        status: "new",
+        privacy_status: "private"
+      }] });
+    }
     throw new Error(`Unexpected Directus request: ${url} ${options.method || "GET"}`);
   };
 }
@@ -187,6 +225,18 @@ test("returns sanitized dashboard and pending beta queues only with an admin ses
   assert.equal(response.json().data.available_collections.police_complaints, false);
   assert.equal(response.json().data.available_collections.app_update_events, true);
   assert.equal(response.json().data.available_collections.beta_tester_requests, true);
+  assert.equal(response.json().data.available_collections.trash_can_comments, true);
+  assert.equal(response.json().data.available_collections.trash_can_complaints, true);
+  assert.equal(response.json().data.totals.trash_can_inventory, 1);
+  assert.equal(response.json().data.totals.trash_can_comments, 1);
+  assert.equal(response.json().data.totals.trash_can_complaints, 1);
+  assert.equal(response.json().data.totals.trash_can_pending_moderation, 1);
+  assert.ok(response.json().data.records.some(({ type }) =>
+    type === "trash_can_comment"
+  ));
+  assert.ok(response.json().data.records.some(({ type }) =>
+    type === "trash_can_complaint"
+  ));
   assert.equal(response.json().data.update_metrics.confirmed_installs, 1);
   assert.equal(response.json().data.beta_tester_requests.total, 2);
   assert.equal(response.json().data.beta_tester_requests.ios[0].email, "ivy@example.com");
@@ -327,3 +377,120 @@ test("allows only an authenticated administrator to approve a Page of Shame phot
   await app.close();
 });
 
+test("moderates a public trash-can comment only against an active canonical can", async () => {
+  const canId = "b046815a-1bb7-43a2-bb8f-ddd9cd7a8c84";
+  let moderationPayload = null;
+  const fetchImplementation = async (url, options = {}) => {
+    const parsed = new URL(url);
+    if (parsed.pathname === "/users/me") return Response.json(adminUser(true));
+    if (parsed.pathname === "/items/public_trash_cans") {
+      assert.equal(parsed.searchParams.get("filter[public_trash_can_id][_eq]"), canId);
+      assert.equal(parsed.searchParams.get("filter[status][_eq]"), "active");
+      return Response.json({ data: [{ id: 41, public_trash_can_id: canId }] });
+    }
+    if (
+      parsed.pathname === "/items/trash_can_comments/42" &&
+      options.method === "PATCH"
+    ) {
+      moderationPayload = JSON.parse(options.body);
+      return Response.json({ data: { id: 42 } });
+    }
+    throw new Error(`Unexpected Directus request: ${url} ${options.method || "GET"}`);
+  };
+  const app = await appWith(fetchImplementation);
+
+  const unauthorized = await app.inject({
+    method: "POST",
+    url: "/columbiawalks-api/admin/trash-can-comments/42/moderate",
+    headers: { origin: "https://www.columbiawalks.com" },
+    payload: { action: "approve", public_trash_can_id: canId, public_comment: "Cleaned." }
+  });
+  assert.equal(unauthorized.statusCode, 401);
+
+  const response = await app.inject({
+    method: "POST",
+    url: "/columbiawalks-api/admin/trash-can-comments/42/moderate",
+    headers: {
+      origin: "https://www.columbiawalks.com",
+      cookie: "cw_admin_access=access-token"
+    },
+    payload: {
+      action: "approve",
+      public_trash_can_id: canId,
+      public_comment: "  The can was cleaned and is available.  "
+    }
+  });
+  assert.equal(response.statusCode, 200, response.body);
+  assert.equal(response.json().data.moderation_status, "approved");
+  assert.equal(moderationPayload.moderation_status, "approved");
+  assert.equal(moderationPayload.public_comment, "The can was cleaned and is available.");
+  assert.equal(moderationPayload.public_trash_can_id, canId);
+  assert.match(moderationPayload.approved_at, /^2026-|^2027-/);
+  await app.close();
+});
+
+test("rejects a public trash-can comment without retaining public text", async () => {
+  let moderationPayload = null;
+  const fetchImplementation = async (url, options = {}) => {
+    const parsed = new URL(url);
+    if (parsed.pathname === "/users/me") return Response.json(adminUser(true));
+    if (
+      parsed.pathname === "/items/trash_can_comments/42" &&
+      options.method === "PATCH"
+    ) {
+      moderationPayload = JSON.parse(options.body);
+      return Response.json({ data: { id: 42 } });
+    }
+    throw new Error(`Unexpected Directus request: ${url} ${options.method || "GET"}`);
+  };
+  const app = await appWith(fetchImplementation);
+  const response = await app.inject({
+    method: "POST",
+    url: "/columbiawalks-api/admin/trash-can-comments/42/moderate",
+    headers: {
+      origin: "https://www.columbiawalks.com",
+      cookie: "cw_admin_access=access-token"
+    },
+    payload: { action: "reject" }
+  });
+  assert.equal(response.statusCode, 200, response.body);
+  assert.deepEqual(moderationPayload, {
+    moderation_status: "rejected",
+    public_comment: null,
+    approved_at: null
+  });
+  await app.close();
+});
+
+test("updates a private trash-can complaint while preserving private status", async () => {
+  let statusPayload = null;
+  const fetchImplementation = async (url, options = {}) => {
+    const parsed = new URL(url);
+    if (parsed.pathname === "/users/me") return Response.json(adminUser(true));
+    if (
+      parsed.pathname === "/items/trash_can_complaints/43" &&
+      options.method === "PATCH"
+    ) {
+      statusPayload = JSON.parse(options.body);
+      return Response.json({ data: { id: 43 } });
+    }
+    throw new Error(`Unexpected Directus request: ${url} ${options.method || "GET"}`);
+  };
+  const app = await appWith(fetchImplementation);
+  const response = await app.inject({
+    method: "POST",
+    url: "/columbiawalks-api/admin/trash-can-complaints/43/status",
+    headers: {
+      origin: "https://www.columbiawalks.com",
+      cookie: "cw_admin_access=access-token"
+    },
+    payload: { status: "in_review" }
+  });
+  assert.equal(response.statusCode, 200, response.body);
+  assert.deepEqual(statusPayload, {
+    status: "in_review",
+    privacy_status: "private"
+  });
+  assert.equal(response.json().data.privacy_status, "private");
+  await app.close();
+});

@@ -72,6 +72,9 @@ export function buildAdminDashboard({
   reports = [],
   feedback = [],
   complaints = [],
+  trashCanInventory = [],
+  trashCanComments = [],
+  trashCanComplaints = [],
   updateEvents = [],
   rangeDays = 90,
   now = new Date()
@@ -88,6 +91,8 @@ export function buildAdminDashboard({
   const selectedReports = reports.filter(inRange);
   const selectedFeedback = feedback.filter(inRange);
   const selectedComplaints = complaints.filter(inRange);
+  const selectedTrashCanComments = trashCanComments.filter(inRange);
+  const selectedTrashCanComplaints = trashCanComplaints.filter(inRange);
   const selectedUpdateEvents = updateEvents.filter(inRange);
   const profiles = [];
   const walkingMetrics = [];
@@ -105,7 +110,9 @@ export function buildAdminDashboard({
     ...ordinaryFeedback.map(normalizeFeedback),
     ...profiles.map(normalizeProfile),
     ...walkingMetrics.map(normalizeWalkingMetric),
-    ...selectedComplaints.map(normalizeComplaint)
+    ...selectedComplaints.map(normalizeComplaint),
+    ...selectedTrashCanComments.map(normalizeTrashCanComment),
+    ...selectedTrashCanComplaints.map(normalizeTrashCanComplaint)
   ].sort((left, right) => Date.parse(right.date || 0) - Date.parse(left.date || 0));
 
   const lastThirtyDays = now.getTime() - 30 * 24 * 60 * 60 * 1000;
@@ -126,6 +133,12 @@ export function buildAdminDashboard({
       pedestrian_profiles: profiles.length,
       walking_metrics: walkingMetrics.length,
       police_complaints: selectedComplaints.length,
+      trash_can_inventory: trashCanInventory.length,
+      trash_can_comments: selectedTrashCanComments.length,
+      trash_can_complaints: selectedTrashCanComplaints.length,
+      trash_can_pending_moderation: selectedTrashCanComments.filter(
+        (item) => (item.moderation_status || "moderation_pending") === "moderation_pending"
+      ).length,
       open_issues: openIssues,
       last_30_days: records.filter((record) => {
         const timestamp = Date.parse(record.date || 0);
@@ -177,6 +190,16 @@ export function buildAdminDashboard({
       police_safety_change: countValues(
         selectedComplaints.map((item) => item.safety_change)
       ),
+      trash_can_categories: countValues([
+        ...selectedTrashCanComments.flatMap((item) => asArray(item.categories)),
+        ...selectedTrashCanComplaints.flatMap((item) => asArray(item.categories))
+      ]),
+      trash_can_comment_status: countValues(
+        selectedTrashCanComments.map((item) => item.moderation_status || "moderation_pending")
+      ),
+      trash_can_complaint_status: countValues(
+        selectedTrashCanComplaints.map((item) => item.status || "new")
+      ),
       update_events: countValues(
         selectedUpdateEvents.map((item) => item.event_type)
       ),
@@ -206,6 +229,82 @@ export function buildAdminDashboard({
     report_heatmap: buildReportHeatmap(selectedReports),
     records
   };
+}
+
+function normalizeTrashCanComment(item) {
+  const categories = unique(asArray(item.categories));
+  return {
+    id: `trash-comment-${item.id}`,
+    record_id: item.id,
+    public_id: item.submission_id,
+    type: "trash_can_comment",
+    title: categories.length > 0
+      ? categories.map(humanize).join(", ")
+      : "Trash-can public comment",
+    summary: cleanText(item.comment) || "Trash-can public comment",
+    date: item.date_created || item.date_updated || null,
+    status: item.moderation_status || "moderation_pending",
+    severity: null,
+    source: item.submission_source || "unknown",
+    location: cleanText(item.address) || coordinateLabel(item),
+    categories,
+    trash_can_comment: {
+      public_trash_can_id: cleanText(item.public_trash_can_id),
+      public_comment: cleanText(item.public_comment),
+      approved_at: item.approved_at || null,
+      has_photo: Boolean(normalizeFileId(item.photo)),
+      can_moderate: (item.moderation_status || "moderation_pending") !== "approved"
+    },
+    details: {
+      "Asset scope": humanize(item.asset_scope),
+      "Canonical can ID": cleanText(item.public_trash_can_id) || "Not linked",
+      "Submitted address": cleanText(item.address) || "Not supplied",
+      "Submitted coordinates": coordinateLabel(item) || "Not supplied",
+      "Photo attached": normalizeFileId(item.photo) ? "Yes" : "No",
+      "App version": item.app_version || "Not recorded"
+    }
+  };
+}
+
+function normalizeTrashCanComplaint(item) {
+  const categories = unique(asArray(item.categories));
+  return {
+    id: `trash-complaint-${item.id}`,
+    record_id: item.id,
+    public_id: item.submission_id,
+    type: "trash_can_complaint",
+    title: categories.length > 0
+      ? categories.map(humanize).join(", ")
+      : "Private trash-can complaint",
+    summary: cleanText(item.comment) || "Private trash-can complaint",
+    date: item.date_created || item.date_updated || null,
+    status: item.status || "new",
+    severity: null,
+    source: item.submission_source || "unknown",
+    location: cleanText(item.address) || coordinateLabel(item),
+    categories,
+    trash_can_complaint: {
+      privacy_status: "private",
+      has_photo: Boolean(normalizeFileId(item.photo))
+    },
+    details: {
+      "Privacy": "Private",
+      "Asset scope": humanize(item.asset_scope),
+      "Canonical can ID": cleanText(item.public_trash_can_id) || "Not linked",
+      "Submitted address": cleanText(item.address) || "Not supplied",
+      "Submitted coordinates": coordinateLabel(item) || "Not supplied",
+      "Photo attached": normalizeFileId(item.photo) ? "Yes" : "No",
+      "App version": item.app_version || "Not recorded"
+    }
+  };
+}
+
+function coordinateLabel(item) {
+  const latitude = Number(item?.latitude);
+  const longitude = Number(item?.longitude);
+  return Number.isFinite(latitude) && Number.isFinite(longitude)
+    ? `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`
+    : "";
 }
 
 export function buildPublicInsights(options = {}) {

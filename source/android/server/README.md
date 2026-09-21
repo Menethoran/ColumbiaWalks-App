@@ -107,6 +107,26 @@ reviewed or redacted text in `public_comment`, setting
 `moderation_status=approved`, and recording `approved_at`; the raw `comment`
 field is never the public source.
 
+Authenticated Directus administrators also receive trash-can inventory,
+public-comment moderation records, and private complaints in the ColumbiaWalks
+admin dashboard response. The backend exposes two same-origin,
+administrator-only workflow endpoints:
+
+```text
+POST /columbiawalks-api/admin/trash-can-comments/:recordId/moderate
+POST /columbiawalks-api/admin/trash-can-complaints/:recordId/status
+```
+
+Comment moderation accepts only `approve` or `reject`. Approval requires
+3–2,000 characters of separately reviewed public text and an active canonical
+`public_trash_can_id`; the server records the approval timestamp. Rejection
+clears any prior public text and timestamp. Complaint status accepts only
+`new`, `in_review`, `referred`, or `closed` and always rewrites
+`privacy_status=private`. Both endpoints require an authenticated Directus
+administrator session and a trusted same-origin request. They never make a
+private complaint public or copy raw submitted comment text into the public
+feed.
+
 Before deploying version 3.16 intake, run the idempotent migration inside the
 Directus container with a short-lived administrator token:
 
@@ -116,7 +136,7 @@ ADMIN_TOKEN='SHORT_LIVED_ADMIN_TOKEN' \
 ```
 
 The same 3.16 deployment also requires the idempotent weather-field migration
-before intake 1.11.0 is started:
+before intake 1.12.0 is started:
 
 ```bash
 ADMIN_TOKEN='SHORT_LIVED_ADMIN_TOKEN' \
