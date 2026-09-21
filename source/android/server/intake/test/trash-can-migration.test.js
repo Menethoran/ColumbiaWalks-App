@@ -20,6 +20,9 @@ test("trash-can migration is idempotent and asserts private service-only access"
   assert.match(source, /ensureField/);
   assert.match(source, /ensurePermission/);
   assert.match(source, /assertPrivatePermissions/);
+  assert.match(source, /userHasAdministratorPolicy/);
+  assert.match(source, /directus_access/);
+  assert.match(source, /directus_policies/);
   assert.match(source, /permission outside the private intake policy/);
   assert.match(source, /public_permission_created:\s*false/);
   assert.match(source, /directus_public_read:\s*false/);
@@ -29,4 +32,3 @@ test("trash-can migration is idempotent and asserts private service-only access"
   assert.doesNotMatch(source, /action:\s*["']delete["']/);
   assert.doesNotMatch(source, /fields:\s*\[\s*["']\*["']/);
 });
-
