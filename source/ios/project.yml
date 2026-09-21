@@ -52,3 +52,24 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.columbiawalks.app.tests
         GENERATE_INFOPLIST_FILE: YES
+  ColumbiaWalksUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: ColumbiaWalksUITests
+    dependencies:
+      - target: ColumbiaWalks
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.columbiawalks.app.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: ColumbiaWalks
+schemes:
+  ColumbiaWalksScreenshots:
+    build:
+      targets:
+        ColumbiaWalks: all
+        ColumbiaWalksUITests: [test]
+    test:
+      targets:
+        - ColumbiaWalksUITests
