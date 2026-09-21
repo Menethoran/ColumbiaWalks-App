@@ -23,16 +23,17 @@ release after approval.
 
 ## Release gates still open
 
-- Verify both 3.16 Directus migrations and intake service 1.12.0 as described
-  in `source/android/DEVELOPMENT_3.16.md`, then verify the separate private
-  trash-can collections, public-feed allowlist, and weather safeguards. On
-  September 21 at approximately 1:50 p.m. EDT, the new trash-can route began
-  validating requests, but a valid, clearly marked private QA complaint
-  returned Cloudflare HTTP 502 twice and the public trash-can feed also
-  returned HTTP 502. The health route returned 200 and an invalid trash-can
-  request returned the expected 400. Reconcile QA submission ID
-  `93b899a0-ce9d-4f2c-9796-618b4097c402` in Directus before another retry;
-  storage is unconfirmed after the 502 responses. No public QA comment was sent.
+- Verify the separate backups and narrow private-policy allowlists from both
+  3.16 Directus migrations, and the weather safeguards described in
+  `source/android/DEVELOPMENT_3.16.md`. The first valid private QA submission
+  and public-feed request returned 502 during deployment. Later on September
+  21, the same private complaint returned 201 `new`, then 200 with
+  `duplicate: true`; a separate public comment returned 201
+  `moderation_pending`. The public feed returned 200 with empty can/comment
+  arrays and exposed neither QA record's text nor UUID. In Directus, close
+  private QA complaint `93b899a0-ce9d-4f2c-9796-618b4097c402` and reject
+  public QA comment `c8359304-458b-4c20-b447-6a36d3279399`; both are
+  explicitly marked as tests with no physical location.
 - Verify the newly deployed public `/privacy-policy/` page against the 3.16
   source in `source/android/server/intake/src/privacy-page.js`. It now shows
   an effective date of September 18, 2026 and mentions the 3.16 Community
