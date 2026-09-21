@@ -28,6 +28,25 @@ xcodebuild -project ColumbiaWalks.xcodeproj -scheme ColumbiaWalks \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test
 ```
 
+## App Store screenshots
+
+The screenshot harness launches the real debug app with deterministic local
+fixtures and never submits its sample reports to the intake service. It captures
+Map, Quick Report, the two 3.16.1 submission choices, Saved Reports, Contact Us,
+and Notify the Authorities as retained XCTest PNG attachments.
+
+On a Mac with an iOS Simulator runtime and XcodeGen installed, run:
+
+```sh
+source/ios/scripts/capture_app_store_screenshots.sh
+```
+
+The same command runs in the `iOS App Store Screenshots` GitHub Actions
+workflow. The harness prefers an iPhone 11 Pro Max, whose portrait screenshots
+are `1242x2688`, and falls back to the other accepted 6.5-inch size on an iPhone
+14 Plus. `--app-store-screenshots` is honored only by DEBUG builds; App Store
+release builds cannot enable the fixture data.
+
 No Directus token or other server credential belongs in the app. Standard,
 Repeat, and Page of Shame reports plus feedback use the same validated public
 intake endpoints as Android. Repeat reports retain one session identifier while

@@ -1,5 +1,16 @@
 import CoreLocation
+import Foundation
 import SwiftUI
+
+enum ScreenshotConfiguration {
+    static var isEnabled: Bool {
+#if DEBUG
+        ProcessInfo.processInfo.arguments.contains("--app-store-screenshots")
+#else
+        false
+#endif
+    }
+}
 
 @MainActor
 final class AppState: ObservableObject {
@@ -21,6 +32,22 @@ final class AppState: ObservableObject {
     @Published var nearestIntersection: IntersectionEstimate?
     @Published var intersectionLookupInProgress = false
     private var intersectionTask: Task<Void, Never>?
+
+    init() {
+        guard ScreenshotConfiguration.isEnabled else { return }
+
+        let coordinate = CLLocationCoordinate2D(latitude: 40.03352, longitude: -76.50486)
+        var draft = ReportLocationDraft()
+        draft.useManual(coordinate, source: .manualMap)
+        reportLocation = draft
+        nearestIntersection = IntersectionEstimate(
+            label: "Locust Street & North 3rd Street",
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
+            distanceMeters: 18,
+            major: true
+        )
+    }
 
     var reportCoordinate: CLLocationCoordinate2D {
         reportLocation.coordinate ?? Self.columbiaCenter

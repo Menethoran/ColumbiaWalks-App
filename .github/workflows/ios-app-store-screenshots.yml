@@ -1,0 +1,44 @@
+name: iOS App Store Screenshots
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/ios-app-store-screenshots.yml"
+      - "source/ios/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-app-store-screenshots
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    name: Capture on iPhone Simulator
+    runs-on: macos-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Capture 3.16.1 screenshots
+        run: source/ios/scripts/capture_app_store_screenshots.sh "$RUNNER_TEMP/columbiawalks-screenshots"
+
+      - name: Upload screenshots and test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ColumbiaWalks-3.16.1-App-Store-screenshots
+          path: |
+            ${{ runner.temp }}/columbiawalks-screenshots/raw-attachments
+            ${{ runner.temp }}/columbiawalks-screenshots/ColumbiaWalksScreenshots.xcresult
+          if-no-files-found: warn
+          retention-days: 30
