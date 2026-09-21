@@ -45,7 +45,7 @@ The fifth tab is now Community. It keeps App Feedback and adds:
   trash-can intake endpoint.
 
 Police-tip text is never sent to a ColumbiaWalks API. Version 3.16 does not
-attach trash-can media. The Directus 3.16 migration and intake service 1.11.0
+attach trash-can media. The Directus 3.16 migration and intake service 1.12.0
 must be deployed before distributing this client.
 
 Version 3.16.0 adds a narrowly scoped, server-owned field-test email workflow.
