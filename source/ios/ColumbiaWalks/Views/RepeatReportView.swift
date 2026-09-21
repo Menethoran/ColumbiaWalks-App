@@ -170,6 +170,11 @@ struct RepeatReportView: View {
                     testEmailOptIn = false
                 }
             }
+            .onChange(of: photoData != nil) { _, hasPhoto in
+                if !hasPhoto {
+                    testEmailOptIn = false
+                }
+            }
             .task {
                 guard !requestedInitialLocation else { return }
                 requestedInitialLocation = true
