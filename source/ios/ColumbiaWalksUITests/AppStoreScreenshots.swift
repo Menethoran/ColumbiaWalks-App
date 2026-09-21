@@ -16,6 +16,7 @@ final class AppStoreScreenshots: XCTestCase {
 
     func testCaptureAppStoreScreenshots() throws {
         XCTAssertTrue(app.navigationBars["Map"].waitForExistence(timeout: 20))
+        Thread.sleep(forTimeInterval: 15)
         capture("01-map")
 
         app.tabBars.buttons["Report"].tap()
