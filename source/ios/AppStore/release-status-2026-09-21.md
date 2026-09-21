@@ -1,4 +1,41 @@
-# iOS 3.16.0 release status — September 21, 2026
+# iOS 3.16.1 release status — September 21, 2026
+
+Adonai's `b032318` release source declares `3.16.1 (31601)` and supersedes
+the uploaded 3.16.0 candidate. The subsequent `c0863fc` fix clears Repeat
+Reporting's test-email consent when its photo is removed. That fix is included
+in the signed 3.16.1 archive and uploaded IPA.
+
+- Signed archive: `source/ios/build/archives/ColumbiaWalks-3.16.1-31601.xcarchive`.
+- Exported IPA: `source/ios/build/export-31601/ColumbiaWalks.ipa`.
+- IPA SHA-256:
+  `2445f6e7aa64a47cf56d93fcf89a932c8f20cb11b0051b77a2c53d152a770835`.
+- `xcodebuild archive` and export succeeded. The app is signed by Apple
+  Distribution team `JKA6EGL5J2` with bundle ID `org.columbiawalks.app`.
+- Apple's `altool --validate-app` and `--upload-app` both succeeded with no
+  errors. Delivery UUID: `80bac17f-4d62-4f68-b875-98b6a726bb7f`.
+- App Store Connect now reports build 31601 as `VALID` and
+  `APP_STORE_ELIGIBLE`. The 3.16.0 draft has not yet been changed to 3.16.1
+  or attached to build 31601. The API key permits reading but returned HTTP
+  403 on a version update, so this change needs the App Store Connect UI.
+  Public version 3.14.0 remains live.
+- The static iOS UI-clarity verifier passed. Two simulator test attempts built
+  the app and test bundle but stalled before executing any tests in this 4 GB
+  VM; both were stopped. Do not claim a 3.16.1 test pass yet. The signed device
+  archive compiled and passed Apple's validation independently.
+
+## Current release gates
+
+- Change the App Store Connect version to 3.16.1, replace the attached 31600
+  build with valid build 31601, and
+  update the description, release notes, and App Review notes from the 3.16.1
+  source files. Keep manual release selected.
+- Replace the three inherited 3.14 screenshots with visually verified 3.16.1
+  images, and attach a fresh physical-iPhone review recording with exact model
+  and iOS version. The old simulator did not produce usable screenshots.
+- Complete 3.16.1 physical-device acceptance and resolve the simulator test
+  result. Submit to Apple review only after the final build and assets match.
+
+## Earlier 3.16.0 candidate (historical snapshot)
 
 The App Store Connect version is **3.16.0, Prepare for Submission**. The live
 App Store version remains 3.14.0. Version 3.16.0 is configured for manual
@@ -57,7 +94,7 @@ release after approval.
   review, and submit the version for Apple review. Release it manually only
   after approval and all production gates pass.
 
-The later 3.16.1 (31601) source update supersedes this candidate with the
-simplified Quick Report, explicit test-email opt-in, CBPD handoff, and Contact
-Us changes. No 3.16.1 signed iOS archive has been produced or uploaded, so the
-attached 3.16.0 build must not be submitted as though it contains those fixes.
+The 3.16.1 (31601) source and uploaded archive now supersede this candidate
+with the simplified Quick Report, explicit test-email opt-in, CBPD handoff,
+and Contact Us changes. The 3.16.0 build must not be submitted as though it
+contains those fixes.
