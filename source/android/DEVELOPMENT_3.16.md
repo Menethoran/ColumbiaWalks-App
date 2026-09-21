@@ -129,7 +129,7 @@ service.
 3. Verify both migrations' private-permission assertions and backup paths.
 4. Populate and independently verify any canonical public-can inventory that
    will be used.
-5. Deploy intake service `1.11.0` with weather enrichment enabled only after
+5. Deploy intake service `1.12.0` with weather enrichment enabled only after
    the weather schema exists.
 6. Exercise JSON comment and complaint submissions with non-sensitive test
    data; verify that they land in different private collections.
@@ -143,7 +143,7 @@ service.
 
 ## Release gates still open
 
-- Run both Directus migrations and deploy intake `1.11.0` in the intended live
+- Run both Directus migrations and deploy intake `1.12.0` in the intended live
   environment.
 - Reconcile the hosted privacy policy with the 3.16 policy source.
 - Capture and visually verify the final 3.16 App Store screenshot set; no 3.16

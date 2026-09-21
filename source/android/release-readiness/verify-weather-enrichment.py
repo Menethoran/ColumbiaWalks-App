@@ -33,8 +33,8 @@ def require(source: str, phrases: tuple[str, ...], description: str) -> None:
 def verify_service_identity() -> None:
     package = json.loads(read(INTAKE / "package.json"))
     lock = json.loads(read(INTAKE / "package-lock.json"))
-    if package.get("version") != "1.11.0":
-        fail("Intake package is not version 1.11.0.")
+    if package.get("version") != "1.12.0":
+        fail("Intake package is not version 1.12.0.")
     if lock.get("version") != package["version"]:
         fail("package-lock.json does not match the intake package version.")
     if lock.get("packages", {}).get("", {}).get("version") != package["version"]:
@@ -45,7 +45,7 @@ def verify_service_identity() -> None:
         ("WEATHER_ENRICHMENT_ENABLED", "WEATHER_TIMEOUT_MS"),
         "weather runtime configuration",
     )
-    print("PASS intake 1.11.0 identity and weather runtime configuration")
+    print("PASS intake 1.12.0 identity and weather runtime configuration")
 
 
 def verify_idempotent_route() -> None:

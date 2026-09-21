@@ -99,6 +99,48 @@ const BETA_TESTER_FIELDS = [
   "comments",
   "status"
 ].join(",");
+const TRASH_CAN_INVENTORY_FIELDS = [
+  "id",
+  "public_trash_can_id",
+  "label",
+  "address",
+  "status"
+].join(",");
+const TRASH_CAN_SUBMISSION_FIELDS = [
+  "id",
+  "submission_id",
+  "date_created",
+  "date_updated",
+  "asset_scope",
+  "public_trash_can_id",
+  "categories",
+  "comment",
+  "latitude",
+  "longitude",
+  "address",
+  "app_version",
+  "submission_source",
+  "photo"
+];
+const TRASH_CAN_COMMENT_FIELDS = [
+  ...TRASH_CAN_SUBMISSION_FIELDS,
+  "moderation_status",
+  "public_comment",
+  "approved_at"
+].join(",");
+const TRASH_CAN_COMPLAINT_FIELDS = [
+  ...TRASH_CAN_SUBMISSION_FIELDS,
+  "status",
+  "privacy_status"
+].join(",");
+const TRASH_CAN_COMPLAINT_STATUSES = new Set([
+  "new",
+  "in_review",
+  "referred",
+  "closed"
+]);
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const pageHtml = readFileSync(new URL("./admin/index.html", import.meta.url), "utf8");
 const pageCss = readFileSync(new URL("./admin/admin.css", import.meta.url), "utf8");
@@ -263,7 +305,16 @@ export function registerAdminRoutes(app, options) {
     }
 
     try {
-      const [reports, feedback, complaints, updateEvents, betaTesterRequests] = await Promise.all([
+      const [
+        reports,
+        feedback,
+        complaints,
+        updateEvents,
+        betaTesterRequests,
+        trashCanInventory,
+        trashCanComments,
+        trashCanComplaints
+      ] = await Promise.all([
         fetchCollection(
           fetchImplementation,
           directusUrl,
@@ -298,12 +349,36 @@ export function registerAdminRoutes(app, options) {
           session.accessToken,
           "beta_tester_requests",
           BETA_TESTER_FIELDS
+        ),
+        fetchCollection(
+          fetchImplementation,
+          directusUrl,
+          session.accessToken,
+          "public_trash_cans",
+          TRASH_CAN_INVENTORY_FIELDS
+        ),
+        fetchCollection(
+          fetchImplementation,
+          directusUrl,
+          session.accessToken,
+          "trash_can_comments",
+          TRASH_CAN_COMMENT_FIELDS
+        ),
+        fetchCollection(
+          fetchImplementation,
+          directusUrl,
+          session.accessToken,
+          "trash_can_complaints",
+          TRASH_CAN_COMPLAINT_FIELDS
         )
       ]);
       const data = buildAdminDashboard({
         reports: reports.data,
         feedback: feedback.data,
         complaints: complaints.data,
+        trashCanInventory: trashCanInventory.data,
+        trashCanComments: trashCanComments.data,
+        trashCanComplaints: trashCanComplaints.data,
         updateEvents: updateEvents.data,
         rangeDays: ALLOWED_RANGES.get(requestedRange)
       });
@@ -314,6 +389,9 @@ export function registerAdminRoutes(app, options) {
         app_update_events: updateEvents.available
       };
       data.available_collections.beta_tester_requests = betaTesterRequests.available;
+      data.available_collections.public_trash_cans = trashCanInventory.available;
+      data.available_collections.trash_can_comments = trashCanComments.available;
+      data.available_collections.trash_can_complaints = trashCanComplaints.available;
       data.beta_tester_requests = buildPendingBetaTesterRequests(betaTesterRequests.data);
       return reply.send({ data });
     } catch (error) {
@@ -487,6 +565,182 @@ export function registerAdminRoutes(app, options) {
       }
     }
   );
+
+  app.post(
+    "/columbiawalks-api/admin/trash-can-comments/:recordId/moderate",
+    async (request, reply) => {
+      noStore(reply);
+      if (!trustedOrigin(request)) {
+        return reply.code(403).send({ error: "This moderation request is not allowed." });
+      }
+      const recordId = String(request.params?.recordId || "");
+      if (!validRecordId(recordId)) {
+        return reply.code(400).send({ error: "A valid trash-can comment ID is required." });
+      }
+      const action = request.body?.action;
+      if (action !== "approve" && action !== "reject") {
+        return reply.code(400).send({ error: "action must be approve or reject." });
+      }
+      const publicComment = cleanPublicText(request.body?.public_comment, 2000);
+      const publicTrashCanId = cleanPublicText(
+        request.body?.public_trash_can_id,
+        36
+      ).toLowerCase();
+      if (action === "approve") {
+        if (publicComment.length < 3) {
+          return reply.code(400).send({
+            error: "Approved public text must contain 3 to 2,000 characters."
+          });
+        }
+        if (!UUID_PATTERN.test(publicTrashCanId)) {
+          return reply.code(400).send({
+            error: "Approval requires an active canonical public trash-can ID."
+          });
+        }
+      }
+
+      const session = await requireAdministrator(
+        request,
+        reply,
+        fetchImplementation,
+        directusUrl
+      );
+      if (!session) return;
+
+      try {
+        if (action === "approve") {
+          const query = new URLSearchParams();
+          query.set("filter[public_trash_can_id][_eq]", publicTrashCanId);
+          query.set("filter[status][_eq]", "active");
+          query.set("fields", "id,public_trash_can_id");
+          query.set("limit", "1");
+          const inventory = await directusJson(
+            fetchImplementation,
+            directusUrl,
+            `/items/public_trash_cans?${query}`,
+            { headers: { Authorization: `Bearer ${session.accessToken}` } }
+          );
+          if (!Array.isArray(inventory.data) || inventory.data.length !== 1) {
+            return reply.code(409).send({
+              error: "The selected canonical trash can is not active."
+            });
+          }
+        }
+
+        const values = action === "approve"
+          ? {
+              moderation_status: "approved",
+              public_comment: publicComment,
+              public_trash_can_id: publicTrashCanId,
+              approved_at: new Date().toISOString()
+            }
+          : {
+              moderation_status: "rejected",
+              public_comment: null,
+              approved_at: null
+            };
+        const result = await directusJson(
+          fetchImplementation,
+          directusUrl,
+          `/items/trash_can_comments/${encodeURIComponent(recordId)}`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${session.accessToken}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(values)
+          }
+        );
+        return reply.send({
+          data: {
+            id: result.data?.id ?? recordId,
+            moderation_status: values.moderation_status,
+            public_trash_can_id:
+              action === "approve" ? publicTrashCanId : null,
+            public_comment: action === "approve" ? publicComment : null,
+            approved_at: values.approved_at
+          }
+        });
+      } catch (error) {
+        if (error.statusCode === 404) {
+          return reply.code(404).send({ error: "That trash-can comment was not found." });
+        }
+        request.log.error(
+          { error, recordId, action },
+          "Trash-can comment moderation failed"
+        );
+        return reply.code(502).send({
+          error: "The trash-can comment could not be moderated. Please try again."
+        });
+      }
+    }
+  );
+
+  app.post(
+    "/columbiawalks-api/admin/trash-can-complaints/:recordId/status",
+    async (request, reply) => {
+      noStore(reply);
+      if (!trustedOrigin(request)) {
+        return reply.code(403).send({ error: "This complaint update is not allowed." });
+      }
+      const recordId = String(request.params?.recordId || "");
+      const status = String(request.body?.status || "");
+      if (!validRecordId(recordId)) {
+        return reply.code(400).send({ error: "A valid trash-can complaint ID is required." });
+      }
+      if (!TRASH_CAN_COMPLAINT_STATUSES.has(status)) {
+        return reply.code(400).send({
+          error: "status must be new, in_review, referred, or closed."
+        });
+      }
+      const session = await requireAdministrator(
+        request,
+        reply,
+        fetchImplementation,
+        directusUrl
+      );
+      if (!session) return;
+
+      try {
+        const result = await directusJson(
+          fetchImplementation,
+          directusUrl,
+          `/items/trash_can_complaints/${encodeURIComponent(recordId)}`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${session.accessToken}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ status, privacy_status: "private" })
+          }
+        );
+        return reply.send({
+          data: {
+            id: result.data?.id ?? recordId,
+            status,
+            privacy_status: "private"
+          }
+        });
+      } catch (error) {
+        if (error.statusCode === 404) {
+          return reply.code(404).send({ error: "That trash-can complaint was not found." });
+        }
+        request.log.error(
+          { error, recordId, status },
+          "Trash-can complaint status update failed"
+        );
+        return reply.code(502).send({
+          error: "The trash-can complaint could not be updated. Please try again."
+        });
+      }
+    }
+  );
+}
+
+function validRecordId(value) {
+  return /^[1-9][0-9]{0,18}$/.test(value) || UUID_PATTERN.test(value);
 }
 
 function buildPendingBetaTesterRequests(records) {

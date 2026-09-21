@@ -73,7 +73,7 @@ Complete and record each gate before building or publishing a store artifact:
    `directus-3.16-weather-upgrade.cjs` migrations with a short-lived
    administrator token. Confirm both backups, the private-policy assertions,
    and the weather Create/Read field allowlists; then deploy intake service
-   1.11.0. Exercise comment and complaint JSON with
+   1.12.0. Exercise comment and complaint JSON with
    non-sensitive samples; verify separate private collections and confirm the
    public feed exposes only approved/redacted comments tied to active canonical
    cans. Do not invent or publish an unverified can inventory.
