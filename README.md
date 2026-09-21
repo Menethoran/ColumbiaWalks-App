@@ -1,6 +1,6 @@
-# ColumbiaWalks for Android
+# ColumbiaWalks
 
-This public repository distributes installable Android releases of ColumbiaWalks.
+This repository contains the ColumbiaWalks Android and iOS source code and distributes verified installable Android releases.
 
 Official website: https://www.columbiawalks.com
 
@@ -36,6 +36,17 @@ Source candidates, successful local builds, and store submissions are not descri
 
 Open the latest release, download the `.apk` file on an Android device, and follow Android's prompt to allow installation from your browser or file manager. You can turn that permission off again after installation.
 
-## Privacy and source code
+## Source code
 
-This repository is for public release downloads. Project source code and operational configuration are maintained separately; credentials, tokens, and private submissions are never published here.
+The newest available source candidate is under [`source/`](source/):
+
+- [`source/android/`](source/android/) contains the Android application, Gradle project, release-readiness checks, shared report catalog, server intake service, migration scripts, tests, and release documentation.
+- [`source/ios/`](source/ios/) contains the SwiftUI application, Xcode project, tests, App Store documentation, and static verification script.
+
+The current source snapshot identifies itself as `3.16.0 (31600)`. It is a development candidate, not proof of a production deployment or store release.
+
+For Android, use JDK 17 and Android SDK Platform 36 with Build Tools 36.0.0, then run the verification commands documented in [`source/android/DEVELOPMENT_3.16.md`](source/android/DEVELOPMENT_3.16.md). The server intake tests run from `source/android/server/intake/` with `npm test` after installing the locked dependencies.
+
+For iOS, use Xcode and XcodeGen on macOS and follow [`source/ios/README.md`](source/ios/README.md). Linux cannot compile or device-test the SwiftUI target.
+
+Generated builds, dependency folders, local environment files, signing material, credentials, tokens, and private submissions are excluded from this repository. Production Android releases require the established signing identity; the signing key and passwords are never stored here.

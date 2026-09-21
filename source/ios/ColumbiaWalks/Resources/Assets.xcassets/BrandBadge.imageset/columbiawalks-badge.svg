@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" role="img" aria-labelledby="title desc">
+  <title id="title">ColumbiaWalks badge</title>
+  <desc id="desc">A white map pin with a green center and walking figure on a blue field.</desc>
+  <rect width="108" height="108" fill="#1e5a7a"/>
+  <path fill="#fff" d="M54 14c-17.1 0-31 13.9-31 31 0 22.8 31 49 31 49s31-26.2 31-49c0-17.1-13.9-31-31-31z"/>
+  <circle cx="54" cy="45" r="18" fill="#2f855a"/>
+  <path fill="#fff" d="M49 34a5 5 0 1 0 0 10 5 5 0 1 0 0-10zm8 10-7 4-5 10h5l3-6 3 3-2 8h5l3-10-5-6 3-2 4 4 3-3-6-7z"/>
+</svg>
+

@@ -1,0 +1,32 @@
+# Android and Gradle
+**/.gradle/
+**/.gradle-bootstrap/
+**/build/
+**/local.properties
+**/.idea/
+**/*.iml
+**/*.apk
+**/*.aab
+**/.externalNativeBuild/
+**/.cxx/
+
+# Node.js and local server configuration
+**/node_modules/
+**/.npm-cache/
+**/.env
+**/secrets/
+
+# Apple build and signing material
+**/DerivedData/
+**/xcuserdata/
+**/*.xcuserstate
+**/*.ipa
+**/*.mobileprovision
+**/*.p12
+**/*.jks
+**/*.keystore
+
+# Local QA and operating-system files
+**/artifacts/
+**/captures/
+.DS_Store
