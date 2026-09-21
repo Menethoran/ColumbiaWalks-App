@@ -29,6 +29,7 @@ test("trash-can migration is idempotent and asserts private service-only access"
   assert.match(source, /public_reads_through_intake_service:\s*true/);
   assert.match(source, /complaints_publicly_readable:\s*false/);
   assert.match(source, /raw_comments_publicly_readable:\s*false/);
+  assert.match(source, /Directus 12 Core-compatible unrestricted action/);
   assert.doesNotMatch(source, /action:\s*["']delete["']/);
-  assert.doesNotMatch(source, /fields:\s*\[\s*["']\*["']/);
+  assert.match(source, /fields:\s*\[\s*["']\*["']/);
 });
