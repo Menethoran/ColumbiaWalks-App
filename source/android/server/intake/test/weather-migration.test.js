@@ -26,6 +26,9 @@ test("weather migration is backup-first and expands only existing intake permiss
   assert.match(source, /VACUUM INTO/);
   assert.match(source, /PRAGMA quick_check/);
   assert.match(source, /assertAdministrator/);
+  assert.match(source, /userHasAdministratorPolicy/);
+  assert.match(source, /directus_access/);
+  assert.match(source, /directus_policies/);
   assert.match(source, /refusing to create a broader permission automatically/);
   assert.match(source, /for \(const action of \["create", "read"\]\)/);
   assert.match(source, /verifyPermissionFields/);
