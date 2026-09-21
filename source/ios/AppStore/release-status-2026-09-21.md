@@ -32,8 +32,11 @@ release after approval.
   `source/android/server/intake/src/privacy-page.js` and verify the public
   `/privacy-policy/` page. The live page still has an August 20, 2026 effective
   date and does not describe the 3.16 Community tools.
-- Replace the four inherited 3.14 App Store screenshots, including the obsolete
-  Feedback-tab image, with visually verified 3.16 screenshots.
+- Replace the three remaining inherited 3.14 App Store screenshots with
+  visually verified 3.16 screenshots. The obsolete Feedback-tab image was
+  removed from the draft. A 6.9-inch iPhone 17 Pro Max simulator booted and
+  installed the 3.16 app, but it displayed a white app screen under severe
+  host load; that capture was rejected and not uploaded.
 - Complete 3.16 physical-iPhone acceptance and supply a fresh screen recording,
   device model, and iOS version for App Review.
 - Recheck the live server and hosted policy, complete final App Store metadata
