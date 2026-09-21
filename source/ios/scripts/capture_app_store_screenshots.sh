@@ -43,6 +43,9 @@ import json, sys
 
 available = {item["identifier"] for item in json.load(sys.stdin).get("devicetypes", [])}
 preferred = [
+    "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro-Max",
+    "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro-Max",
+    "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro-Max",
     "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro-Max",
     "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Plus",
 ]
@@ -51,7 +54,7 @@ for identifier in preferred:
         print(identifier)
         break
 else:
-    raise SystemExit("Neither an iPhone 11 Pro Max nor iPhone 14 Plus simulator is available")
+    raise SystemExit("No supported large-screen iPhone simulator is available")
 ')"
 
 SIMULATOR_ID="$(xcrun simctl create "ColumbiaWalks App Store Screenshots" "${DEVICE_TYPE_ID}" "${RUNTIME_ID}")"
