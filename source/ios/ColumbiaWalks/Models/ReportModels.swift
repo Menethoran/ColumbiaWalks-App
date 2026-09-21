@@ -416,15 +416,15 @@ struct OfficialEmailServerState: Codable, Equatable {
     var acceptanceSummary: String {
         let prefix = "Report accepted by ColumbiaWalks. \(fieldTestRoutingSummary)"
         switch status {
-        case "recorded": "\(prefix) \(recordedSummary)"
+        case "recorded": return "\(prefix) \(recordedSummary)"
         case "not_eligible":
-            "\(prefix) The server did not accept this report for field-test email processing; no email was authorized by this response."
+            return "\(prefix) The server did not accept this report for field-test email processing; no email was authorized by this response."
         case "deferred":
-            "\(prefix) Field-test email setup was deferred for server reconciliation; delivery is not confirmed."
+            return "\(prefix) Field-test email setup was deferred for server reconciliation; delivery is not confirmed."
         case "not_reported":
-            "\(prefix) The server did not return a field-test email status; delivery is not confirmed."
+            return "\(prefix) The server did not return a field-test email status; delivery is not confirmed."
         default:
-            "\(prefix) The server returned field-test email status “\(status.replacingOccurrences(of: "_", with: " "))”; delivery is not confirmed."
+            return "\(prefix) The server returned field-test email status “\(status.replacingOccurrences(of: "_", with: " "))”; delivery is not confirmed."
         }
     }
 
