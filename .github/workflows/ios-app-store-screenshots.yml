@@ -10,7 +10,7 @@ on:
       - "source/ios/**"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ios-app-store-screenshots
@@ -31,6 +31,18 @@ jobs:
 
       - name: Capture 3.16.1 screenshots
         run: source/ios/scripts/capture_app_store_screenshots.sh "$RUNNER_TEMP/columbiawalks-screenshots"
+
+      - name: Publish screenshots for App Store review
+        run: |
+          target="source/ios/AppStore/screenshots/ci-3.16.1"
+          mkdir -p "$target"
+          find "$RUNNER_TEMP/columbiawalks-screenshots/raw-attachments" \
+            -type f -name '*.png' -exec cp {} "$target"/ \;
+          git add "$target"
+          git -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -m 'Capture iOS 3.16.1 App Store screenshots'
+          git push origin "HEAD:refs/heads/codex/ios-31601-screenshots-${GITHUB_RUN_ID}"
 
       - name: Upload screenshots and test evidence
         if: always()
