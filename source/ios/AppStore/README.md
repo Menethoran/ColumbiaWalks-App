@@ -25,7 +25,7 @@ App Feedback as a nested destination. The hub also provides a local-only police
 tip drafting handoff and separate public-comment/private-complaint trash-can
 forms. The police draft and media are not sent to ColumbiaWalks; the user must
 finish the tip on the official Police Department website. Trash-can JSON is
-queued locally and requires intake service 1.11.0 plus the 3.16 Directus schema
+queued locally and requires intake service 1.12.0 plus the 3.16 Directus schema
 before this client can be distributed.
 
 Version 3.16.0 lets users authorize a server-generated field-test email for only
