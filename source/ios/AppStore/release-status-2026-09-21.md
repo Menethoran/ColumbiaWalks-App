@@ -23,15 +23,20 @@ release after approval.
 
 ## Release gates still open
 
-- Deploy both 3.16 Directus migrations and intake service 1.12.0 as described
+- Verify both 3.16 Directus migrations and intake service 1.12.0 as described
   in `source/android/DEVELOPMENT_3.16.md`, then verify the separate private
-  trash-can collections, public-feed allowlist, and weather safeguards. As of
-  this status, `POST /columbiawalks-api/trash-can-submissions` returns HTTP 404
-  in production.
-- Deploy the privacy-policy source bundled in
-  `source/android/server/intake/src/privacy-page.js` and verify the public
-  `/privacy-policy/` page. The live page still has an August 20, 2026 effective
-  date and does not describe the 3.16 Community tools.
+  trash-can collections, public-feed allowlist, and weather safeguards. On
+  September 21 at approximately 1:50 p.m. EDT, the new trash-can route began
+  validating requests, but a valid, clearly marked private QA complaint
+  returned Cloudflare HTTP 502 twice and the public trash-can feed also
+  returned HTTP 502. The health route returned 200 and an invalid trash-can
+  request returned the expected 400. Reconcile QA submission ID
+  `93b899a0-ce9d-4f2c-9796-618b4097c402` in Directus before another retry;
+  storage is unconfirmed after the 502 responses. No public QA comment was sent.
+- Verify the newly deployed public `/privacy-policy/` page against the 3.16
+  source in `source/android/server/intake/src/privacy-page.js`. It now shows
+  an effective date of September 18, 2026 and mentions the 3.16 Community
+  tools, trash-can handling, and Open-Meteo.
 - Replace the three remaining inherited 3.14 App Store screenshots with
   visually verified 3.16 screenshots. The obsolete Feedback-tab image was
   removed from the draft. A 6.9-inch iPhone 17 Pro Max simulator booted and
