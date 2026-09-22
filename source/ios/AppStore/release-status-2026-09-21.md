@@ -1,4 +1,4 @@
-# iOS 3.16.1 release status — September 21, 2026
+# iOS 3.16.1 release status — September 21–22, 2026
 
 Adonai's `b032318` release source declares `3.16.1 (31601)` and supersedes
 the uploaded 3.16.0 candidate. The subsequent `c0863fc` fix clears Repeat
@@ -14,12 +14,14 @@ in the signed 3.16.1 archive and uploaded IPA.
 - Apple's `altool --validate-app` and `--upload-app` both succeeded with no
   errors. Delivery UUID: `80bac17f-4d62-4f68-b875-98b6a726bb7f`.
 - App Store Connect reports build 31601 as `VALID` and
-  `APP_STORE_ELIGIBLE`. The version is now **3.16.1, Ready for Review**, with
-  build 31601 attached and the superseded 31600 build detached. Description
-  and release notes match their source files exactly; App Review notes describe
-  3.16.1 without physical-device placeholders. Manual release remains selected.
-  A draft review submission contains 3.16.1 (31601), but **Submit for Review
-  has not been pressed**. Public version 3.14.0 remains live.
+  `APP_STORE_ELIGIBLE`. The version is **3.16.1, Waiting for Review**, with
+  build 31601 attached and the superseded 31600 build detached. A review
+  submission was sent on September 21 at 8:14 p.m. EDT (ID
+  `12ee3e4c-610f-4e80-9e3f-6af4432528da`). Description and release notes
+  match their source files exactly; App Review notes describe 3.16.1 without
+  physical-device placeholders. **Manual release is still saved**, despite the
+  user's request to release automatically after approval. Public version 3.14.0
+  remains live.
 - The static iOS UI-clarity verifier passed. Two simulator test attempts built
   the app and test bundle but stalled before executing any tests in this 4 GB
   VM; both were stopped. Do not claim a 3.16.1 test pass yet. The signed device
@@ -27,16 +29,22 @@ in the signed 3.16.1 archive and uploaded IPA.
 
 ## Current release gates
 
-- The listing still has three inherited 3.14 screenshots. They show the old
-  single Report submit action and Feedback tab, so do not submit them as a
-  representation of 3.16.1. A direct 6.9-inch simulator capture attempt spent
-  over ten minutes at the iOS startup spinner on this 4 GB VM and did not yield
-  a usable app screenshot. Obtain current captures from TestFlight on an iPhone.
-- Replace the three inherited 3.14 screenshots with visually verified 3.16.1
-  images, and attach a fresh physical-iPhone review recording with exact model
-  and iOS version.
-- Complete 3.16.1 physical-device acceptance and resolve the simulator test
-  result. Submit to Apple review only after the final build and assets match.
+- The submitted listing still has three inherited 3.14 screenshots, showing
+  the old single Report submit action and Feedback tab. Apple locks media editing
+  while the version is Waiting for Review. The user approved replacing these
+  images and changing to automatic release. Remove the version from review,
+  upload the six verified 3.16.1 screenshots, select automatic release after
+  approval, save, then resubmit build 31601. App Store Connect signed out during
+  this correction and requires the account holder to sign in again.
+- GitHub Actions screenshot run `35661755409` passed its 3.16.1 UI capture test
+  and produced six visually checked 1320 x 2868 non-alpha PNGs at
+  `source/ios/AppStore/screenshots/en-US/iphone-6.9/`. The map tiles loaded and
+  the Quick Report, dual submit actions, Saved, Contact Us, and Police Tip
+  screens match the release. The earlier local simulator boot did not finish.
+- A fresh physical-iPhone review recording with exact model and iOS version is
+  still recommended because Apple requested one during an earlier review.
+  Complete 3.16.1 physical-device acceptance and resolve the stalled local
+  simulator unit-test result when possible; the CI screenshot UI test passed.
 
 ## Earlier 3.16.0 candidate (historical snapshot)
 
