@@ -4,7 +4,8 @@ set -euo pipefail
 readonly EXPECTED_PACKAGE="org.columbiawalks.app"
 readonly EXPECTED_VERSION_NAME="3.17.0"
 readonly EXPECTED_VERSION_CODE="31700"
-readonly EXPECTED_UPLOAD_CERT_SHA256="a0c9e5abc99caec8d2ec31181c75c577d00963e0af3f654aca19bb3f7355dcc4"
+# This validates the prepared replacement key, not the server-side reset status.
+readonly EXPECTED_UPLOAD_CERT_SHA256="9be8e68554f0f9902e87fccb8199772db31e4186a441c8754e3653a450603e95"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source_dir="$(cd "$script_dir/.." && pwd)"
@@ -55,7 +56,7 @@ actual_cert="$(
         | tr -d ':' | tr '[:upper:]' '[:lower:]' | tail -1
 )"
 [[ "$actual_cert" == "$EXPECTED_UPLOAD_CERT_SHA256" ]] \
-    || fail "AAB signer does not match the Play Console upload certificate."
+    || fail "AAB signer does not match the pinned Play upload certificate."
 
 manifest_report="$(
     java -jar "$bundletool_path" dump manifest \
@@ -80,15 +81,16 @@ if grep -q 'android.permission.REQUEST_INSTALL_PACKAGES' <<<"$manifest_report"; 
 fi
 
 unzip -tq "$aab_path" >/dev/null || fail "AAB ZIP integrity check failed."
+# Consume the complete listing: grep -q can SIGPIPE unzip under pipefail.
 unzip -Z1 "$aab_path" \
-    | grep -q '^BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map$' \
+    | grep '^BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map$' >/dev/null \
     || fail "AAB does not contain its R8 mapping metadata."
 [[ -s "$mapping_file" ]] || fail "External R8 mapping file is missing."
 [[ -s "$native_symbols" ]] || fail "Native debug-symbol ZIP is missing."
 unzip -tq "$native_symbols" >/dev/null \
     || fail "Native debug-symbol ZIP integrity check failed."
 for abi in arm64-v8a armeabi-v7a x86 x86_64; do
-    unzip -Z1 "$native_symbols" | grep -q "^$abi/.*\.so$" \
+    unzip -Z1 "$native_symbols" | grep "^$abi/.*\.so$" >/dev/null \
         || fail "Native debug-symbol ZIP is missing $abi symbols."
 done
 
@@ -98,6 +100,7 @@ symbols_sha256="$(sha256sum "$native_symbols" | awk '{print $1}')"
 mapping_sha256="$(sha256sum "$mapping_file" | awk '{print $1}')"
 
 echo "Google Play INTERNAL TESTING verification passed. Public and external distribution are prohibited."
+echo "Before upload, confirm Play Console has activated the pinned upload certificate."
 echo "Package:      $actual_package"
 echo "Version:      $actual_version_name ($actual_version_code)"
 echo "Upload cert:  $actual_cert"

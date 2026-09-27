@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly EXPECTED_CERT_SHA256="a0c9e5abc99caec8d2ec31181c75c577d00963e0af3f654aca19bb3f7355dcc4"
+# Replacement upload certificate prepared for the 2026-09-27 Play reset.
+# Confirm Play has activated this fingerprint before uploading the staged AAB.
+readonly EXPECTED_UPLOAD_CERT_SHA256="9be8e68554f0f9902e87fccb8199772db31e4186a441c8754e3653a450603e95"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source_dir="$(cd "$script_dir/.." && pwd)"
@@ -25,9 +27,9 @@ trap clear_signing_secrets EXIT HUP INT TERM
 
 [[ -d "$source_dir" ]] || fail "Source directory is missing: $source_dir"
 [[ -n "${CW_ANDROID_KEYSTORE:-}" ]] \
-    || fail "Set CW_ANDROID_KEYSTORE to the absolute recovered-keystore path."
+    || fail "Set CW_ANDROID_KEYSTORE to the absolute Play upload-keystore path."
 [[ -n "${CW_ANDROID_KEY_ALIAS:-}" ]] \
-    || fail "Set CW_ANDROID_KEY_ALIAS to the recovered key alias."
+    || fail "Set CW_ANDROID_KEY_ALIAS to the Play upload-key alias."
 [[ "$CW_ANDROID_KEYSTORE" == /* ]] || fail "CW_ANDROID_KEYSTORE must be absolute."
 [[ -f "$CW_ANDROID_KEYSTORE" ]] || fail "The configured keystore does not exist."
 
@@ -35,7 +37,7 @@ keystore_path="$(realpath "$CW_ANDROID_KEYSTORE")"
 source_path="$(realpath "$project_dir")"
 case "$keystore_path" in
     "$source_path"|"$source_path"/*)
-        fail "The production keystore must remain outside the source tree."
+        fail "The upload keystore must remain outside the source tree."
         ;;
 esac
 
@@ -71,8 +73,8 @@ keystore_cert="$(
     sed -n 's/^[[:space:]]*SHA256: //p' <<<"$keystore_report" \
         | tr -d ':' | tr '[:upper:]' '[:lower:]' | tail -1
 )"
-[[ "$keystore_cert" == "$EXPECTED_CERT_SHA256" ]] \
-    || fail "The keystore is not the permanent 3.13.0 signing identity."
+[[ "$keystore_cert" == "$EXPECTED_UPLOAD_CERT_SHA256" ]] \
+    || fail "The keystore does not match the pinned Play upload certificate."
 
 export CW_ANDROID_KEYSTORE="$keystore_path"
 
@@ -92,23 +94,29 @@ python3 "$script_dir/verify-community-tools.py"
 
 install -d -m 755 "$gradle_cache"
 
-docker run --rm \
+# Pass passwords through stdin rather than Docker's persisted container settings.
+printf '%s\0%s\0' "$CW_ANDROID_KEYSTORE_PASSWORD" "$CW_ANDROID_KEY_PASSWORD" \
+    | docker run --rm --interactive \
     --user "$(id -u):$(id -g)" \
     --env HOME=/tmp \
     --env GRADLE_USER_HOME="$gradle_cache" \
     --env ANDROID_SDK_ROOT="$sdk_root" \
     --env CW_ANDROID_KEYSTORE \
-    --env CW_ANDROID_KEYSTORE_PASSWORD \
     --env CW_ANDROID_KEY_ALIAS \
-    --env CW_ANDROID_KEY_PASSWORD \
     --volume "$source_dir:$source_dir" \
     --volume "$sdk_root:$sdk_root" \
     --volume "$gradle_cache:$gradle_cache" \
     --volume "$keystore_path:$keystore_path:ro" \
     --workdir "$source_dir" \
     "$gradle_image" \
-    gradle --no-daemon -PcwDistributionChannel=internal \
-        testInternalTestingUnitTest lintInternalTesting bundleInternalTesting
+    bash -c '
+        set -euo pipefail
+        IFS= read -r -d "" CW_ANDROID_KEYSTORE_PASSWORD
+        IFS= read -r -d "" CW_ANDROID_KEY_PASSWORD
+        export CW_ANDROID_KEYSTORE_PASSWORD CW_ANDROID_KEY_PASSWORD
+        exec gradle --no-daemon --no-configuration-cache -PcwDistributionChannel=internal \
+            testInternalTestingUnitTest lintInternalTesting bundleInternalTesting
+    '
 
 [[ -f "$play_aab" ]] || fail "Gradle completed without producing app-internalTesting.aab."
 

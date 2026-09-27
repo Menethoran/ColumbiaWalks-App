@@ -1,6 +1,35 @@
 # 3.17.0 internal builds
 
-For the current internal source, use `build-internal-android.sh` for a separate local test APK or `build-play-internal.sh` for a signed Play **Internal testing** bundle. The latter requires the established private upload key; it does not upload automatically. See [the current development record](../../../DEVELOPMENT_3.17.md).
+For the current internal source, use `build-internal-android.sh` for a separate local test APK or `build-play-internal.sh` for a signed Play **Internal testing** bundle. The latter pins the replacement upload key prepared on 2026-09-27; it does not upload automatically. See [the current development record](../../../DEVELOPMENT_3.17.md).
+
+## Play upload-key recovery, 2026-09-27
+
+The original encrypted keystore was recovered but its password could not be
+unlocked. The owner authorized an upload-key reset. The replacement key is
+RSA 4096-bit, with alias `columbiawalks-upload-20260927`. Only its
+[public certificate](play-upload-certificate.pem) is included here:
+
+```text
+SHA-256: 9B:E8:E6:85:54:F0:F9:90:2E:87:FC:CB:81:99:77:2D:B3:1E:41:86:A4:41:C8:75:4E:36:53:A4:50:60:3E:95
+```
+
+The private key and generated password are outside Git; the password is in
+the desktop secure keyring. Two encrypted recovery copies passed restore
+checks, including the separate /Backup disk. The prepared AAB passed the full
+internal verification script with this key.
+
+**Reset status: prepared, not submitted or activated.** In Play Console's
+App signing page, the reset reason is "I forgot the password to my keystore".
+The owner must upload this PEM and submit the reset. Before uploading the AAB,
+verify that Play has accepted the request and activated the fingerprint above.
+Then upload only to **Internal testing**. A local signing check does not prove
+Google has activated the replacement.
+
+Google's [upload-key reset documentation](https://support.google.com/googleplay/android-developer/answer/9842756?hl=en)
+distinguishes the upload key from the app-signing key used for installed Play
+apps. This recovery does not rotate Google's app-signing key. Historical
+website APK signing and migration instructions below remain separate; their
+old certificate pins are retained.
 
 The release/signing history below is retained for reference. Public staging scripts reject this .0 version.
 
