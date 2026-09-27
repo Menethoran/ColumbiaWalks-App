@@ -1,51 +1,24 @@
 # ColumbiaWalks
 
-This repository contains the ColumbiaWalks Android and iOS source code and distributes verified installable Android releases.
-
-Official website: https://www.columbiawalks.com
-
 ColumbiaWalks is a private community walking-safety initiative. It is not affiliated with the Borough of Columbia or the Columbia Borough Police Department.
 
-## Current release status
+Website: https://www.columbiawalks.com
 
-| Version | Build | Status | Summary |
-| --- | ---: | --- | --- |
-| [3.14.0](https://github.com/Menethoran/ColumbiaWalks-App/releases/tag/v3.14.0) | 31400 | Latest public Android release | Production-signed APK with Repeat Reporting, photo/GPS improvements, walking-distance tools, and Page of Shame reliability fixes. |
-| 3.14.1 | 31401 | QA candidate only | UI clarity, accessibility text, privacy-link, backup-policy, and Play-policy corrections were completed locally, but no production-signed public APK was created. |
-| 3.15.0 | 31500 | Development candidate | Added faster field-reporting work and a consent-based, test-only official-email design. The required backend deployment, production signing, store review, and physical-device QA were not completed. |
-| 3.16.0 | 31600 | Superseded source candidate | Added Community tools, a local-only police-tip drafting handoff, separate public trash-can comments and private complaints, queued submissions, and server-side weather enrichment. |
-| 3.16.1 | 31601 | Newest source candidate | Simplifies Quick Report, keeps standard-report photos optional, adds two CW/CBPD choices, makes test email opt-in, and adds Contact Us. No signed 3.16.1 artifact has been produced. |
+## 3.17.0 (31700): internal test source
 
-The newest source available for development testing is 3.16.1. It does not yet have a signed Android APK, iOS archive, TestFlight build, or App Store build. The newest build users can safely install from this repository remains the production-signed [3.14.0 APK](https://github.com/Menethoran/ColumbiaWalks-App/releases/download/v3.14.0/ColumbiaWalks-3.14.0.apk).
+This branch adds anonymous tip **test intake** on Android and iOS. Tips go only to private ColumbiaWalks storage. Every human-readable submitted field has `[TEST]` between every word, enforced by both the clients and the server. Police are not contacted. The app shows an internal-build banner, a marked preview, explicit test acknowledgement, and a verified receipt or a retryable pending state.
 
-## Path to the next public release
+Starting with 3.17.0, every version whose patch component is `0` is an **internal test build only**. Public website/GitHub releases, Play production/open/closed testing, external TestFlight, and App Store distribution are prohibited for these versions. Android provides a separately installed local test APK and an explicitly gated signed Play **Internal testing** variant. iOS currently permits Debug/internal device builds only.
 
-Before 3.16.1, or a later replacement build, can be published here, the maintainers must:
+[Development, verification, and deployment status](DEVELOPMENT_3.17.md) distinguishes completed local checks from hosted intake and store availability. Source code and a successful local build do not mean the service or store release is live.
 
-1. Back up and migrate the Directus schema, deploy the matching intake service, and verify the public/private data boundaries with non-sensitive test submissions.
-2. Reconcile the hosted privacy policy and Google Play Data Safety disclosures with the new Community, trash-can, weather, and any enabled forwarding behavior.
-3. Complete Android physical-device testing and build/test the iOS target on a Mac, including accessibility, offline retry, external-site handoff, and device visual QA.
-4. Build Android and iOS artifacts with the established production signing identities; verify package IDs, versions, signatures, checksums, archive integrity, mapping files, and native symbols.
-5. Complete the applicable Play Store, TestFlight, and App Store review steps and independently verify tester access and public availability.
-6. Publish exactly one verified production APK in a non-draft GitHub release, then confirm the latest-release API reports the expected semantic tag, file size, SHA-256 digest, and HTTPS download URL.
+## Source and builds
 
-Source candidates, successful local builds, and store submissions are not described as public releases until those checks are complete.
+- [`source/android/`](source/android/) contains the Android app, backend intake, Directus migration, and tests. Run `source/android/release-readiness/build-internal-android.sh` to test, lint, and build the separate internal APK.
+- [`source/android/release-readiness/build-play-internal.sh`](source/android/release-readiness/build-play-internal.sh) builds and verifies the Play Internal testing bundle with the existing upload key. Configure signing privately outside Git. The bundle keeps `org.columbiawalks.app`; local debug installs use `org.columbiawalks.app.internal`.
+- [`source/ios/`](source/ios/) contains the SwiftUI app, Xcode project, and tests. Follow the [3.17.0 iOS handoff](source/ios/INTERNAL_TEST_3.17.0.md) on a Mac. Linux static checks do not replace an Xcode build.
+- Backend checks: run `npm ci && npm test` in `source/android/server/intake/` with Node.js 22 or newer.
 
-## Install
+Prior release and App Store documents remain historical records. Published Android artifacts are listed on the [GitHub releases page](https://github.com/Menethoran/ColumbiaWalks-App/releases); this internal source branch must not be published there as a release.
 
-Open the latest release, download the `.apk` file on an Android device, and follow Android's prompt to allow installation from your browser or file manager. You can turn that permission off again after installation.
-
-## Source code
-
-The newest available source candidate is under [`source/`](source/):
-
-- [`source/android/`](source/android/) contains the Android application, Gradle project, release-readiness checks, shared report catalog, server intake service, migration scripts, tests, and release documentation.
-- [`source/ios/`](source/ios/) contains the SwiftUI application, Xcode project, tests, App Store documentation, and static verification script.
-
-The current source snapshot identifies itself as `3.16.1 (31601)`. It is a development candidate, not proof of a production deployment or store release.
-
-For Android, use JDK 17 and Android SDK Platform 36 with Build Tools 36.0.0, then run the verification commands documented in [`source/android/DEVELOPMENT_3.16.md`](source/android/DEVELOPMENT_3.16.md). The server intake tests run from `source/android/server/intake/` with `npm test` after installing the locked dependencies.
-
-For iOS, use Xcode and XcodeGen on macOS and follow [`source/ios/README.md`](source/ios/README.md). Linux cannot compile or device-test the SwiftUI target.
-
-Generated builds, dependency folders, local environment files, signing material, credentials, tokens, and private submissions are excluded from this repository. Production Android releases require the established signing identity; the signing key and passwords are never stored here.
+Generated builds, signing material, credentials, tokens, environment files, and private submissions are excluded from Git.

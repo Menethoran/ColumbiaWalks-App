@@ -4,6 +4,7 @@ import Fastify from "fastify";
 import sharp from "sharp";
 import { randomUUID } from "node:crypto";
 
+import { registerAnonymousTipRoutes } from "./anonymous-tip-routes.js";
 import { registerAdminRoutes } from "./admin.js";
 import { registerBetaTestingPageRoutes } from "./beta-testing-page.js";
 import { validateBetaTesterRequest } from "./beta-tester-validation.js";
@@ -129,6 +130,10 @@ export async function buildApp(options) {
     directusUrl,
     directusToken,
     fetchImplementation
+  });
+  registerAnonymousTipRoutes(app, {
+    directusUrl, directusToken, fetchImplementation,
+    anonymousTipTestsEnabled: options.anonymousTipTestsEnabled
   });
   registerTrashCanRoutes(app, {
     directusUrl,

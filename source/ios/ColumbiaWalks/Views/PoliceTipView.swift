@@ -1,282 +1,98 @@
 import SwiftUI
-import UIKit
 
 struct PoliceTipView: View {
-    @Environment(\.openURL) private var openURL
     @State private var draft: PoliceTipDraft
+    @State private var testOnly = false
+    @State private var prepared: AnonymousTipSubmission?
     @State private var errorMessage: String?
-    @State private var showHandoffAlert = false
+    @State private var confirmNew = false
+    @StateObject private var service = AnonymousTipService()
 
     init(initialDraft: PoliceTipDraft = PoliceTipDraft()) {
         _draft = State(initialValue: initialDraft)
     }
-
-    private static let tipURL = URL(
-        string: "https://crimewatch.net/us/pa/lancaster/columbia-boro-pd/10552/submit-tip"
-    )!
-    private static let formalReportURL = URL(
-        string: "https://crimewatch.net/us/pa/lancaster/columbia-boro-pd/10552/report"
-    )!
-    private static let officerComplaintURL = URL(
-        string: "https://crimewatch.net/us/pa/lancaster/columbia-boro-pd/10552/content/citizen-complaint-form"
-    )!
-
+    private var locked: Bool { service.busy || service.pending != nil || service.completed }
     var body: some View {
         Form {
             Section {
-                AppHeader(
-                    "Anonymous Police Tip",
-                    subtitle: "Prepare a local-only draft for the official Columbia Borough Police form"
-                )
-                Label {
-                    Text(draft.sourceWasSubmittedToColumbiaWalks
-                         ? "This draft was prepared from the CW report you just saved. ColumbiaWalks has not sent it or any media to CBPD."
-                         : "Nothing entered here is uploaded to or stored by ColumbiaWalks. No media is selected in this app.")
-                        .fixedSize(horizontal: false, vertical: true)
-                } icon: {
-                    Image(systemName: "lock.shield.fill")
-                }
-                .font(.footnote)
-                .foregroundStyle(Color.cwBlueDark)
-            }
-
-            Section("Emergency or happening now") {
-                Label {
-                    Text("Do not use an online form for an emergency or an incident currently in progress.")
-                        .fixedSize(horizontal: false, vertical: true)
-                } icon: {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                }
-                .font(.headline)
-                .foregroundStyle(Color.cwError)
-
-                PoliceCallLink(
-                    title: "Call 911",
-                    detail: "Emergency or incident in progress",
-                    number: "911"
-                )
-                PoliceCallLink(
-                    title: "Call County Dispatch",
-                    detail: "Non-emergency: 717-664-1180",
-                    number: "7176641180"
-                )
-                PoliceCallLink(
-                    title: "Call Toll-Free Dispatch",
-                    detail: "1-800-957-2677",
-                    number: "18009572677"
-                )
-                PoliceCallLink(
-                    title: "Call Columbia Police Station",
-                    detail: "717-684-7735",
-                    number: "7176847735"
-                )
-            }
-
-            Section("Required confirmation") {
-                Toggle(
-                    "I confirm this incident is in the past and is not currently in progress.",
-                    isOn: $draft.isPastAndNotInProgress
-                )
-                .tint(.cwGreen)
-                Text("The official police form will require you to personally make the same confirmation before submitting.")
+                AppHeader("[TEST] Anonymous Police Tip", subtitle: "Internal build 3.17.0")
+                Text("[TEST] INTERNAL TEST ONLY. Private ColumbiaWalks test intake. Columbia Borough Police Department will NOT receive this tip.")
+                    .font(.headline).padding(12).background(Color.yellow.opacity(0.25))
+                Text("No name, email, phone number, account ID, or device ID is included. Do not identify yourself in the text. Hosting infrastructure can still process network information. Text only in this test; no attachments.")
                     .font(.footnote)
-                    .foregroundStyle(Color.cwTextSecondary)
+                EmergencyNotice()
             }
-
-            Section("Tip subject and time") {
-                TextField("Short subject (required)", text: $draft.subject)
-                    .textInputAutocapitalization(.sentences)
-                Text("The official form accepts up to 128 characters for its subject.")
-                    .font(.caption)
-                    .foregroundStyle(Color.cwTextSecondary)
-                DatePicker(
-                    "Date and time observed",
-                    selection: $draft.observedAt,
-                    in: ...Date(),
-                    displayedComponents: [.date, .hourAndMinute]
-                )
-            }
-
-            Section("Where and which vehicle") {
-                TextField(
-                    "Location or nearest landmark (required)",
-                    text: $draft.location,
-                    axis: .vertical
-                )
-                .lineLimit(2...5)
-                TextField(
-                    "Direction of travel (optional)",
-                    text: $draft.directionOfTravel,
-                    axis: .vertical
-                )
-                .lineLimit(1...3)
-                TextField("License plate (optional)", text: $draft.licensePlate)
-                    .textInputAutocapitalization(.characters)
-                    .autocorrectionDisabled()
-                TextField("Plate state or jurisdiction (optional)", text: $draft.plateState)
-                    .textInputAutocapitalization(.characters)
-                    .autocorrectionDisabled()
-                TextField(
-                    "Vehicle description (optional)",
-                    text: $draft.vehicleDescription,
-                    axis: .vertical
-                )
-                .lineLimit(3...8)
-            }
-
-            Section("What you observed") {
-                TextField(
-                    "Describe only what you personally observed (required)",
-                    text: $draft.firsthandObservation,
-                    axis: .vertical
-                )
-                .lineLimit(5...12)
-                TextField(
-                    "Evidence notes (optional)",
-                    text: $draft.evidenceNotes,
-                    axis: .vertical
-                )
-                .lineLimit(3...8)
-                Text("Mention what each original photo, plate image, or video shows. You will attach the files yourself on the official police site.")
-                    .font(.footnote)
-                    .foregroundStyle(Color.cwTextSecondary)
-            }
-
-            Section("What happens next") {
-                PoliceTipInstruction(number: 1, text: "ColumbiaWalks copies a subject and message to your clipboard, with clear Subject and Message labels.")
-                PoliceTipInstruction(number: 2, text: "On the official form, choose “I wish to remain anonymous” and select “Other” as the type.")
-                PoliceTipInstruction(number: 3, text: "Paste the copied text and attach the original relevant files yourself.")
-                Text("Accepted types published by the police form: JPG, JPEG, PNG, TXT, PDF, AVI, MOV, MP4, MP3, and WAV. HEIC is not listed.")
-                    .font(.footnote)
-                    .foregroundStyle(Color.cwTextSecondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                PoliceTipInstruction(number: 4, text: "Review everything, personally accept the truth/not-in-progress attestation, complete reCAPTCHA, and press Submit on the official site.")
-                Label {
-                    Text("Opening the official site does not submit the tip. ColumbiaWalks cannot confirm delivery.")
-                        .fixedSize(horizontal: false, vertical: true)
-                } icon: {
-                    Image(systemName: "hand.raised.fill")
+            Section("[TEST] Tip details") {
+                markedField("Subject (required; 128 characters)", value: $draft.subject)
+                DatePicker("[TEST] Observed date and time", selection: $draft.observedAt, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
+                markedField("Location (required; 500 characters)", value: $draft.location)
+                markedField("Direction of travel (optional; 500 characters)", value: $draft.directionOfTravel)
+                markedField("License plate (optional; 500 characters)", value: $draft.licensePlate)
+                markedField("Plate state or jurisdiction (optional; 500 characters)", value: $draft.plateState)
+                markedField("Vehicle description (optional; 500 characters)", value: $draft.vehicleDescription)
+                markedField("What you observed (required; 5,000 characters)", value: $draft.firsthandObservation)
+                markedField("Evidence notes (optional; 2,000 characters; no files)", value: $draft.evidenceNotes)
+            }.disabled(locked)
+            Section("[TEST] Confirm before preview") {
+                Toggle("[TEST] This concerns a past or inactive matter.", isOn: $draft.isPastAndNotInProgress)
+                Toggle("[TEST] I understand this is a private ColumbiaWalks test and will not reach police.", isOn: $testOnly)
+                Text("[TEST] is inserted between every word in all submitted fields, including optional fields. Review the exact marked text below.").font(.footnote)
+                Button("Preview [TEST] fields") { prepare() }
+            }.disabled(locked)
+            if let payload = service.pending ?? prepared {
+                Section("[TEST] Marked submission preview") {
+                    ForEach(AnonymousTipSubmission.fieldOrder, id: \.self) { key in
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("[TEST] " + key.replacingOccurrences(of: "_", with: " ")).font(.headline)
+                            Text(payload.fields[key] ?? "[TEST]").textSelection(.enabled)
+                        }
+                    }
+                    if !service.completed {
+                        Button(service.pending == nil ? "Submit [TEST] to private intake" : "Retry saved [TEST]") {
+                            Task { await service.submit(payload) }
+                        }.buttonStyle(.borderedProminent).disabled(service.busy)
+                    }
                 }
-                .font(.footnote.bold())
-                .foregroundStyle(Color.cwWarning)
             }
-
-            if let errorMessage {
+            if let errorMessage { Section { Text(errorMessage).foregroundStyle(Color.cwError) } }
+            if !service.message.isEmpty {
+                Section("[TEST] Submission status") {
+                    Text(service.message).font(.headline).accessibilityAddTraits(.updatesFrequently)
+                }
+            }
+            if service.pending != nil || service.completed {
                 Section {
-                    Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(Color.cwError)
+                    Button("Clear and start new [TEST]", role: .destructive) { confirmNew = true }.disabled(service.busy)
                 }
-            }
-
-            Section {
-                Button {
-                    prepareTip()
-                } label: {
-                    Label("Copy Draft and Continue", systemImage: "doc.on.clipboard.fill")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .accessibilityHint("Validates and copies the draft, then offers to open the official Columbia Borough Police tip form.")
-            }
-
-            Section("Other official police forms") {
-                Link(destination: Self.formalReportURL) {
-                    Label("Formal named online report", systemImage: "arrow.up.right.square")
-                }
-                Text("Use the named report for a formal non-active traffic complaint. It requires contact information and is not anonymous.")
-                    .font(.footnote)
-                    .foregroundStyle(Color.cwTextSecondary)
-                Link(destination: Self.officerComplaintURL) {
-                    Label("Complaint about a police employee", systemImage: "arrow.up.right.square")
-                }
-                Text("The officer-conduct form is separate from a complaint about a driver or vehicle.")
-                    .font(.footnote)
-                    .foregroundStyle(Color.cwTextSecondary)
-            }
-
-            Section {
-                Text(draft.sourceWasSubmittedToColumbiaWalks
-                     ? "Handoff check: your CW report was saved, but this police tip and any media have not been sent to CBPD."
-                     : "Privacy check: the draft and any media were not sent to ColumbiaWalks or CBPD.")
-                    .font(.footnote.bold())
-                    .foregroundStyle(Color.cwBlueDark)
-                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .columbiaWalksScrollSurface()
-        .navigationTitle("Police Tip")
+        .navigationTitle("[TEST] Police Tip")
         .navigationBarTitleDisplayMode(.inline)
-        .alert("Draft copied — not submitted", isPresented: $showHandoffAlert) {
-            Button("Open Official Police Form") {
-                openURL(Self.tipURL)
+        .onChange(of: draft) { _, _ in prepared = nil; errorMessage = nil }
+        .onChange(of: testOnly) { _, _ in prepared = nil; errorMessage = nil }
+        .confirmationDialog("Start a new [TEST]?", isPresented: $confirmNew, titleVisibility: .visible) {
+            Button("Clear local copy", role: .destructive) {
+                service.discard()
+                if service.pending == nil { draft = PoliceTipDraft(); testOnly = false; prepared = nil }
             }
-            Button("Not Now", role: .cancel) {}
         } message: {
-            Text("Your Subject and Message are on the clipboard. ColumbiaWalks has not submitted anything to CBPD. You must finish and submit the tip on the official police site.")
+            Text("This clears the local draft and pending retry. A test already stored by ColumbiaWalks is not deleted.")
         }
     }
-
-    private func prepareTip() {
-        errorMessage = nil
-        if let validationError = PoliceTipValidator.validate(draft) {
-            errorMessage = validationError
-            return
+    private func markedField(_ title: String, value: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("[TEST] " + title).font(.subheadline.bold())
+            TextField("Enter test text", text: value, axis: .vertical)
+                .lineLimit(1...8).autocorrectionDisabled().textInputAutocapitalization(.sentences)
+                .accessibilityLabel("[TEST] " + title)
         }
-
-        let prepared = PoliceTipDraftBuilder.prepare(draft)
-        UIPasteboard.general.string = prepared.clipboardText
-        showHandoffAlert = true
     }
-}
-
-private struct PoliceCallLink: View {
-    let title: String
-    let detail: String
-    let number: String
-
-    var body: some View {
-        Link(destination: URL(string: "tel:\(number)")!) {
-            HStack(alignment: .center, spacing: 12) {
-                Image(systemName: "phone.fill")
-                    .foregroundStyle(Color.cwGreen)
-                    .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(.headline)
-                    Text(detail)
-                        .font(.subheadline)
-                        .foregroundStyle(Color.cwTextSecondary)
-                }
-                .fixedSize(horizontal: false, vertical: true)
-                Spacer(minLength: 8)
-                Image(systemName: "arrow.up.right")
-                    .font(.caption.bold())
-                    .accessibilityHidden(true)
-            }
-            .contentShape(Rectangle())
-        }
-        .accessibilityHint("Opens the Phone app with this number.")
-    }
-}
-
-private struct PoliceTipInstruction: View {
-    let number: Int
-    let text: String
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Text("\(number)")
-                .font(.caption.bold())
-                .foregroundStyle(.white)
-                .frame(width: 24, height: 24)
-                .background(Color.cwBlue, in: Circle())
-                .accessibilityHidden(true)
-            Text(text)
-                .font(.subheadline)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Step \(number). \(text)")
+    private func prepare() {
+        do {
+            prepared = try AnonymousTipSubmission.make(draft, testOnly: testOnly,
+                version: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
+            errorMessage = nil
+        } catch { errorMessage = error.localizedDescription }
     }
 }
