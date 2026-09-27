@@ -27,6 +27,8 @@
 **/*.keystore
 
 # Local QA and operating-system files
+**/__pycache__/
+**/*.pyc
 **/artifacts/
 **/captures/
 .DS_Store

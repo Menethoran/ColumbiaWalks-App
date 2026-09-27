@@ -2,6 +2,26 @@ plugins {
     id("com.android.application")
 }
 
+val appVersionName = "3.17.0"
+val internalTestBuild = appVersionName.substringAfterLast(".") == "0"
+val internalPlayRequested = gradle.startParameter.taskNames.any {
+    it.contains("internalTesting", ignoreCase = true)
+}
+val distributionChannel = providers.gradleProperty("cwDistributionChannel").orNull
+if (internalTestBuild && gradle.startParameter.taskNames.any {
+        it.contains("release", ignoreCase = true) || it.contains("publish", ignoreCase = true)
+    }) {
+    throw GradleException("Versions ending in .0 are INTERNAL TEST ONLY. Use assembleDebug or the signed Internal testing build script.")
+}
+
+gradle.taskGraph.whenReady {
+    if (internalTestBuild && allTasks.any {
+            it.name.contains("release", ignoreCase = true) || it.name.contains("publish", ignoreCase = true)
+        }) {
+        throw GradleException("Internal .0 versions cannot build or publish public release variants.")
+    }
+}
+
 val releaseStorePath = providers.environmentVariable("CW_ANDROID_KEYSTORE").orNull
 val releaseStorePassword = providers.environmentVariable(
     "CW_ANDROID_KEYSTORE_PASSWORD"
@@ -14,16 +34,27 @@ val releaseSigningReady = listOf(
     releaseKeyAlias,
     releaseKeyPassword
 ).all { !it.isNullOrBlank() }
-val releaseTaskRequested = gradle.startParameter.taskNames.any {
+val signedTaskRequested = internalPlayRequested || gradle.startParameter.taskNames.any {
     it.contains("release", ignoreCase = true)
 }
 
-if (releaseTaskRequested && !releaseSigningReady) {
+if (internalPlayRequested && distributionChannel != "internal") {
+    throw GradleException("The Internal testing bundle requires -PcwDistributionChannel=internal and must only be uploaded to Play Internal testing.")
+}
+
+if (signedTaskRequested && !releaseSigningReady) {
     throw GradleException(
         "Release signing is not configured. Set CW_ANDROID_KEYSTORE, " +
             "CW_ANDROID_KEYSTORE_PASSWORD, CW_ANDROID_KEY_ALIAS, and " +
             "CW_ANDROID_KEY_PASSWORD."
     )
+}
+
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.name.contains("internalTesting", ignoreCase = true) } &&
+        (distributionChannel != "internal" || !releaseSigningReady)) {
+        throw GradleException("Internal testing tasks require the internal channel and the existing upload-signing key.")
+    }
 }
 
 android {
@@ -34,8 +65,8 @@ android {
         applicationId = "org.columbiawalks.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 31601
-        versionName = "3.16.1"
+        versionCode = 31700
+        versionName = appVersionName
         buildConfigField(
             "String",
             "REPORT_ENDPOINT",
@@ -66,7 +97,9 @@ android {
             "WALKING_METRIC_ENDPOINT",
             "\"https://directus.rndtech.org/columbiawalks-api/walking-metrics\""
         )
-        buildConfigField("boolean", "SELF_UPDATE_ENABLED", "true")
+        buildConfigField("boolean", "SELF_UPDATE_ENABLED", (!internalTestBuild).toString())
+        buildConfigField("boolean", "INTERNAL_TEST_BUILD", internalTestBuild.toString())
+        buildConfigField("String", "ANONYMOUS_TIP_ENDPOINT", "\"https://directus.rndtech.org/columbiawalks-api/anonymous-tip-tests\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -91,6 +124,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            if (internalTestBuild) applicationIdSuffix = ".internal"
+            // A separate QA package can exercise an isolated local intake. The
+            // distributable internal APK always keeps the fixed HTTPS endpoint.
+            val testEndpoint = providers.gradleProperty("cwTipTestEndpoint").orNull
+            if (testEndpoint != null) {
+                if (!testEndpoint.matches(Regex("http://10\\.0\\.2\\.2:[0-9]{4,5}/columbiawalks-api/anonymous-tip-tests"))) {
+                    throw GradleException("QA tip endpoint must be the local Android emulator host.")
+                }
+                applicationIdSuffix = if (internalTestBuild) ".internal.qa" else ".qa"
+                buildConfigField("String", "ANONYMOUS_TIP_ENDPOINT", "\"$testEndpoint\"")
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -114,6 +160,14 @@ android {
             if (releaseSigningReady) {
                 signingConfig = signingConfigs.getByName("release")
             }
+        }
+        create("internalTesting") {
+            initWith(getByName("playRelease"))
+            matchingFallbacks += listOf("release")
+            // Keeps the existing Play package and upload certificate. The .0
+            // public tasks stay blocked; only the Internal testing track is allowed.
+            isDebuggable = false
+            buildConfigField("boolean", "SELF_UPDATE_ENABLED", "false")
         }
     }
 
@@ -140,7 +194,17 @@ val packagePlayReleaseNativeDebugSymbols by tasks.registering(Zip::class) {
     )
 }
 
+val packageInternalTestingNativeDebugSymbols by tasks.registering(Zip::class) {
+    dependsOn("mergeInternalTestingNativeLibs")
+    from(layout.buildDirectory.dir("intermediates/merged_native_libs/internalTesting/mergeInternalTestingNativeLibs/out/lib"))
+    archiveFileName.set("native-debug-symbols.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("outputs/native-debug-symbols/internalTesting"))
+}
+
 tasks.configureEach {
+    if (name == "bundleInternalTesting") {
+        finalizedBy(packageInternalTestingNativeDebugSymbols)
+    }
     if (name == "bundlePlayRelease") {
         finalizedBy(packagePlayReleaseNativeDebugSymbols)
     }

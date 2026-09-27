@@ -1,3 +1,11 @@
+# 3.17.0 internal builds
+
+For the current internal source, use `build-internal-android.sh` for a separate local test APK or `build-play-internal.sh` for a signed Play **Internal testing** bundle. The latter requires the established private upload key; it does not upload automatically. See [the current development record](../../../DEVELOPMENT_3.17.md).
+
+The release/signing history below is retained for reference. Public staging scripts reject this .0 version.
+
+---
+
 # ColumbiaWalks Android 3.16.1 release readiness
 
 This directory contains non-secret release tooling. It does **not** contain a

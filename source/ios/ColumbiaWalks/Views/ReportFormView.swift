@@ -123,7 +123,7 @@ struct ReportFormView: View {
                     Button {
                         saveReport(notifyAuthorities: true)
                     } label: {
-                        Label("Submit to CW & Notify CBPD", systemImage: "building.columns.fill")
+                        Label("Submit to CW & prepare [TEST] tip", systemImage: "building.columns.fill")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
@@ -131,16 +131,16 @@ struct ReportFormView: View {
                 } header: {
                     Text("Submit")
                 } footer: {
-                    Text("The second option saves the CW report, then opens a prepared anonymous-tip draft. You must review and submit it yourself on CBPD's official site; opening that site is not delivery.")
+                    Text("The second option saves the CW report, then opens a separate private [TEST] tip. Review and submit the marked test to ColumbiaWalks. Police will not receive it.")
                 }
 
                 Section("More reporting options") {
                     NavigationLink {
                         PoliceTipView()
                     } label: {
-                        Label("Notify the Authorities", systemImage: "building.columns")
+                        Label("[TEST] Anonymous tip intake", systemImage: "building.columns")
                     }
-                    Text("Prepare an anonymous tip without first submitting a CW report. ColumbiaWalks does not automatically send it to police.")
+                    Text("Send a separate anonymous [TEST] to private ColumbiaWalks intake. Police will not receive it.")
                         .font(.footnote)
                         .foregroundStyle(Color.cwTextSecondary)
 
@@ -596,7 +596,7 @@ struct ReportFormView: View {
             vehicleDescription: vehicleDescription,
             firsthandObservation: observation,
             evidenceNotes: hadPhoto
-                ? "CW report \(reportID.uuidString.lowercased()) includes a photo. Attach the original relevant file yourself on the official CBPD form."
+                ? "CW report \(reportID.uuidString.lowercased()) includes a photo. No files are attached to the private test tip."
                 : "CW report \(reportID.uuidString.lowercased()) did not include a photo.",
             sourceWasSubmittedToColumbiaWalks: true
         )
@@ -695,7 +695,7 @@ struct OfficialEmailDisclosure: View {
     var body: some View {
         Section("Optional test email") {
             DisclosureGroup(isExpanded: $isExpanded) {
-                Text("This is a separate field test for the \(rulePhrase). It is off unless you turn it on. In version 3.16.1, the server addresses any resulting [TEST]-subject message only to a ColumbiaWalks-controlled test mailbox, not Police, the Mayor, or Codes.")
+                Text("This is a separate field test for the \(rulePhrase). It is off unless you turn it on. In version 3.17.0, the server addresses any resulting [TEST]-subject message only to a ColumbiaWalks-controlled test mailbox, not Police, the Mayor, or Codes.")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(Color.cwText)
                 Text("The optional test needs a photo and a confirmed report location within 5 km of Columbia Borough center. Those items remain optional for the CW report itself.")

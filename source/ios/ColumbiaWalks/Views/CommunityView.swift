@@ -26,8 +26,8 @@ struct CommunityView: View {
                         PoliceTipView()
                     } label: {
                         CommunityDestinationLabel(
-                            title: "Prepare an Anonymous Police Tip",
-                            detail: "Create a local-only draft, then continue on Columbia Police's official site.",
+                            title: "[TEST] Anonymous Police Tip",
+                            detail: "Submit marked text to private ColumbiaWalks test intake. Police will not receive this test.",
                             systemImage: "shield.lefthalf.filled"
                         )
                     }

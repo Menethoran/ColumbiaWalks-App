@@ -5,6 +5,7 @@ readonly EXPECTED_CERT_SHA256="a0c9e5abc99caec8d2ec31181c75c577d00963e0af3f654ac
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source_dir="$(cd "$script_dir/.." && pwd)"
+python3 "$script_dir/verify-distribution.py" --channel public
 release_apk="$source_dir/app/build/outputs/apk/release/app-release.apk"
 play_aab="$source_dir/app/build/outputs/bundle/playRelease/app-playRelease.aab"
 sdk_root="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/home/robert/.cache/columbiawalks-android-sdk}}"
