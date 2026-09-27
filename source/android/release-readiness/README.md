@@ -18,13 +18,14 @@ the desktop secure keyring. Two encrypted recovery copies passed restore
 checks, including the separate /Backup disk. The prepared AAB passed the full
 internal verification script with this key.
 
-**Reset status: submitted and pending at Google.** At 19:30 UTC on 2026-09-27,
-Play Console confirmed a pending upload-key reset request. The old upload
-certificate ending `7355DCC4` was still registered, with no activation time
-shown. Before uploading the AAB, verify that Play has activated the replacement
-fingerprint above.
-Then upload only to **Internal testing**. A local signing check does not prove
-Google has activated the replacement.
+**Reset status: submitted; activation scheduled for 2026-09-29 at 19:30 UTC
+(3:30 PM America/New_York).** At 20:21 UTC on 2026-09-27, Play Console displayed
+the replacement fingerprint above and a pending reset. Google's notification
+states that no new AAB/APK uploads are allowed until that activation time.
+The displayed certificate does not establish that uploads are enabled yet.
+At or after the scheduled time, verify activation and the replacement
+fingerprint, then upload only to **Internal testing**. A local signing check
+does not prove Google has activated the replacement.
 
 Google's [upload-key reset documentation](https://support.google.com/googleplay/android-developer/answer/9842756?hl=en)
 distinguishes the upload key from the app-signing key used for installed Play
