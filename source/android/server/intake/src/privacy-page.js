@@ -36,7 +36,7 @@ export const PRIVACY_POLICY_HTML = `<!doctype html>
   <header>
     <p class="eyebrow">ColumbiaWalks</p>
     <h1>Privacy Policy</h1>
-    <p class="effective">Effective September 21, 2026</p>
+    <p class="effective">Effective September 27, 2026</p>
   </header>
   <main>
     <h2>Overview</h2>
@@ -50,7 +50,8 @@ export const PRIVACY_POLICY_HTML = `<!doctype html>
       <li>Beta tester requests include an iOS or Android choice, name, the Apple or Google account email used for testing access, a Columbia street name without a house number, optional comments, consent, and request status.</li>
     </ul>
     <p>The app does not require an account. Optional contact fields may be left blank.</p>
-    <p>The Community police-tip assistant is different from a ColumbiaWalks submission. When opened by itself, its draft stays on your device until you copy it, and ColumbiaWalks does not receive or store that text or your police-tip evidence. When you choose Submit to CW &amp; Notify CBPD, the CW report is saved first and the app prepares a separate tip draft from those report fields. In either path, ColumbiaWalks does not send the draft or media to CBPD. If you continue, the app opens the Columbia Borough Police Department's external website, where you must choose anonymity, paste and review the text, attach any evidence, personally make the site's attestation, complete reCAPTCHA, and press its Submit button. Opening the site is not delivery, and ColumbiaWalks cannot confirm receipt. The Police Department website controls its own collection, receipt, retention, and privacy practices.</p>
+    <p>In internal test build 3.17.0, the Community anonymous-tip form sends text only to private ColumbiaWalks test intake after you review the marked preview and confirm the test acknowledgements. Every submitted human-readable field contains [TEST] between every word, including optional placeholders. The private record contains the marked subject, observation time, location, direction, plate/state and vehicle details if supplied, observation, evidence notes, app version, receipt time, test flags, and a random request ID/content hash used to prevent duplicate retries. It includes no name/contact fields, account or device identifier, or media. Police are not contacted, and these tips are not published on public maps, feeds, or the Page of Shame. Do not identify yourself in the free text; hosting infrastructure can still process network information. A marked pending copy is saved privately on your device until a receipt is confirmed or you remove that local copy. Removing the local copy does not delete a test already stored by ColumbiaWalks.</p>
+    <p>In older 3.16.x builds, the Community police-tip assistant is different from a ColumbiaWalks submission. When opened by itself, its draft stays on your device until you copy it, and ColumbiaWalks does not receive or store that text or your police-tip evidence. When you choose Submit to CW &amp; Notify CBPD, the CW report is saved first and the app prepares a separate tip draft from those report fields. In either path, ColumbiaWalks does not send the draft or media to CBPD. If you continue, the app opens the Columbia Borough Police Department's external website, where you must choose anonymity, paste and review the text, attach any evidence, personally make the site's attestation, complete reCAPTCHA, and press its Submit button. Opening the site is not delivery, and ColumbiaWalks cannot confirm receipt. The Police Department website controls its own collection, receipt, retention, and privacy practices.</p>
 
     <h2>Photos, location, and device permissions</h2>
     <ul>

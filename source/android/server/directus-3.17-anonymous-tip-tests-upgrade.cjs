@@ -154,6 +154,7 @@ async function createAndVerifyBackup() {
       await closeDatabase(database);
     }
   }
+  fs.chmodSync(backupPath, 0o600);
   const backup = await openDatabase(backupPath, sqlite3.OPEN_READONLY);
   try {
     const result = await databaseAll(backup, "PRAGMA quick_check");
@@ -370,6 +371,15 @@ async function assertPrivatePermissions() {
     throw new Error("The migration session is not a Directus administrator.");
   }
 
+  const policy = await request("GET", `/policies/${policyId}?fields=id,admin_access,app_access`);
+  const access = await request("GET", "/access?" + new URLSearchParams({
+    "filter[policy][_eq]": policyId, fields: "role,user", limit: "-1"
+  }));
+  if (!policy.data || policy.data.admin_access || policy.data.app_access ||
+      !Array.isArray(access.data) || !access.data.length ||
+      access.data.some((entry) => !entry.role && !entry.user)) {
+    throw new Error("The target policy must be a private, non-administrator server policy with no public access.");
+  }
   await createAndVerifyBackup();
   const collections = {};
   const fields = {};

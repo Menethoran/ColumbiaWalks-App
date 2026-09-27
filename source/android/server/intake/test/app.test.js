@@ -334,7 +334,10 @@ test("serves the public privacy policy without contacting Directus", async () =>
   assert.match(response.headers["content-security-policy"], /frame-ancestors 'none'/);
   assert.match(response.body, /ColumbiaWalks/);
   assert.match(response.body, /Privacy Policy/);
-  assert.match(response.body, /Effective September 21, 2026/);
+  assert.match(response.body, /Effective September 27, 2026/);
+  assert.match(response.body, /internal test build 3\.17\.0/);
+  assert.match(response.body, /Police are not contacted/);
+  assert.match(response.body, /does not delete a test already stored by ColumbiaWalks/);
   assert.match(response.body, /A photo is not required for a standard Quick or Full CW report/);
   assert.match(response.body, /eligible-report control is collapsed, off by default/);
   assert.match(response.body, /Submit to CW &amp; Notify CBPD/);

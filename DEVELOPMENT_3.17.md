@@ -12,7 +12,7 @@ Submissions use a random UUID per request, persist the marked request privately 
 
 `POST /columbiawalks-api/anonymous-tip-tests` accepts JSON only, at most 128 KiB. This route is permanently test-only and defaults to disabled (`ANONYMOUS_TIP_TESTS_ENABLED=false`). There is no public read route, official-form handoff, police forwarding, or email-outbox integration. Invalid bodies, contact/attachment fields, destination overrides, and non-.0 versions are rejected.
 
-`server/directus-3.17-anonymous-tip-tests-upgrade.cjs` creates private `anonymous_tip_tests` with a unique `submission_id`, content hash, test-only flags, timestamps, and marked content. It verifies a database backup before schema changes and permits only create/read for the existing private intake policy. No Public policy is created. The hosted migration and live endpoint must be verified before announcing that phone submissions are operational.
+`server/directus-3.17-anonymous-tip-tests-upgrade.cjs` creates private `anonymous_tip_tests` with a unique `submission_id`, content hash, test-only flags, timestamps, and marked content. It verifies a database backup before schema changes and permits only create/read for the existing private intake policy. No Public policy is created. The hosted migration and live endpoint were verified on 2026-09-27 as recorded below.
 
 Deployment sequence:
 
@@ -26,7 +26,7 @@ Deployment sequence:
 - Node intake suite: **200 tests passed**.
 - Android unit suite: **59 tests passed**; debug lint and APK build passed. The Internal testing variant also passed its unit tests, lint, R8 build, and AAB packaging with a local QA key; this is not an upload-signed bundle. Its package/version, non-debuggable manifest, and absence of the sideload permission were checked.
 - Android API 36 emulator: **2 instrumented workflows passed**: preview/submit/receipt/rotation and lost-receipt recovery after reopening the activity with the same request UUID.
-- The emulator used a loopback-only SQLite fixture that implements the Directus response contract. This is local persistence/integration evidence, not proof of live Directus storage.
+- Those two emulator workflows use a loopback-only SQLite fixture implementing the Directus response contract. Hosted Directus verification is recorded separately below.
 - UI, Community contract, privacy/release checks passed for Android; iOS static UI/contract checks passed. Screenshots were visually checked locally.
 - The intake Docker image built successfully. iOS has not been compiled or run in Xcode on this Linux host.
 
@@ -40,6 +40,21 @@ Every semantic version ending in `.0` is internal only, starting with 3.17.0. Th
 
 The signed Android `internalTesting` variant requires `-PcwDistributionChannel=internal`, the established upload key, and non-debuggable packaging. `build-play-internal.sh` verifies the certificate, AAB signature/manifest, version, R8 mapping, and native-symbol files before staging privately. Its only authorized Play destination is **Internal testing**. An AAB cannot technically prevent a console operator from choosing another track; this policy must also be followed in the console.
 
-On 2026-09-27 the signed-in Play Console was accessible and its upload certificate matched the existing pinned SHA-256 ending `7355DCC4`. The upload keystore and signing settings were not available on this host, so no upload-signed 3.17.0 AAB or track rollout is claimed. No hosted tip migration/deployment is claimed by this source snapshot. Those outstanding deployment steps must be recorded when actually completed.
+On 2026-09-27 the signed-in Play Console was accessible and its upload certificate matched the existing pinned SHA-256 ending `7355DCC4`. The upload keystore and signing settings were not available on this host, so no upload-signed 3.17.0 AAB or track rollout is claimed. The private hosted tip endpoint has now been deployed and verified as described below.
 
 For iOS, see [INTERNAL_TEST_3.17.0.md](source/ios/INTERNAL_TEST_3.17.0.md). The Xcode project includes the new models/service and retains a separate internal bundle ID. The user will finish building and testing iOS on a Mac.
+
+## Hosted private intake verification — 2026-09-27
+
+The backend host `columbiawalks-backend` (Gabriel) ran the backup-first migration using its existing server-side administrator configuration. The intake policy was verified as private and non-administrator before collection changes. The resulting collection permits create/read only for ColumbiaWalks Intake; public access remains denied.
+
+- Verified SQLite backup: `/directus/database/data.db.bak-pre-anonymous-tip-tests-20260927`, with `PRAGMA quick_check=ok` and mode 0600.
+- Active intake image: `columbiawalks-intake:3.17.0-internal`, containing package version 1.13.0. The service is running/healthy; Directus remains running. Official-email mode remains disabled.
+- Deployment uses `/docker/docker-compose.yml` plus `/docker/columbiawalks-3.17.0-internal.yml`, which sets this image and `ANONYMOUS_TIP_TESTS_ENABLED=true`. Future Compose updates must include that override until the setting is incorporated into the main deployment.
+- Rollback: recreate only `columbiawalks-intake` using the original Compose file without the override to restore `columbiawalks-intake:1.12.0`; retain the private collection and its data. No schema rollback is needed to disable this new route.
+- Public HTTPS probe: a synthetic tip received HTTP 201; an identical retry received HTTP 200 with `duplicate:true` and the same receipt. Directus inspection confirmed exactly one record with every human-readable field marked and the destination fixed to private test intake.
+- An invalid JSON tip received HTTP 400; GET on the tip route returned 404; unauthenticated Directus collection reads returned 403. Service health and the existing public incidents feed returned 200.
+- Android API 36 hosted smoke test: **1 test passed** using the distributable internal APK against the real HTTPS endpoint. The app displayed a verified private receipt and that police were not contacted. This test is opt-in via `-e hostedAnonymousTip true` and uses synthetic text only.
+- The live privacy page now describes the stored internal-test tips and distinguishes the older 3.16.x external-form workflow.
+
+No police destination or email delivery was enabled. The synthetic verification records are clearly marked test data.
