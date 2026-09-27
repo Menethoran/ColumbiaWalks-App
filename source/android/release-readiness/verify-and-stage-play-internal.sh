@@ -9,7 +9,7 @@ readonly EXPECTED_UPLOAD_CERT_SHA256="a0c9e5abc99caec8d2ec31181c75c577d00963e0af
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source_dir="$(cd "$script_dir/.." && pwd)"
 python3 "$script_dir/verify-distribution.py" --channel internal
-artifact_dir="${CW_ANDROID_ARTIFACT_DIR:-$source_dir/../artifacts}"
+artifact_dir="${CW_ANDROID_ARTIFACT_DIR:-$source_dir/../../artifacts}"
 play_artifact_dir="$artifact_dir/play-internal"
 bundletool_path="${BUNDLETOOL:-/home/robert/.cache/columbiawalks-tools/bundletool-all-1.18.3.jar}"
 native_symbols="$source_dir/app/build/outputs/native-debug-symbols/internalTesting/native-debug-symbols.zip"

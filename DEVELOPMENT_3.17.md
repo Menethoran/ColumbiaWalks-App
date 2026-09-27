@@ -40,7 +40,9 @@ Every semantic version ending in `.0` is internal only, starting with 3.17.0. Th
 
 The signed Android `internalTesting` variant requires `-PcwDistributionChannel=internal`, the established upload key, and non-debuggable packaging. `build-play-internal.sh` verifies the certificate, AAB signature/manifest, version, R8 mapping, and native-symbol files before staging privately. Its only authorized Play destination is **Internal testing**. An AAB cannot technically prevent a console operator from choosing another track; this policy must also be followed in the console.
 
-On 2026-09-27 the signed-in Play Console was accessible and its upload certificate matched the existing pinned SHA-256 ending `7355DCC4`. The upload keystore and signing settings were not available on this host, so no upload-signed 3.17.0 AAB or track rollout is claimed. The private hosted tip endpoint has now been deployed and verified as described below.
+On 2026-09-27 the signed-in Play Console was accessible and its upload certificate matched the existing pinned SHA-256 ending `7355DCC4`. A password-protected release keystore was subsequently recovered from Gabriel into an owner-only local directory outside the repository. Its private-key alias is `columbiawalks-release`, created August 19, and the local copy matches the server file byte for byte. Unlocking it and checking its certificate are still required before signing; no upload-signed 3.17.0 AAB or track rollout is claimed. The Play Internal testing draft is labeled `[TEST] 3.17.0 (31700) Internal only`; its notes describe private test intake. The private hosted tip endpoint has been deployed and verified as described below.
+
+Internal Play artifacts stage under the project-root `artifacts/play-internal/` directory, outside the source tree. The release helper accepts credentials through an interactive prompt or privately configured environment; credentials and the keystore must never enter Git.
 
 For iOS, see [INTERNAL_TEST_3.17.0.md](source/ios/INTERNAL_TEST_3.17.0.md). The Xcode project includes the new models/service and retains a separate internal bundle ID. The user will finish building and testing iOS on a Mac.
 
