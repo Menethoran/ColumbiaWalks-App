@@ -1,24 +1,28 @@
 # ColumbiaWalks
 
-ColumbiaWalks is a private community walking-safety initiative. It is not affiliated with the Borough of Columbia or the Columbia Borough Police Department.
+ColumbiaWalks is an independent community walking-safety initiative in Columbia, Pennsylvania. It is not affiliated with the Borough or Columbia Borough Police Department.
 
 Website: https://www.columbiawalks.com
 
-## 3.17.0 (31700): internal test source
+## 3.17.1 (31701): public release candidate
 
-This branch adds anonymous tip **test intake** on Android and iOS. Tips go only to private ColumbiaWalks storage. Every human-readable submitted field has `[TEST]` between every word, enforced by both the clients and the server. Police are not contacted. The app shows an internal-build banner, a marked preview, explicit test acknowledgement, and a verified receipt or a retryable pending state.
+Android and iOS prepare a police-tip draft locally and open CBPD's official CRIMEWATCH tip form. The user chooses anonymity, reviews the text, attaches evidence, completes the official form's acknowledgements and verification, and submits there. ColumbiaWalks does not automatically transmit the draft or confirm police receipt.
 
-Starting with 3.17.0, every version whose patch component is `0` is an **internal test build only**. Public website/GitHub releases, Play production/open/closed testing, external TestFlight, and App Store distribution are prohibited for these versions. Android provides a separately installed local test APK and an explicitly gated signed Play **Internal testing** variant. iOS currently permits Debug/internal device builds only.
+The website update adds [Contact Us](https://www.columbiawalks.com/contact/) and [anonymous police-tip instructions](https://www.columbiawalks.com/police-tip/), app-store links, and the current founder/contact information. Both founders are Callie Jo Thompson and Robert Burton Thompson V; the project phone is (717) 992-3102 and email is columbiawalks@gmail.com.
 
-[Development, verification, and deployment status](DEVELOPMENT_3.17.md) distinguishes completed local checks from hosted intake and store availability. Source code and a successful local build do not mean the service or store release is live.
+See [3.17.1 verification and deployment status](DEVELOPMENT_3.17.1.md) and [website deployment notes](source/website/README.md). The website theme version is separate from the available Android APK. A successful QA build is not a signed public release.
 
 ## Source and builds
 
-- [`source/android/`](source/android/) contains the Android app, backend intake, Directus migration, and tests. Run `source/android/release-readiness/build-internal-android.sh` to test, lint, and build the separate internal APK.
-- [`source/android/release-readiness/build-play-internal.sh`](source/android/release-readiness/build-play-internal.sh) builds and verifies the Play Internal testing bundle with the existing upload key. Configure signing privately outside Git. The bundle keeps `org.columbiawalks.app`; local debug installs use `org.columbiawalks.app.internal`.
-- [`source/ios/`](source/ios/) contains the SwiftUI app, Xcode project, and tests. Follow the [3.17.0 iOS handoff](source/ios/INTERNAL_TEST_3.17.0.md) on a Mac. Linux static checks do not replace an Xcode build.
-- Backend checks: run `npm ci && npm test` in `source/android/server/intake/` with Node.js 22 or newer.
+- `source/android/` contains the app and intake backend. `release-readiness/build-production-android.sh` verifies the original website signing identity before building/staging public artifacts. Signing material stays outside Git. QA debug installs use `org.columbiawalks.app.qa` and disable self-updates.
+- `source/ios/` contains the SwiftUI app and Xcode project, version 3.17.1/build 31701. Follow the App Store handoff on a Mac; Linux static checks do not replace Xcode, simulator, or physical-iPhone validation.
+- `source/website/` contains the overlay applied to the verified live Ghost theme, the published page HTML, and deployment/rollback notes.
+- Backend checks: `npm ci && npm test` from `source/android/server/intake/` with Node.js 22 or newer. Container tests must mount the parent `server/` directory so migration fixtures are available.
 
-Prior release and App Store documents remain historical records. Published Android artifacts are listed on the [GitHub releases page](https://github.com/Menethoran/ColumbiaWalks-App/releases); this internal source branch must not be published there as a release.
+## Internal builds remain separate
 
-Generated builds, signing material, credentials, tokens, environment files, and private submissions are excluded from Git.
+Starting with 3.17.0, every semantic version whose patch component is `0` is **internal test only**. Public website/GitHub releases, Play production/open/closed testing, external TestFlight, and App Store distribution are blocked for those versions.
+
+The preserved `internal/3.17.0-anonymous-tips` branch contains the private test app. Its text-only intake inserts `[TEST]` between every submitted word and never contacts police. Its backend route remains available for existing internal tests; public 3.17.1 clients do not call it. `DEVELOPMENT_3.17.md` and `source/ios/INTERNAL_TEST_3.17.0.md` describe that separate historical build, not this candidate.
+
+Generated builds, signing material, credentials, environment files, tokens, and private submissions are excluded from Git.

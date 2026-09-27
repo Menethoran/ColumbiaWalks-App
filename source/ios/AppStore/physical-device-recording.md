@@ -5,7 +5,7 @@ Apple requires this recording to come from a physical iPhone running the latest 
 ## Before recording
 
 1. On the iPhone, open Settings > General > About and record the **Model Name** and **iOS Version** for the App Review response.
-2. Install TestFlight from the App Store if needed, accept the invitation sent to the designated internal tester, and install ColumbiaWalks 3.16.1 (31601) from the **ColumbiaWalks Internal** group.
+2. Install TestFlight from the App Store if needed, accept the invitation sent to the designated internal tester, and install ColumbiaWalks 3.17.1 (31701) from the **ColumbiaWalks Internal** group.
 3. To make the permission prompts visible, use a fresh install or reset ColumbiaWalks permissions in Settings. Deleting the app removes its locally saved reports.
 4. Use a generic test description and a public map point in Columbia. Avoid showing notifications, personal photos, a home location, or other private information.
 
@@ -29,4 +29,4 @@ Apple requires this recording to come from a physical iPhone running the latest 
 - Exact physical iPhone model.
 - Exact iOS version.
 
-Upload and select the verified 3.16.1 (31601) build before attaching this recording and response.
+Upload and select the verified 3.17.1 (31701) build before attaching this recording and response.

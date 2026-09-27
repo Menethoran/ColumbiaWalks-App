@@ -343,7 +343,7 @@ test("serves the public privacy policy without contacting Directus", async () =>
   assert.match(response.body, /Submit to CW &amp; Notify CBPD/);
   assert.match(response.body, /ColumbiaWalks does not send the draft or media to CBPD/);
   assert.match(response.body, /Contact Us/);
-  assert.match(response.body, /\(717\) 466-9069/);
+  assert.match(response.body, /\(717\) 992-3102/);
   assert.match(response.body, /location metadata embedded in a camera or selected photo/);
   assert.match(response.body, /Open-Meteo/);
   assert.match(response.body, /rounds the incident coordinates to two decimal places/);
@@ -362,7 +362,7 @@ test("serves the public privacy policy without contacting Directus", async () =>
   assert.match(response.body, /Health Connect/);
   assert.match(response.body, /disables Android backup/);
   assert.match(response.body, /affirmatively opt in specifically for the test destination/);
-  assert.match(response.body, /defaults to field-test destination mode/);
+  assert.match(response.body, /Versions 3\.16\.1 and 3\.17\.1 default to field-test destination mode/);
   assert.match(response.body, /send it only to a ColumbiaWalks-controlled test mailbox/);
   assert.match(response.body, /do not receive a field-test message/);
   assert.match(response.body, /Authorization for the test mailbox cannot be reused for official routing/);

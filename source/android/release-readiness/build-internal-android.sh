@@ -8,6 +8,13 @@ gradle_cache="${CW_GRADLE_CACHE:-/home/robert/.cache/columbiawalks-gradle}"
 internal_android_home="${CW_INTERNAL_ANDROID_HOME:-/home/robert/.cache/columbiawalks-internal-android}"
 mkdir -p -m 700 "$internal_android_home"
 python3 "$script_dir/verify-distribution.py" --channel internal
+if ! python3 - "$source_dir/app/build.gradle.kts" <<'CHECK'
+import pathlib, re, sys
+version = re.search(r'appVersionName = "([^"]+)"', pathlib.Path(sys.argv[1]).read_text()).group(1)
+if version != "3.17.0":
+    sys.exit("This script belongs to internal/3.17.0-anonymous-tips. Use the 3.17.1 public build workflow on this branch.")
+CHECK
+then exit 1; fi
 args=(testDebugUnitTest lintDebug assembleDebug)
 artifact="ColumbiaWalks-3.17.0-internal-test.apk"
 if [[ "${1:-}" == "--qa" && $# == 1 ]]; then

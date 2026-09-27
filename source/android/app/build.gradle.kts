@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
 }
 
-val appVersionName = "3.17.0"
+val appVersionName = "3.17.1"
 val internalTestBuild = appVersionName.substringAfterLast(".") == "0"
 val internalPlayRequested = gradle.startParameter.taskNames.any {
     it.contains("internalTesting", ignoreCase = true)
@@ -65,7 +65,7 @@ android {
         applicationId = "org.columbiawalks.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 31700
+        versionCode = 31701
         versionName = appVersionName
         buildConfigField(
             "String",
@@ -99,7 +99,7 @@ android {
         )
         buildConfigField("boolean", "SELF_UPDATE_ENABLED", (!internalTestBuild).toString())
         buildConfigField("boolean", "INTERNAL_TEST_BUILD", internalTestBuild.toString())
-        buildConfigField("String", "ANONYMOUS_TIP_ENDPOINT", "\"https://directus.rndtech.org/columbiawalks-api/anonymous-tip-tests\"")
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -125,17 +125,8 @@ android {
 
     buildTypes {
         debug {
-            if (internalTestBuild) applicationIdSuffix = ".internal"
-            // A separate QA package can exercise an isolated local intake. The
-            // distributable internal APK always keeps the fixed HTTPS endpoint.
-            val testEndpoint = providers.gradleProperty("cwTipTestEndpoint").orNull
-            if (testEndpoint != null) {
-                if (!testEndpoint.matches(Regex("http://10\\.0\\.2\\.2:[0-9]{4,5}/columbiawalks-api/anonymous-tip-tests"))) {
-                    throw GradleException("QA tip endpoint must be the local Android emulator host.")
-                }
-                applicationIdSuffix = if (internalTestBuild) ".internal.qa" else ".qa"
-                buildConfigField("String", "ANONYMOUS_TIP_ENDPOINT", "\"$testEndpoint\"")
-            }
+            applicationIdSuffix = if (internalTestBuild) ".internal" else ".qa"
+            buildConfigField("boolean", "SELF_UPDATE_ENABLED", "false")
         }
         release {
             isMinifyEnabled = false

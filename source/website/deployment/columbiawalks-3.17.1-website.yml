@@ -1,0 +1,4 @@
+# Layer over docker-compose.yml and columbiawalks-3.17.0-internal.yml.
+services:
+  columbiawalks-intake:
+    image: columbiawalks-intake:3.17.1-contact

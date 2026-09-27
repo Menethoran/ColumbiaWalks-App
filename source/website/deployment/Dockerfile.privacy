@@ -1,0 +1,3 @@
+# Narrow website/privacy update; preserves the deployed 3.17.0 private test intake.
+FROM columbiawalks-intake:3.17.0-internal
+COPY source/android/server/intake/src/privacy-page.js /app/src/privacy-page.js

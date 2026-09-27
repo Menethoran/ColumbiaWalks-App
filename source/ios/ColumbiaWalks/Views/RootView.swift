@@ -25,11 +25,6 @@ struct RootView: View {
                 .tabItem { Label("Community", systemImage: "person.3") }
                 .tag(AppState.Tab.community)
         }
-        .safeAreaInset(edge: .top, spacing: 0) {
-            Text("[TEST] Internal build • 3.17.0")
-                .font(.caption.bold()).frame(maxWidth: .infinity).padding(6)
-                .background(Color.yellow).foregroundStyle(.black)
-        }
         .background(Color.cwSurface.ignoresSafeArea())
         .preferredColorScheme(.light)
     }

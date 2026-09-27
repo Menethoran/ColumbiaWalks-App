@@ -34,8 +34,6 @@
 		E10EBCEC05C1032546820303 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D3302F34283FD866131028E /* APIClient.swift */; };
 		EC0454F737D04B6BE1AABA22 /* PhotoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A433911087F0F149B9BC79A /* PhotoStore.swift */; };
 		EE4BE0F998C0DD18FA7DB1E9 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD71217F331784444CC8E89 /* FeedbackView.swift */; };
-		FA0CABFF38EA06C60B53F133 /* AnonymousTipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721C69AAA84AEE4233CD8B3D /* AnonymousTipModels.swift */; };
-		BAFC18D7CD833C56B05D87CD /* AnonymousTipService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39D0A93451F0692532A555 /* AnonymousTipService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,8 +77,6 @@
 		DBD71217F331784444CC8E89 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		ED693F34B10DD3EC0C3EAB46 /* MapScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapScreen.swift; sourceTree = "<group>"; };
 		F1C6209733803082F0C53D92 /* SavedReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedReportsView.swift; sourceTree = "<group>"; };
-		721C69AAA84AEE4233CD8B3D /* AnonymousTipModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnonymousTipModels.swift; sourceTree = "<group>"; };
-		5A39D0A93451F0692532A555 /* AnonymousTipService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnonymousTipService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -118,7 +114,6 @@
 		8DB0AFD47A785B81154D7CBE /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				5A39D0A93451F0692532A555 /* AnonymousTipService.swift */,
 				8D3302F34283FD866131028E /* APIClient.swift */,
 				D03917CC00A75E92D50C578C /* FeedbackService.swift */,
 				8F088E061F974B7703DC6601 /* LocationService.swift */,
@@ -140,7 +135,6 @@
 		C57C5F22BD842D1FABD0D9BA /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				721C69AAA84AEE4233CD8B3D /* AnonymousTipModels.swift */,
 				12DDA6A7F55CAE9EAFAF3585 /* ChecklistCatalog.swift */,
 				AB45598B9053B699F7B8A0D3 /* FeedbackModels.swift */,
 				316000000000000000000104 /* PoliceTipModels.swift */,
@@ -297,8 +291,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BAFC18D7CD833C56B05D87CD /* AnonymousTipService.swift in Sources */,
-				FA0CABFF38EA06C60B53F133 /* AnonymousTipModels.swift in Sources */,
 				E10EBCEC05C1032546820303 /* APIClient.swift in Sources */,
 				07C91F83382C9125D0E988E6 /* AppState.swift in Sources */,
 				191267FE095A87552CD597A8 /* CameraPicker.swift in Sources */,
@@ -372,7 +364,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 31700;
+				CURRENT_PROJECT_VERSION = 31701;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = JKA6EGL5J2;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -386,7 +378,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 3.17.0;
+				MARKETING_VERSION = 3.17.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -407,7 +399,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.columbiawalks.app.internal.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.columbiawalks.app.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ColumbiaWalks.app/ColumbiaWalks";
@@ -425,7 +417,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.columbiawalks.app.internal;
+				PRODUCT_BUNDLE_IDENTIFIER = org.columbiawalks.app;
 				PRODUCT_NAME = ColumbiaWalks;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -443,7 +435,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.columbiawalks.app.internal;
+				PRODUCT_BUNDLE_IDENTIFIER = org.columbiawalks.app;
 				PRODUCT_NAME = ColumbiaWalks;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -460,7 +452,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.columbiawalks.app.internal.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.columbiawalks.app.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ColumbiaWalks.app/ColumbiaWalks";
@@ -502,7 +494,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 31700;
+				CURRENT_PROJECT_VERSION = 31701;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = JKA6EGL5J2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -522,7 +514,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 3.17.0;
+				MARKETING_VERSION = 3.17.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

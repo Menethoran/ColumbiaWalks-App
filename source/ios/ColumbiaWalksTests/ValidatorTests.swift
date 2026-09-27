@@ -1089,38 +1089,3 @@ final class ReportSubmissionResultTests: XCTestCase {
         )
     }
 }
-
-
-final class AnonymousTipTestIntakeTests: XCTestCase {
-    func testMandatoryMarkersAndEncoding() throws {
-        var draft = PoliceTipDraft()
-        draft.subject = "Fixture test"; draft.location = "Synthetic location"
-        draft.firsthandObservation = "Synthetic observation only"; draft.isPastAndNotInProgress = true
-        let submission = try AnonymousTipSubmission.make(draft, testOnly: true, version: "3.17.0")
-        for key in AnonymousTipSubmission.fieldOrder {
-            let marked = try XCTUnwrap(submission.fields[key])
-            let tokens = marked.split(separator: " ")
-            for index in stride(from: 0, to: tokens.count, by: 2) { XCTAssertEqual(tokens[index], "[TEST]") }
-            XCTAssertEqual(tokens.last, "[TEST]")
-            XCTAssertEqual(AnonymousTipSubmission.mark(marked), marked)
-        }
-        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(submission)) as? [String: Any])
-        XCTAssertEqual(Set(json.keys), ["submission_id", "app_version", "past_or_inactive_confirmed", "test_only_acknowledged", "fields"])
-        XCTAssertEqual(AnonymousTipSubmission.mark("[test] one\n[TEST] two"), "[TEST] one [TEST] two [TEST]")
-        XCTAssertThrowsError(try AnonymousTipSubmission.make(draft, testOnly: false, version: "3.17.0"))
-        XCTAssertThrowsError(try AnonymousTipSubmission.make(draft, testOnly: true, version: "3.17.1"))
-        draft.subject = "[TEST]"
-        XCTAssertThrowsError(try AnonymousTipSubmission.make(draft, testOnly: true, version: "3.17.0"))
-    }
-    func testRejectsFalseOrMismatchedReceipt() throws {
-        var draft = PoliceTipDraft()
-        draft.subject = "Fixture test"; draft.location = "Synthetic location"
-        draft.firsthandObservation = "Synthetic observation"; draft.isPastAndNotInProgress = true
-        let submission = try AnonymousTipSubmission.make(draft, testOnly: true, version: "3.17.0")
-        let id = submission.submissionID.uuidString.lowercased()
-        let data: [String: Any] = ["submission_id": id, "reference": "[TEST] CW-TIP-" + id,
-            "test_mode": true, "police_contacted": true, "status": "test_received", "destination": "private_columbiawalks_test_intake"]
-        let receipt = try JSONDecoder().decode(AnonymousTipReceipt.self, from: JSONSerialization.data(withJSONObject: ["data": data]))
-        XCTAssertThrowsError(try receipt.verifiedReference(for: submission))
-    }
-}

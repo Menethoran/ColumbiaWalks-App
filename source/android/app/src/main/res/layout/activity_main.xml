@@ -68,8 +68,6 @@
             app:tint="@color/white" />
     </LinearLayout>
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/cw_gold" android:padding="6dp" android:gravity="center" android:text="@string/internal_build_banner" android:textColor="@color/cw_text" android:textStyle="bold" />
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"

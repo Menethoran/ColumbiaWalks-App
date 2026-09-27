@@ -41,7 +41,7 @@ These answers describe ColumbiaWalks 3.16.1 (31601). Reconfirm them if the app o
 
 ### Contact Info
 
-- Name, email address, phone number, physical address, and other contact details may be collected only through the clearly optional Contact Us message fields. Robert's displayed ColumbiaWalks contact number, (717) 466-9069, is app content and is not user data collected by the app.
+- Name, email address, phone number, physical address, and other contact details may be collected only through the clearly optional Contact Us message fields. Robert's displayed ColumbiaWalks contact number, (717) 992-3102, is app content and is not user data collected by the app.
 - Linked to identity: **Yes** when provided
 - Used for tracking: **No**
 - Purpose: **App Functionality** (support and optional follow-up)
