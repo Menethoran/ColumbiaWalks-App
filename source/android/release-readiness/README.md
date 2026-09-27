@@ -18,10 +18,11 @@ the desktop secure keyring. Two encrypted recovery copies passed restore
 checks, including the separate /Backup disk. The prepared AAB passed the full
 internal verification script with this key.
 
-**Reset status: prepared, not submitted or activated.** In Play Console's
-App signing page, the reset reason is "I forgot the password to my keystore".
-The owner must upload this PEM and submit the reset. Before uploading the AAB,
-verify that Play has accepted the request and activated the fingerprint above.
+**Reset status: submitted and pending at Google.** At 19:30 UTC on 2026-09-27,
+Play Console confirmed a pending upload-key reset request. The old upload
+certificate ending `7355DCC4` was still registered, with no activation time
+shown. Before uploading the AAB, verify that Play has activated the replacement
+fingerprint above.
 Then upload only to **Internal testing**. A local signing check does not prove
 Google has activated the replacement.
 
