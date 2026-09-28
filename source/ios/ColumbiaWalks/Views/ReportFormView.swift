@@ -123,7 +123,7 @@ struct ReportFormView: View {
                     Button {
                         saveReport(notifyAuthorities: true)
                     } label: {
-                        Label("Submit to CW & Notify CBPD", systemImage: "building.columns.fill")
+                        Label("Submit to CW & prepare [TEST] tip", systemImage: "building.columns.fill")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
@@ -588,7 +588,7 @@ struct ReportFormView: View {
         ].map(\.trimmed).filter { !$0.isEmpty }.joined(separator: " ")
 
         return PoliceTipDraft(
-            subject: String(subject.prefix(128)),
+            subject: TestTipText.mark(subject).utf16.count <= 128 ? subject : "ColumbiaWalks report",
             observedAt: observedAt,
             location: locationText,
             licensePlate: vehicle.licensePlate,
@@ -596,8 +596,8 @@ struct ReportFormView: View {
             vehicleDescription: vehicleDescription,
             firsthandObservation: observation,
             evidenceNotes: hadPhoto
-                ? "CW report \(reportID.uuidString.lowercased()) includes a photo. Attach the original relevant file yourself on the official CBPD form."
-                : "CW report \(reportID.uuidString.lowercased()) did not include a photo.",
+                ? "The saved ColumbiaWalks report includes a photo. Attach the original relevant file yourself on the official CBPD form."
+                : "The saved ColumbiaWalks report did not include a photo.",
             sourceWasSubmittedToColumbiaWalks: true
         )
     }

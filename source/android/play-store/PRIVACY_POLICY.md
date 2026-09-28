@@ -208,3 +208,8 @@ personal information from children under 13.
 This policy may be updated as the service changes. The current version and its
 effective date will remain available at
 https://www.columbiawalks.com/privacy-policy/.
+
+
+## 3.17.1 official police-tip form
+
+On a deliberate user action, the app opens CBPD's official CRIMEWATCH form inside WebView/WKWebView and makes the prepared `[TEST]` subject/message available to that site. Report time, location, vehicle/plate, observations, and evidence notes can be carried from a new or saved CW complaint. Contact fields are cleared, Anonymous and Other are selected, and only the optional subscription notice is dismissed. The app does not proxy the tip through CW intake. CRIMEWATCH controls its page data handling. The user alone selects files, accepts the agreement, completes CAPTCHA, and presses Submit. Autofill and popup dismissal do not confirm police receipt. Review this third-party form behavior alongside the unchanged CW collection and optional test-email declarations before a store submission.

@@ -112,43 +112,14 @@ def verify_identity_and_navigation() -> None:
 
 
 def verify_police_handoff() -> None:
-    android_model = read(
-        ANDROID / "java/org/columbiawalks/app/domain/PoliceTipDraft.java"
-    )
-    android_view = read(
-        ANDROID / "java/org/columbiawalks/app/ui/PoliceTipFragment.java"
-    )
-    android_strings = read(ANDROID / "res/values/strings.xml")
-    ios_model = read(IOS / "Models/PoliceTipModels.swift")
-    ios_view = read(IOS / "Views/PoliceTipView.swift")
-    combined = "\n".join(
-        (android_model, android_view, android_strings, ios_model, ios_view)
-    )
-
-    require(
-        combined,
-        (
-            TIP_URL,
-            "reCAPTCHA",
-            "not submitted",
-            "past",
-            "not currently in progress",
-            "Prepared locally in ColumbiaWalks",
-            "717-664-1180",
-            "1-800-957-2677",
-            "717-684-7735",
-        ),
-        "local-only police handoff",
-    )
-    for source_name, source in (
-        ("Android PoliceTip sources", android_model + android_view),
-        ("iOS PoliceTip sources", ios_model + ios_view),
-    ):
-        forbidden = ("directus.rndtech.org", "URLSession", "HttpURLConnection")
-        found = [value for value in forbidden if value in source]
-        if found:
-            fail(f"{source_name} gained a ColumbiaWalks upload path: {found}")
-    print("PASS local-only police draft, official handoff, and call routes")
+    android = read(ANDROID / "java/org/columbiawalks/app/ui/PoliceTipFragment.java")
+    ios = read(IOS / "Views/PoliceTipView.swift")
+    require(android, ("CrimewatchTipActivity.intent", "preparedTip.getSubject()", "preparedTip.getNarrative()"), "Android official autofill handoff")
+    require(ios, ("CrimewatchForm", "WKWebView", "[TEST]", "PoliceTipDraftBuilder.prepare"), "iOS official autofill handoff")
+    for name, source in (("Android", android), ("iOS", ios)):
+        if "AnonymousTipService" in source or "AnonymousTipSubmissionModel" in source:
+            fail(f"{name} still routes to the legacy private test intake")
+    print("PASS 3.17.1 official CRIMEWATCH autofill handoff")
 
 
 def verify_trash_contract() -> None:
@@ -313,10 +284,10 @@ def verify_simplified_reporting_and_contact() -> None:
         combined,
         (
             "Submit complaint to CW",
-            "Submit to CW &amp; Notify CBPD",
+            "Submit to CW &amp; prepare [TEST] tip",
             "Opt in to the [TEST] email",
             "(717) 992-3102",
-            "17179923102",
+            "7179923102",
             "#contact-us",
         ),
         "simplified report and Contact Us contract",

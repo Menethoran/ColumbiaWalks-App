@@ -73,3 +73,15 @@ a:focus-visible, summary:focus-visible { outline: 3px solid #056aa8; outline-off
   .cw-community-content { padding-inline: 18px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+#cw-tip-draft { max-width: 820px; }
+#cw-tip-draft [hidden] { display: none !important; }
+#cw-tip-draft label { display: block; color: #173c50; font-weight: 700; margin: 22px 0 8px; }
+#cw-tip-draft input:not([type=checkbox]), #cw-tip-draft textarea { box-sizing: border-box; width: 100%; max-width: 100%; padding: 12px; font: inherit; line-height: 1.5; color: #173c50; background: #fff; border: 2px solid #657f8b; border-radius: 8px; }
+#cw-tip-draft textarea { resize: vertical; }
+#cw-tip-draft .cw-tip-confirm { display: flex; align-items: flex-start; gap: 12px; padding: 18px; background: #fff3c4; }
+#cw-tip-inactive { flex: 0 0 22px; width: 22px; height: 22px; margin-top: 4px; }
+#cw-tip-draft button { cursor: pointer; white-space: normal; max-width: 100%; margin: 12px 0; }
+#cw-tip-draft :focus-visible { outline: 3px solid #056aa8; outline-offset: 3px; }
+#cw-tip-status { font-weight: 700; }
+#cw-tip-prepared { border-left: 5px solid #946000; padding: 8px 0 8px 22px; }

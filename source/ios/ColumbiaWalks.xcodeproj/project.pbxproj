@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		317010000000000000000001 /* crimewatch-test-autofill.js in Resources */ = {isa = PBXBuildFile; fileRef = 317010000000000000000002 /* crimewatch-test-autofill.js */; };
 		07C91F83382C9125D0E988E6 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E070DFB7D8BADA308F7495 /* AppState.swift */; };
 		10A8E5F5E94611C19C1F5ABB /* SavedReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C6209733803082F0C53D92 /* SavedReportsView.swift */; };
 		191267FE095A87552CD597A8 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5C501107FA8EA5523C9AE7 /* CameraPicker.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		317010000000000000000002 /* crimewatch-test-autofill.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "crimewatch-test-autofill.js"; sourceTree = "<group>"; };
 		0B5C501107FA8EA5523C9AE7 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		0CF56B40DE86D6EB428E2020 /* ColumbiaWalks.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ColumbiaWalks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12DDA6A7F55CAE9EAFAF3585 /* ChecklistCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistCatalog.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			children = (
 				A2D335ED9A1EE3BD3716957E /* Assets.xcassets */,
 				ACCD9C4B017FF395F92DD671 /* checklist_catalog.json */,
+				317010000000000000000002 /* crimewatch-test-autofill.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -258,6 +261,7 @@
 			files = (
 				3EC877855442BBBB093D9AAA /* Assets.xcassets in Resources */,
 				90556024DD5E7A8FA25BE8A8 /* checklist_catalog.json in Resources */,
+				317010000000000000000001 /* crimewatch-test-autofill.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

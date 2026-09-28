@@ -3,18 +3,47 @@
   <p>Call <a href="tel:911">911</a> now. Online tips are for non-emergency information.</p>
 </aside>
 <section aria-labelledby="official-tip-title">
-  <h2 id="official-tip-title">Submit directly to CBPD</h2>
-  <p class="cw-intro">Continue to Columbia Borough Police Department’s CRIMEWATCH page to share information about suspicious, nuisance, or criminal activity. The official form lets you choose whether to include contact information.</p>
+  <h2 id="official-tip-title">Prepare a [TEST] anonymous tip</h2>
+  <p class="cw-intro"><strong>Police-tip testing remains enabled.</strong> Every word of the prepared subject and message is separated by <strong>[TEST]</strong>. Review all details before you personally submit anything to Columbia Borough Police Department.</p>
+  <p>In ColumbiaWalks 3.17.1, start with a new complaint or open a saved report and choose <strong>Prepare [TEST] Police Tip</strong>. Review the carried-over information, then choose <strong>Fill CRIMEWATCH Form [TEST]</strong>. The app selects Anonymous and Other, fills the marked subject and message, and dismisses the optional subscription notice. App-store and download availability is listed on our <a href="/contact/">Contact Us page</a>.</p>
+</section>
+<section id="cw-tip-draft" aria-labelledby="browser-draft-title">
+  <h2 id="browser-draft-title">Prepare text in this browser</h2>
+  <p>This optional helper works on your device. ColumbiaWalks does not receive or save this tip draft. This helper does not store your draft for later. Avoid adding your name or contact details if you want to remain anonymous.</p>
+  <noscript><p>Enable JavaScript to prepare a marked draft here, or enter your [TEST] text directly on the official form below.</p></noscript>
+  <div class="cw-tip-fields">
+    <label class="cw-tip-confirm"><input id="cw-tip-inactive" type="checkbox"> I confirm this is a past or non-active matter, not an emergency.</label>
+    <label for="cw-tip-subject">Short subject</label><input id="cw-tip-subject" maxlength="128" autocomplete="off" placeholder="For example: Crosswalk concern">
+    <p class="cw-small">The final subject, including [TEST] markers, must fit CRIMEWATCH’s 128-character limit.</p>
+    <label for="cw-tip-when">Observed date and time</label><input id="cw-tip-when" maxlength="500" autocomplete="off">
+    <label for="cw-tip-where">Location or nearest intersection</label><input id="cw-tip-where" maxlength="500" autocomplete="off">
+    <label for="cw-tip-vehicle">Vehicle description and license plate (optional)</label><input id="cw-tip-vehicle" maxlength="500" autocomplete="off">
+    <label for="cw-tip-observation">What you personally observed</label><textarea id="cw-tip-observation" rows="5" maxlength="5000" autocomplete="off"></textarea>
+    <label for="cw-tip-evidence">Evidence available (optional)</label><textarea id="cw-tip-evidence" rows="3" maxlength="2000" autocomplete="off"></textarea>
+    <p class="cw-small">Describe relevant evidence here. Choose any files yourself on CRIMEWATCH.</p>
+    <button class="button primary" type="button" id="cw-tip-prepare">Prepare [TEST] text</button>
+  </div>
+  <p id="cw-tip-status" role="status" aria-live="polite"></p>
+  <div id="cw-tip-prepared" hidden>
+    <h3>Review and copy your marked text</h3>
+    <label for="cw-tip-output-subject">Prepared subject</label><textarea id="cw-tip-output-subject" rows="2" readonly></textarea>
+    <button class="button secondary" type="button" id="cw-tip-copy-subject">Copy subject</button>
+    <label for="cw-tip-output-message">Prepared message</label><textarea id="cw-tip-output-message" rows="9" readonly></textarea>
+    <button class="button secondary" type="button" id="cw-tip-copy-message">Copy message</button>
+  </div>
+</section>
+<section aria-labelledby="finish-tip-title">
+  <h2 id="finish-tip-title">Finish on CRIMEWATCH yourself</h2>
   <a class="button primary cw-official-tip-link" href="https://crimewatch.net/us/pa/lancaster/columbia-boro-pd/10552/submit-tip" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Open CBPD’s official tip form <span aria-hidden="true">↗</span></a>
-  <p class="cw-small">Opens the Police Department’s CRIMEWATCH form in a new tab.</p>
+  <p class="cw-small">Opens in a new tab. This website cannot autofill or close prompts inside a separate CRIMEWATCH tab. The app’s embedded form provides those conveniences.</p>
   <ol class="cw-tip-steps">
-    <li><h3>Choose anonymity</h3><p>Under Anonymity, select <strong>“I wish to remain anonymous.”</strong> Avoid identifying yourself in your message or attachments if you want to remain anonymous.</p></li>
-    <li><h3>Add what you know</h3><p>Choose the type of issue, then enter a subject and message. Include the location, timing, and relevant details you observed. Add any supporting files on the official form.</p></li>
-    <li><h3>Review and submit on CRIMEWATCH</h3><p>Read the form’s required agreement, complete its verification steps, and press its Submit button yourself. Opening the form does not send a tip.</p></li>
+    <li><h3>Choose anonymity and Other</h3><p>Select <strong>“I wish to remain anonymous”</strong> and <strong>Other</strong> as the crime type. If the subscription popup appears in your browser, choose <strong>“No thanks, just browsing.”</strong></p></li>
+    <li><h3>Paste and review</h3><p>Paste the prepared subject and message into their matching fields. Keep the [TEST] markings when editing. Attach any relevant original files yourself; attachments can contain identifying information.</p></li>
+    <li><h3>Personally submit</h3><p>Read and accept the required agreement, complete any CAPTCHA, and press Submit yourself. Read CRIMEWATCH’s response to determine whether it received your tip. Opening this link does not send a tip. Filling the form does not confirm receipt.</p></li>
   </ol>
 </section>
 <section class="cw-contact-notice" aria-labelledby="tip-privacy-title">
   <h2 id="tip-privacy-title">Your tip goes through the official form</h2>
-  <p>This ColumbiaWalks page does not collect tip text, contact details, or attachments. No ColumbiaWalks report is automatically forwarded when you open the link. CBPD and CRIMEWATCH handle information entered on their site under their own privacy practices; ColumbiaWalks cannot confirm receipt.</p>
+  <p>This ColumbiaWalks page does not upload tip text, contact details, or attachments. No ColumbiaWalks report is automatically forwarded when you open the link. Information you enter on CRIMEWATCH is handled by CBPD and CRIMEWATCH under their own privacy practices. ColumbiaWalks cannot confirm receipt.</p>
   <p>ColumbiaWalks is an independent community project. For a sidewalk, crossing, or accessibility concern you want to document with our project, <a href="https://www.columbiawalks.com/report/">make a ColumbiaWalks safety report</a>. For questions about ColumbiaWalks, <a href="https://www.columbiawalks.com/contact/">Contact Us</a>.</p>
 </section>

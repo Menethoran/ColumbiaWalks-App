@@ -173,18 +173,12 @@ def verify_community_contract() -> None:
     required = {
         "Community tab": 'Label("Community", systemImage: "person.3")',
         "Community root": "CommunityView()",
+        "official autofill": "CrimewatchForm",
+        "marked test text": "TestTipText.mark",
         "police past confirmation model": "isPastAndNotInProgress = false",
         "police past confirmation copy": "Past / not currently in progress",
         "police delivery boundary": "did not send this draft or any media to CBPD",
-        "labeled clipboard text": '"Subject:\\n\\(subject)\\n\\nMessage:\\n\\(narrative)"',
-        "clipboard handoff": "UIPasteboard.general.string = prepared.clipboardText",
-        "official police tip URL": "columbia-boro-pd/10552/submit-tip",
-        "formal police report URL": "columbia-boro-pd/10552/report",
-        "officer complaint URL": "citizen-complaint-form",
-        "911 call path": 'number: "911"',
-        "county dispatch": 'number: "7176641180"',
-        "toll-free dispatch": 'number: "18009572677"',
-        "station phone": 'number: "7176847735"',
+        "labeled clipboard text": '"[TEST] Subject: [TEST]\\n\\(subject)\\n\\n[TEST] Message: [TEST]\\n\\(narrative)"',
         "trash intake endpoint": "trash-can-submissions",
         "trash service environment": ".environmentObject(trashCans)",
         "trash launch retry": "await trashCans.submitPending()",
@@ -196,7 +190,7 @@ def verify_community_contract() -> None:
         "trash contract test": "testCategoryKeysExactlyMatchThe316Contract",
         "trash encoding test": "testJSONEncodingUsesExactTrashCanContractKeysAndValues",
         "police builder test": "testBuilderProducesDeterministicLabeledClipboardText",
-        "two CW submit choices": "Submit to CW & Notify CBPD",
+        "two CW submit choices": "Submit to CW & prepare [TEST] tip",
         "optional test email": "Opt in to the [TEST] email",
         "Contact Us phone": "(717) 992-3102",
     }
@@ -218,8 +212,11 @@ def verify_community_contract() -> None:
         if value not in combined:
             fail(f"Missing {purpose}: {value}")
 
-    if "APIClient.shared" in police_view:
-        fail("The local-only police-tip view must not call a ColumbiaWalks API.")
+    if "AnonymousTipService" in police_view or "AnonymousTipSubmission" in police_view:
+        fail("The 3.17.1 police-assisted flow must not use private test intake.")
+    for boundary in ("didFinish", "crimewatch.net", "nonPersistent", "evaluateJavaScript"):
+        if boundary not in police_view:
+            fail("Official autofill is missing " + boundary)
     reset_form = re.search(
         r"private func resetForm\(\) \{(?P<body>.*?)\n    \}",
         trash_view,

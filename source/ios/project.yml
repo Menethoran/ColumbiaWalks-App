@@ -17,6 +17,10 @@ targets:
     platform: iOS
     sources:
       - path: ColumbiaWalks
+        excludes:
+          - Resources/crimewatch-test-autofill.js
+      - path: ColumbiaWalks/Resources/crimewatch-test-autofill.js
+        buildPhase: resources
     preBuildScripts:
       - name: Enforce internal build policy
         script: /bin/sh "$SRCROOT/scripts/check-internal-build.sh"

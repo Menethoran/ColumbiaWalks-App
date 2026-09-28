@@ -14,7 +14,7 @@ Suggested review:
 
 The app has no public in-app user-content feed, messaging, ads, analytics, tracking, purchases, or third-party login. It is an independent community pedestrian-safety tool, not a government, police, emergency, medical, legal, or financial service. Emergencies and incidents in progress are directed to 911.
 
-Core services are Apple MapKit, Core Location, PhotosUI, UIPasteboard, camera access, and ColumbiaWalks HTTPS endpoints at directus.rndtech.org/columbiawalks-api. The police-tip tool opens the official CRIMEWATCH site externally and has no path that submits a tip or media to CBPD. No Gmail credential or recipient address is in the app.
+Core services are Apple MapKit, Core Location, PhotosUI, UIPasteboard, camera access, and ColumbiaWalks HTTPS endpoints at directus.rndtech.org/columbiawalks-api. The police-tip tool opens the official CRIMEWATCH form in WKWebView, fills a mandatory [TEST] subject/message, selects Anonymous and Other, and dismisses only the optional subscription notice. The user alone chooses files, accepts the agreement, completes CAPTCHA, and presses Submit. Autofill is not receipt. No Gmail credential or recipient address is in the app.
 
 After upload, the server may request model-derived incident weather from Open-Meteo using only two-decimal incident coordinates and the incident date/hour. It sends no live phone location, precise coordinates, narrative, photo, contact, or report ID. The app contacts no weather service, adds no permission, and weather failure never blocks a report.
 

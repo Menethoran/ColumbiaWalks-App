@@ -1,0 +1,4 @@
+# Use after the base compose and 3.17.0 internal-intake overlay.
+services:
+  columbiawalks-intake:
+    image: columbiawalks-intake:3.17.1-autofill

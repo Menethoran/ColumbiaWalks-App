@@ -24,9 +24,11 @@ Version 3.16 replaces the Feedback tab with a Community hub while retaining
 App Feedback as a nested destination. The hub also provides a local-only police
 tip drafting handoff and separate public-comment/private-complaint trash-can
 forms. In 3.17.1, Quick Report can also save a CW report and prepare a separate
-police-tip draft from those fields. ColumbiaWalks never sends the draft or
-media to CBPD; the user must review and finish the tip on the official Police
-Department website. Trash-can JSON is
+police-tip draft from those fields or an older saved report. The official CRIMEWATCH
+form opens in WKWebView and receives the mandatory [TEST] subject/message, with
+Anonymous and Other selected. Only the optional subscription notice is dismissed.
+The user reviews, attaches files, accepts the agreement, completes CAPTCHA, and
+presses Submit personally. ColumbiaWalks does not proxy tips or confirm receipt. Trash-can JSON is
 queued locally and requires intake service 1.12.0 plus the 3.16 Directus schema
 before this client can be distributed.
 

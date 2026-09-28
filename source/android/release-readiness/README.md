@@ -1,4 +1,18 @@
-# 3.17.0 internal builds
+# 3.17.1 release handoff
+
+The current app identity is 3.17.1 / 31701. A final dot-separated numeric component exactly `0` means internal testing only, including four-component logical versions. `.10` and `.20` do not mean internal by themselves. Mandatory police-tip `[TEST]` marking remains enabled independently of this classification.
+
+- `build-qa-android.sh` runs unit tests/lint and produces the separate `org.columbiawalks.app.qa` APK for local QA. Never publish this debug signer as the website update.
+- `build-play-internal.sh` uses privately configured upload signing and stages the signed 3.17.1 AAB, symbols, and mapping for Play Internal testing. No upload is performed by this script. The replacement upload key is blocked by Google's reset waiting period until September 29, 2026 at 19:30 UTC.
+- `build-production-android.sh` and public APK staging require the established original website signer. Its password is still unavailable here; a Play upload signature is not interchangeable with that signer.
+- `verify-distribution.py` gates both source and artifact versions. `test-distribution-policy.py` covers final-component classification and iOS guards.
+- `source/form-tests` contains the shared form/popup and website-helper tests. Run `npm ci && npm test` in `source/form-tests` from the repository root.
+
+See the repository's `DEVELOPMENT_3.17.1.md` for current verification and exact artifact hashes. The following notes are historical and must not be used to choose this release's version or distribution channel.
+
+## Historical build notes
+
+### 3.17.0 internal builds
 
 For the current internal source, use `build-internal-android.sh` for a separate local test APK or `build-play-internal.sh` for a signed Play **Internal testing** bundle. The latter pins the replacement upload key prepared on 2026-09-27; it does not upload automatically. See [the current development record](../../../DEVELOPMENT_3.17.md).
 

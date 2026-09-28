@@ -2,8 +2,8 @@
 set -euo pipefail
 
 readonly EXPECTED_PACKAGE="org.columbiawalks.app"
-readonly EXPECTED_VERSION_NAME="3.17.0"
-readonly EXPECTED_VERSION_CODE="31700"
+readonly EXPECTED_VERSION_NAME="3.17.1"
+readonly EXPECTED_VERSION_CODE="31701"
 # This validates the prepared replacement key, not the server-side reset status.
 readonly EXPECTED_UPLOAD_CERT_SHA256="9be8e68554f0f9902e87fccb8199772db31e4186a441c8754e3653a450603e95"
 
@@ -112,12 +112,12 @@ echo "Mapping SHA:  $mapping_sha256"
 if [[ "$stage_requested" == true ]]; then
     install -d -m 700 "$play_artifact_dir"
     install -m 644 "$aab_path" \
-        "$play_artifact_dir/ColumbiaWalks-3.17.0-internal-testing.aab"
+        "$play_artifact_dir/ColumbiaWalks-3.17.1-internal-testing.aab"
     install -m 600 "$native_symbols" \
-        "$play_artifact_dir/ColumbiaWalks-3.17.0-native-debug-symbols.zip"
+        "$play_artifact_dir/ColumbiaWalks-3.17.1-native-debug-symbols.zip"
     install -m 600 "$mapping_file" \
-        "$play_artifact_dir/ColumbiaWalks-3.17.0-mapping.txt"
-    (cd "$play_artifact_dir" && sha256sum ColumbiaWalks-3.17.0-* > SHA256SUMS.txt)
-    echo "Staged AAB:  $play_artifact_dir/ColumbiaWalks-3.17.0-internal-testing.aab"
+        "$play_artifact_dir/ColumbiaWalks-3.17.1-mapping.txt"
+    (cd "$play_artifact_dir" && sha256sum ColumbiaWalks-3.17.1-* > SHA256SUMS.txt)
+    echo "Staged AAB:  $play_artifact_dir/ColumbiaWalks-3.17.1-internal-testing.aab"
     echo "Staged symbols and mapping privately in: $play_artifact_dir"
 fi

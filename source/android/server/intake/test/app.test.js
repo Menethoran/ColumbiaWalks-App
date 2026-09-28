@@ -334,7 +334,10 @@ test("serves the public privacy policy without contacting Directus", async () =>
   assert.match(response.headers["content-security-policy"], /frame-ancestors 'none'/);
   assert.match(response.body, /ColumbiaWalks/);
   assert.match(response.body, /Privacy Policy/);
-  assert.match(response.body, /Effective September 27, 2026/);
+  assert.match(response.body, /Effective September 28, 2026/);
+  assert.match(response.body, /version 3\.17\.1 and the earlier police-assisted 3\.17\.10 build/);
+  assert.match(response.body, /clears contact fields/);
+  assert.match(response.body, /personally review and submit/);
   assert.match(response.body, /internal test build 3\.17\.0/);
   assert.match(response.body, /Police are not contacted/);
   assert.match(response.body, /does not delete a test already stored by ColumbiaWalks/);
@@ -362,7 +365,7 @@ test("serves the public privacy policy without contacting Directus", async () =>
   assert.match(response.body, /Health Connect/);
   assert.match(response.body, /disables Android backup/);
   assert.match(response.body, /affirmatively opt in specifically for the test destination/);
-  assert.match(response.body, /Versions 3\.16\.1 and 3\.17\.1 default to field-test destination mode/);
+  assert.match(response.body, /default to field-test destination mode/);
   assert.match(response.body, /send it only to a ColumbiaWalks-controlled test mailbox/);
   assert.match(response.body, /do not receive a field-test message/);
   assert.match(response.body, /Authorization for the test mailbox cannot be reused for official routing/);

@@ -1,42 +1,37 @@
 # ColumbiaWalks website 3.17.1
 
-This is an overlay for the existing Ghost site, not a replacement built from an older source export. The baseline was the active theme `columbiawalks-ghost-theme-3.14.0-civic-privacy-2026-09-11` on Gabriel (10.2.76.5), Ghost 6.56.0, verified September 27, 2026.
+Updated September 28, 2026. The active Ghost theme is `columbiawalks-ghost-theme-3-17-1-autofill` (package version 3.17.1). It was staged from a fresh copy of the previous live theme, preserving the existing site, maps, report flows, contact page, and downloads.
 
-## Published content
+## Published behavior
 
-- `pages/contact.html` is the source HTML for `/contact/`. Email: columbiawalks@gmail.com. Phone: (717) 992-3102. Founders: Callie Jo Thompson and Robert Burton Thompson V. Apple and Google Play links distinguish live iPhone distribution from the Android closed beta.
-- `pages/police-tip.html` is the source HTML for `/police-tip/`. It links to `https://crimewatch.net/us/pa/lancaster/columbia-boro-pd/10552/submit-tip`. Users select “I wish to remain anonymous” and submit directly on CRIMEWATCH. Do not send a tip during testing.
-- `pages/about.html` preserves the live About content while updating founders and adding contact links.
-- The exact Facebook page/group URL remains pending. Do not substitute Ghost's default page, a guessed account, or an unrelated Columbia group.
+- `/police-tip/` offers local-only `[TEST]` draft preparation, separate subject/message copy controls, and the official CBPD CRIMEWATCH link. No tip endpoint or persistent draft storage is introduced. Users choose Anonymous and Other, paste, attach files, agree, complete CAPTCHA, and press Submit personally in their browser.
+- App 3.17.1 opens the official form inside WebView/WKWebView, fills the marked report details, selects Anonymous and Other, and dismisses only the optional CBPD subscription notice. A normal website tab cannot access or dismiss a separate CRIMEWATCH tab; the page explains this distinction.
+- `/contact/` retains founders Callie Jo Thompson and Robert Burton Thompson V, columbiawalks@gmail.com, (717) 992-3102, and Apple/Google links. The exact Facebook URL remains pending; do not invent one.
 
-The two new pages use a Ghost Lexical HTML card to preserve their semantic sections and class names. Their custom templates still render `{{content}}`, so content remains editable in Ghost Admin.
+Source HTML is `pages/police-tip.html`. Ghost stores it as a Lexical HTML card. The corresponding template includes `assets/js/police-tip-draft.js`; styles are in `assets/css/community-contact.css`. Browser checks confirmed preparation/copying, no horizontal overflow at 320px, and empty fields after reload. No real report or police tip was submitted.
 
-## Theme and artifact boundary
+## Theme and APK boundary
 
-Active theme: `columbiawalks-ghost-theme-3-17-1`, package version 3.17.1.
+`ghost-theme/` is an overlay, not a complete theme. Apply it over a fresh full copy of the live theme. The deployed archive excluded APK files; the unchanged downloads directory was copied from the previous theme before activation. The public APK remains 3.14.0, SHA-256 `9774eae6b879a2d0fd807c0530b99c83d1d58515af3e3bcb55d0792f8a9fbd1c`.
 
-Apply `ghost-theme/` over a full copy of the verified live baseline. Unchanged scripts, forms, maps, editorial content, vendor files and the downloads directory must remain in that full theme. This directory alone is not a complete theme. The website archive is intentionally uploaded without APK binaries, then the unchanged downloads directory is copied from the backed-up theme before activation.
+Only versions with a final component exactly `0` are internal-only (`3.17.10.0` is internal; `3.17.10` is a public candidate). A version allowed publicly still needs correct signing and release validation. Do not advertise 3.17.1 QA or Play-upload-signed APKs as updates for original website installs.
 
-The website's available direct APK is still 3.14.0; SHA-256 `9774eae6b879a2d0fd807c0530b99c83d1d58515af3e3bcb55d0792f8a9fbd1c`. Do not change this to a 3.17.1 download until an APK signed with the original website certificate has passed the release staging verifier. Starting with 3.17.0, `.0` builds are internal only.
+## Intake/privacy deployment
 
-## Privacy endpoint deployment
+`/privacy-policy/` is served by Fastify intake, not Ghost. The active image is `columbiawalks-intake:3.17.1-autofill`, layering only `privacy-page.js` onto the previously deployed `columbiawalks-intake:3.17.10-privacy` (intake 1.13.0) image.
 
-The live `/privacy-policy/` route is served by the intake container, not Ghost's theme. The narrow `deployment/Dockerfile.privacy` image layers the current privacy HTML onto `columbiawalks-intake:3.17.0-internal`, retaining all deployed intake behavior and private internal-test settings.
+At preflight, a 20:12 UTC restart had reverted the service to an August image through the base Compose file. This deployment restored the already-deployed 1.13.0 implementation and updated privacy copy. Only intake was recreated; no database schema or submission data was changed. Health is 200/ok and the live privacy page shows September 28, 2026 and the new autofill/browser behavior.
 
-Deployed image: `columbiawalks-intake:3.17.1-contact`. Compose includes, in order:
+Run Compose using these files in order, with `up -d --no-deps --no-build columbiawalks-intake`:
 
 1. `/docker/docker-compose.yml`
 2. `/docker/columbiawalks-3.17.0-internal.yml`
-3. `/docker/columbiawalks-3.17.1-website.yml`
+3. `/docker/columbiawalks-3.17.1-autofill.yml`
 
-Only `columbiawalks-intake` was recreated with `--no-deps`. Its health endpoint returned 200/ok after deployment. No Directus schema or submission data changed.
+Build the narrow image using `deployment/Dockerfile.privacy` with `privacy-page.js` copied into its build context. Using only the base Compose file would select the obsolete backend image again; retain the listed override files in deployment commands.
 
-## Rollback and verification
+## Rollback
 
-The previous theme remains installed and can be reactivated. Before-state page objects and the publication description, navigation and default social settings are saved privately in Ghost `/tmp/cw3171-before-pages-settings.json` and locally under the ignored `artifacts/website/rollback/` directory.
+The previous theme `columbiawalks-ghost-theme-3-17-1` is still installed. Reactivate it and restore the previous police-tip page from Ghost's private `/tmp/cw3171-autofill-before.json`. A fresh theme snapshot and deployment logs are under ignored `artifacts/website/`. No public downloads were overwritten.
 
-Full baseline theme archive: `artifacts/website/rollback/active-theme-before-3.17.1.tar`, SHA-256 `3027329ad3ba95959b62a3e5a0a5a8a6a81e4f4317e8f7a7ef04ecfecc1cc620`.
-
-To revert intake, recreate only that service using the first two Compose files, which selects `columbiawalks-intake:3.17.0-internal`. Keep the database and submission volumes unchanged.
-
-After any publication, inspect Contact Us, police-tip instructions, About, homepage app links, report navigation and privacy in a browser; check responsive widths and external link targets. Verify the APK hash rather than trusting its filename. Do not test by submitting reports, messages or police tips.
+Backend before-image and old privacy source are preserved under `/docker/columbiawalks-3.17.1-autofill/`. To return to the last supported pre-autofill backend, use the base Compose file plus the 3.17.0 internal, 3.17.1 website, and 3.17.10 privacy overlays. Avoid rolling back to the obsolete August image unless that is intentional.

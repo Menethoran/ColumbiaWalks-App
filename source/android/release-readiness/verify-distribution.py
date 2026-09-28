@@ -10,13 +10,14 @@ def verify(channel, version=None):
     gradle = (ROOT / "source/android/app/build.gradle.kts").read_text()
     android = re.search(r'appVersionName = "([^"]+)"', gradle).group(1)
     ios = (ROOT / "source/ios/project.yml").read_text()
-    ios_version = re.search(r'MARKETING_VERSION: "([^"]+)"', ios).group(1)
+    ios_logical = re.search(r'CW_RELEASE_VERSION: "([^"]+)"', ios)
+    ios_version = (ios_logical or re.search(r'MARKETING_VERSION: "([^"]+)"', ios)).group(1)
     if android != ios_version:
         raise ValueError("Android and iOS versions disagree.")
     value = version or android
-    if not re.fullmatch(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)', value):
-        raise ValueError("A plain major.minor.patch version is required.")
-    if value.split(".")[-1].endswith("0") and channel != "internal":
+    if not re.fullmatch(r'(0|[1-9]\d*)(?:\.(0|[1-9]\d*)){2,}', value):
+        raise ValueError("A canonical numeric version with at least three dot-separated components is required.")
+    if value.split(".")[-1] == "0" and channel != "internal":
         raise ValueError(f"{value} is INTERNAL TEST ONLY. Public and external distribution are blocked.")
     return value
 
