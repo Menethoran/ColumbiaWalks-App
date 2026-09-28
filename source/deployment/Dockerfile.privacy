@@ -1,0 +1,2 @@
+FROM columbiawalks-intake:3.17.1-contact
+COPY privacy-page.js /app/src/privacy-page.js

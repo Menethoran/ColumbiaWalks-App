@@ -26,8 +26,8 @@ struct CommunityView: View {
                         PoliceTipView()
                     } label: {
                         CommunityDestinationLabel(
-                            title: "[TEST] Anonymous Police Tip",
-                            detail: "Submit marked text to private ColumbiaWalks test intake. Police will not receive this test.",
+                            title: "Prepare an Anonymous Police Tip",
+                            detail: "Create a local-only draft, then continue on Columbia Police's official site.",
                             systemImage: "shield.lefthalf.filled"
                         )
                     }
@@ -68,8 +68,8 @@ struct CommunityView: View {
 }
 
 private struct ContactUsView: View {
-    private static let phoneDisplay = "(717) 466-9069"
-    private static let phoneDigits = "7174669069"
+    private static let phoneDisplay = "(717) 992-3102"
+    private static let phoneDigits = "17179923102"
 
     var body: some View {
         List {

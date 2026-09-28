@@ -399,8 +399,8 @@ def verify_privacy_and_play_boundaries() -> None:
 
 def verify_release_identity_and_tooling() -> None:
     gradle = normalized_text(SOURCE / "app" / "build.gradle.kts")
-    if "versioncode = 31700" not in gradle or 'appversionname = "3.17.0"' not in gradle:
-        fail("Android app must be 3.17.0 (31700).")
+    if "versioncode = 31710" not in gradle or 'appversionname = "3.17.10"' not in gradle:
+        fail("Android app must be 3.17.10 (31710).")
 
     android_stage = normalized_text(
         SOURCE / "release-readiness" / "verify-and-stage-android-release.sh"
@@ -409,15 +409,15 @@ def verify_release_identity_and_tooling() -> None:
         SOURCE / "release-readiness" / "verify-and-stage-play-release.sh"
     )
     for name, content in (("APK", android_stage), ("AAB", play_stage)):
-        for phrase in ('expected_version_name="3.17.0"', 'expected_version_code="31700"'):
+        for phrase in ('expected_version_name="3.17.10"', 'expected_version_code="31710"'):
             if phrase not in content:
-                fail(f"{name} staging verifier is missing 3.17.0 identity: {phrase}")
-    if "columbiawalks-3.17.0.apk" not in android_stage:
-        fail("APK staging verifier does not use the 3.17.0 artifact filename.")
+                fail(f"{name} staging verifier is missing 3.17.10 identity: {phrase}")
+    if "columbiawalks-3.17.10.apk" not in android_stage:
+        fail("APK staging verifier does not use the 3.17.10 artifact filename.")
     for filename in (
-        "columbiawalks-3.17.0-play.aab",
-        "columbiawalks-3.17.0-native-debug-symbols.zip",
-        "columbiawalks-3.17.0-mapping.txt",
+        "columbiawalks-3.17.10-play.aab",
+        "columbiawalks-3.17.10-native-debug-symbols.zip",
+        "columbiawalks-3.17.10-mapping.txt",
     ):
         if filename not in play_stage:
             fail(f"Play staging verifier is missing artifact filename: {filename}")
@@ -430,7 +430,7 @@ def verify_release_identity_and_tooling() -> None:
     ):
         if expected_cert not in normalized_text(path):
             fail(f"{path.relative_to(SOURCE)} lost the pinned production signer.")
-    print("PASS 3.17.0 staging identity and established signer pin")
+    print("PASS 3.17.10 staging identity and established signer pin")
 
 
 def main() -> int:
@@ -444,7 +444,7 @@ def main() -> int:
     except (AssertionError, ET.ParseError, OSError) as error:
         print(f"FAIL {error}", file=sys.stderr)
         return 1
-    print("Android 3.17.0 release-policy verification passed.")
+    print("Android 3.17.10 release-policy verification passed.")
     return 0
 
 

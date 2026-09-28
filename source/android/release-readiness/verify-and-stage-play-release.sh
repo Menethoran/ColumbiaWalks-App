@@ -2,8 +2,8 @@
 set -euo pipefail
 
 readonly EXPECTED_PACKAGE="org.columbiawalks.app"
-readonly EXPECTED_VERSION_NAME="3.17.0"
-readonly EXPECTED_VERSION_CODE="31700"
+readonly EXPECTED_VERSION_NAME="3.17.10"
+readonly EXPECTED_VERSION_CODE="31710"
 readonly EXPECTED_UPLOAD_CERT_SHA256="a0c9e5abc99caec8d2ec31181c75c577d00963e0af3f654aca19bb3f7355dcc4"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -106,11 +106,11 @@ echo "Mapping SHA:  $mapping_sha256"
 if [[ "$stage_requested" == true ]]; then
     install -d -m 700 "$play_artifact_dir"
     install -m 644 "$aab_path" \
-        "$play_artifact_dir/ColumbiaWalks-3.17.0-play.aab"
+        "$play_artifact_dir/ColumbiaWalks-3.17.10-play.aab"
     install -m 600 "$native_symbols" \
-        "$play_artifact_dir/ColumbiaWalks-3.17.0-native-debug-symbols.zip"
+        "$play_artifact_dir/ColumbiaWalks-3.17.10-native-debug-symbols.zip"
     install -m 600 "$mapping_file" \
-        "$play_artifact_dir/ColumbiaWalks-3.17.0-mapping.txt"
-    echo "Staged AAB:  $play_artifact_dir/ColumbiaWalks-3.17.0-play.aab"
+        "$play_artifact_dir/ColumbiaWalks-3.17.10-mapping.txt"
+    echo "Staged AAB:  $play_artifact_dir/ColumbiaWalks-3.17.10-play.aab"
     echo "Staged symbols and mapping privately in: $play_artifact_dir"
 fi

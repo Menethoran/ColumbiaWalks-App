@@ -1,6 +1,6 @@
-# 3.17.0 internal builds
+# 3.17.10 internal builds
 
-For the current internal source, use `build-internal-android.sh` for a separate local test APK or `build-play-internal.sh` for a signed Play **Internal testing** bundle. The latter pins the replacement upload key prepared on 2026-09-27; it does not upload automatically. See [the current development record](../../../DEVELOPMENT_3.17.md).
+For the current internal source, use `build-internal-android.sh` for a separate local test APK or `build-play-internal.sh` for a signed Play **Internal testing** bundle. The latter pins the replacement upload key prepared on 2026-09-27; it does not upload automatically. See [the current development record](../../../DEVELOPMENT_3.17.10.md).
 
 ## Play upload-key recovery, 2026-09-27
 
@@ -33,7 +33,7 @@ apps. This recovery does not rotate Google's app-signing key. Historical
 website APK signing and migration instructions below remain separate; their
 old certificate pins are retained.
 
-The release/signing history below is retained for reference. Public staging scripts reject this .0 version.
+The release/signing history below is retained for reference. Public staging scripts reject every version whose third semantic component ends in 0, including .0, .10, .20 and .100.
 
 ---
 

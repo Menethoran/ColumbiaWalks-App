@@ -1,0 +1,3 @@
+services:
+  columbiawalks-intake:
+    image: columbiawalks-intake:3.17.10-privacy

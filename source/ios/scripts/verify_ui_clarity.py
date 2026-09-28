@@ -54,26 +54,26 @@ def verify_versions_and_appearance() -> None:
     pbx = (IOS / "ColumbiaWalks.xcodeproj" / "project.pbxproj").read_text(
         encoding="utf-8"
     )
-    if 'MARKETING_VERSION: "3.17.0"' not in project:
-        fail("project.yml is not versioned as 3.17.0.")
-    if 'CURRENT_PROJECT_VERSION: "31700"' not in project:
-        fail("project.yml is not build 31700.")
+    if 'MARKETING_VERSION: "3.17.10"' not in project:
+        fail("project.yml is not versioned as 3.17.10.")
+    if 'CURRENT_PROJECT_VERSION: "31710"' not in project:
+        fail("project.yml is not build 31710.")
     if project.count("UIUserInterfaceStyle: Light") != 1:
         fail("XcodeGen must explicitly generate a light-only application.")
     if "<key>UIUserInterfaceStyle</key>" not in info or "<string>Light</string>" not in info:
         fail("The committed Info.plist must explicitly select Light appearance.")
-    if pbx.count("MARKETING_VERSION = 3.17.0;") != 2:
+    if pbx.count("MARKETING_VERSION = 3.17.10;") != 2:
         fail("The generated Xcode project has stale marketing versions.")
-    if pbx.count("CURRENT_PROJECT_VERSION = 31700;") != 2:
+    if pbx.count("CURRENT_PROJECT_VERSION = 31710;") != 2:
         fail("The generated Xcode project has stale build versions.")
-    if 'static let version = "3.17.0"' not in api_client:
+    if 'static let version = "3.17.10"' not in api_client:
         fail("The API payload and User-Agent version are stale.")
 
-    internal = (IOS / "INTERNAL_TEST_3.17.0.md").read_text()
-    for phrase in ("3.17.0", "31700", "INTERNAL TEST ONLY", "Community"):
+    internal = (IOS / "INTERNAL_TEST_3.17.10.md").read_text()
+    for phrase in ("3.17.10", "31710", "INTERNAL TEST ONLY", "Community"):
         if phrase not in internal:
             fail(f"Internal test handoff is missing {phrase}")
-    print("PASS unique iOS identity 3.17.0 (31700) and explicit Light appearance")
+    print("PASS unique iOS identity 3.17.10 (31710) and explicit Light appearance")
 
 
 def verify_palette() -> None:
@@ -167,12 +167,12 @@ def verify_community_contract() -> None:
     required = {
         "Community tab": 'Label("Community", systemImage: "person.3")',
         "Community root": "CommunityView()",
-        "private test service": "AnonymousTipService",
-        "test acknowledgement": "testOnly",
+        "official autofill": "CrimewatchForm",
+        "marked test text": "TestTipText.mark",
         "police past confirmation model": "isPastAndNotInProgress = false",
         "police past confirmation copy": "Past / not currently in progress",
         "police delivery boundary": "did not send this draft or any media to CBPD",
-        "labeled clipboard text": '"Subject:\\n\\(subject)\\n\\nMessage:\\n\\(narrative)"',
+        "labeled clipboard text": '"[TEST] Subject: [TEST]\\n\\(subject)\\n\\n[TEST] Message: [TEST]\\n\\(narrative)"',
         "trash intake endpoint": "trash-can-submissions",
         "trash service environment": ".environmentObject(trashCans)",
         "trash launch retry": "await trashCans.submitPending()",
@@ -186,7 +186,7 @@ def verify_community_contract() -> None:
         "police builder test": "testBuilderProducesDeterministicLabeledClipboardText",
         "two CW submit choices": "Submit to CW & prepare [TEST] tip",
         "optional test email": "Opt in to the [TEST] email",
-        "Contact Us phone": "(717) 466-9069",
+        "Contact Us phone": "(717) 992-3102",
     }
     combined = "\n".join(
         (
@@ -206,8 +206,11 @@ def verify_community_contract() -> None:
         if value not in combined:
             fail(f"Missing {purpose}: {value}")
 
-    if "crimewatch" in police_view or "UIPasteboard" in police_view:
-        fail("The test-only police-tip view must not open or populate an official form.")
+    if "AnonymousTipService" in police_view or "AnonymousTipSubmission" in police_view:
+        fail("The 3.17.10 police-assisted flow must not use private test intake.")
+    for boundary in ("didFinish", "crimewatch.net", "nonPersistent", "evaluateJavaScript"):
+        if boundary not in police_view:
+            fail("Official autofill is missing " + boundary)
     reset_form = re.search(
         r"private func resetForm\(\) \{(?P<body>.*?)\n    \}",
         trash_view,

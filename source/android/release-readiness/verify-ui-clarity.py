@@ -363,9 +363,9 @@ def verify_optional_email_and_collapsed_sections() -> None:
 
 def verify_version() -> None:
     gradle = (SOURCE / "app" / "build.gradle.kts").read_text(encoding="utf-8")
-    if "versionCode = 31700" not in gradle or 'appVersionName = "3.17.0"' not in gradle:
-        fail("The simplified reporting build must be uniquely identified as 3.17.0 (31700).")
-    print("PASS unique Android release identity 3.17.0 (31700)")
+    if "versionCode = 31710" not in gradle or 'appVersionName = "3.17.10"' not in gradle:
+        fail("The simplified reporting build must be uniquely identified as 3.17.10 (31710).")
+    print("PASS unique Android release identity 3.17.10 (31710)")
 
 
 def verify_release_policy_copy() -> None:

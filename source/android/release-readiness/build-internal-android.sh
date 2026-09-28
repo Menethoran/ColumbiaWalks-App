@@ -9,10 +9,10 @@ internal_android_home="${CW_INTERNAL_ANDROID_HOME:-/home/robert/.cache/columbiaw
 mkdir -p -m 700 "$internal_android_home"
 python3 "$script_dir/verify-distribution.py" --channel internal
 args=(testDebugUnitTest lintDebug assembleDebug)
-artifact="ColumbiaWalks-3.17.0-internal-test.apk"
+artifact="ColumbiaWalks-3.17.10-internal-test.apk"
 if [[ "${1:-}" == "--qa" && $# == 1 ]]; then
-    args=(-PcwTipTestEndpoint=http://10.0.2.2:31717/columbiawalks-api/anonymous-tip-tests assembleDebug assembleDebugAndroidTest)
-    artifact="ColumbiaWalks-3.17.0-local-qa.apk"
+    args=(testDebugUnitTest lintDebug assembleDebug assembleDebugAndroidTest)
+    artifact="ColumbiaWalks-3.17.10-internal-test.apk"
 elif [[ $# != 0 ]]; then
     echo "Usage: $0 [--qa]" >&2
     exit 2

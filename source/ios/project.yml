@@ -7,8 +7,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    MARKETING_VERSION: "3.17.0"
-    CURRENT_PROJECT_VERSION: "31700"
+    MARKETING_VERSION: "3.17.10"
+    CURRENT_PROJECT_VERSION: "31710"
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: JKA6EGL5J2
 targets:
@@ -17,6 +17,10 @@ targets:
     platform: iOS
     sources:
       - path: ColumbiaWalks
+        excludes:
+          - Resources/crimewatch-test-autofill.js
+      - path: ColumbiaWalks/Resources/crimewatch-test-autofill.js
+        buildPhase: resources
     preBuildScripts:
       - name: Enforce internal build policy
         script: /bin/sh "$SRCROOT/scripts/check-internal-build.sh"

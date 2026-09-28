@@ -81,8 +81,8 @@ def verify_identity_and_navigation() -> None:
     require(
         android_gradle,
         (
-            "versionCode = 31700",
-            'appVersionName = "3.17.0"',
+            "versionCode = 31710",
+            'appVersionName = "3.17.10"',
             '"TRASH_CAN_ENDPOINT"',
             TRASH_ENDPOINT,
         ),
@@ -90,7 +90,7 @@ def verify_identity_and_navigation() -> None:
     )
     require(
         ios_project,
-        ('MARKETING_VERSION: "3.17.0"', 'CURRENT_PROJECT_VERSION: "31700"'),
+        ('MARKETING_VERSION: "3.17.10"', 'CURRENT_PROJECT_VERSION: "31710"'),
         "iOS 3.16 identity",
     )
 
@@ -108,18 +108,18 @@ def verify_identity_and_navigation() -> None:
         ("CommunityView()", 'Label("Community"', ".preferredColorScheme(.light)"),
         "iOS Community navigation",
     )
-    print("PASS 3.17.0 identities and Community navigation")
+    print("PASS 3.17.10 identities and Community navigation")
 
 
 def verify_police_handoff() -> None:
     android = read(ANDROID / "java/org/columbiawalks/app/ui/PoliceTipFragment.java")
     ios = read(IOS / "Views/PoliceTipView.swift")
+    require(android, ("CrimewatchTipActivity.intent", "preparedTip.getSubject()", "preparedTip.getNarrative()"), "Android official autofill handoff")
+    require(ios, ("CrimewatchForm", "WKWebView", "[TEST]", "PoliceTipDraftBuilder.prepare"), "iOS official autofill handoff")
     for name, source in (("Android", android), ("iOS", ios)):
-        if "crimewatch" in source or "Open Official" in source:
-            fail(f"{name} test intake has an official delivery path")
-    require(android, ("AnonymousTipSubmissionModel", "AnonymousTip.payload"), "Android private test tip")
-    require(ios, ("AnonymousTipService", "[TEST]", "Police"), "iOS private test tip")
-    print("PASS private test tip screens; official handoff removed")
+        if "AnonymousTipService" in source or "AnonymousTipSubmissionModel" in source:
+            fail(f"{name} still routes to the legacy private test intake")
+    print("PASS 3.17.10 official CRIMEWATCH autofill handoff")
 
 
 def verify_trash_contract() -> None:
@@ -286,8 +286,8 @@ def verify_simplified_reporting_and_contact() -> None:
             "Submit complaint to CW",
             "Submit to CW &amp; prepare [TEST] tip",
             "Opt in to the [TEST] email",
-            "(717) 466-9069",
-            "7174669069",
+            "(717) 992-3102",
+            "7179923102",
             "#contact-us",
         ),
         "simplified report and Contact Us contract",
@@ -305,7 +305,7 @@ def main() -> int:
     except AssertionError as error:
         print(f"FAIL {error}", file=sys.stderr)
         return 1
-    print("ColumbiaWalks 3.17.0 Community-tools verification passed.")
+    print("ColumbiaWalks 3.17.10 Community-tools verification passed.")
     return 0
 
 

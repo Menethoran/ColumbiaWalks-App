@@ -2083,11 +2083,9 @@ public class ReportFragment extends Fragment implements LocationListener {
         }
 
         String evidenceText = hadPhoto
-                ? "CW report " + clientReportId
-                + " includes a photo. No files are attached "
-                + "to the private test tip."
-                : "CW report " + clientReportId
-                + " did not include a photo.";
+                ? "The saved ColumbiaWalks report includes a photo. Attach the original relevant file "
+                + "yourself on the official CBPD form."
+                : "The saved ColumbiaWalks report did not include a photo.";
         return PoliceTipFragment.newReportHandoff(
                 subjectText,
                 observedText,

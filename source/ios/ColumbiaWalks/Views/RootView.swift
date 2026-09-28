@@ -26,7 +26,7 @@ struct RootView: View {
                 .tag(AppState.Tab.community)
         }
         .safeAreaInset(edge: .top, spacing: 0) {
-            Text("[TEST] Internal build • 3.17.0")
+            Text("[TEST] Internal build • 3.17.10")
                 .font(.caption.bold()).frame(maxWidth: .infinity).padding(6)
                 .background(Color.yellow).foregroundStyle(.black)
         }

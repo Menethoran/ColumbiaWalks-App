@@ -16,7 +16,7 @@ def verify(channel, version=None):
     value = version or android
     if not re.fullmatch(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)', value):
         raise ValueError("A plain major.minor.patch version is required.")
-    if value.split(".")[-1] == "0" and channel != "internal":
+    if value.split(".")[-1].endswith("0") and channel != "internal":
         raise ValueError(f"{value} is INTERNAL TEST ONLY. Public and external distribution are blocked.")
     return value
 
