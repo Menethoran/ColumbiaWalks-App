@@ -70,6 +70,7 @@ const app = await buildApp({
   weatherTimeoutMs: Number(process.env.WEATHER_TIMEOUT_MS || 3000),
   wallpaperPath,
   officialEmailQueue: officialEmailStore,
+  anonymousTipTestsEnabled: process.env.ANONYMOUS_TIP_TESTS_ENABLED === "true",
   logger: true
 });
 

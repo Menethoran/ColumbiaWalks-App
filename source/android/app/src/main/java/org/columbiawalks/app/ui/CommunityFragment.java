@@ -39,14 +39,14 @@ public final class CommunityFragment extends Fragment {
                 .setOnClickListener(button -> openContactIntent(
                         new Intent(
                                 Intent.ACTION_DIAL,
-                                Uri.parse("tel:7174669069")
+                                Uri.parse("tel:17179923102")
                         )
                 ));
         view.findViewById(R.id.contact_text_robert)
                 .setOnClickListener(button -> openContactIntent(
                         new Intent(
                                 Intent.ACTION_SENDTO,
-                                Uri.parse("smsto:7174669069")
+                                Uri.parse("smsto:17179923102")
                         )
                 ));
         view.findViewById(R.id.contact_private_message)

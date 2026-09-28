@@ -68,8 +68,8 @@ struct CommunityView: View {
 }
 
 private struct ContactUsView: View {
-    private static let phoneDisplay = "(717) 466-9069"
-    private static let phoneDigits = "7174669069"
+    private static let phoneDisplay = "(717) 992-3102"
+    private static let phoneDigits = "17179923102"
 
     var body: some View {
         List {

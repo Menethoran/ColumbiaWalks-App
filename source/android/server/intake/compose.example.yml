@@ -15,6 +15,7 @@ services:
       WEATHER_TIMEOUT_MS: "${WEATHER_TIMEOUT_MS:-3000}"
       # Start fail-closed. Use review after recipient verification; use
       # automatic only after mounting all three OAuth secrets below.
+      ANONYMOUS_TIP_TESTS_ENABLED: "${ANONYMOUS_TIP_TESTS_ENABLED:-false}"
       OFFICIAL_EMAIL_MODE: "${OFFICIAL_EMAIL_MODE:-disabled}"
       # Version 3.15 defaults to interception by one ColumbiaWalks-controlled
       # test mailbox. Example format: field-test@example.invalid. A real

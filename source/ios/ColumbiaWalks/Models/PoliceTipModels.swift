@@ -19,7 +19,7 @@ struct PreparedPoliceTip: Equatable {
     let narrative: String
 
     var clipboardText: String {
-        "Subject:\n\(subject)\n\nMessage:\n\(narrative)"
+        "[TEST] Subject: [TEST]\n\(subject)\n\n[TEST] Message: [TEST]\n\(narrative)"
     }
 }
 
@@ -28,18 +28,18 @@ enum PoliceTipValidator {
         guard draft.isPastAndNotInProgress else {
             return "Confirm that the incident is in the past and is not currently in progress."
         }
-        let subject = draft.subject.trimmingCharacters(in: .whitespacesAndNewlines)
+        let subject = TestTipText.plain(draft.subject)
         guard !subject.isEmpty else { return "Enter a short subject for the tip." }
-        guard PoliceTipDraftBuilder.subject(for: draft).count <= 128 else {
-            return "The subject must be 128 characters or fewer to fit the official form."
+        guard PoliceTipDraftBuilder.subject(for: draft).utf16.count <= 128 else {
+            return "[TEST] The subject including test markers must fit the official 128-character limit."
         }
         guard draft.observedAt <= now.addingTimeInterval(60) else {
             return "Choose a date and time that is not in the future."
         }
-        let location = draft.location.trimmingCharacters(in: .whitespacesAndNewlines)
+        let location = TestTipText.plain(draft.location)
         guard !location.isEmpty else { return "Enter the incident location or nearest landmark." }
         guard location.count <= 500 else { return "The location must be 500 characters or fewer." }
-        let observation = draft.firsthandObservation.trimmingCharacters(in: .whitespacesAndNewlines)
+        let observation = TestTipText.plain(draft.firsthandObservation)
         guard !observation.isEmpty else { return "Describe only what you personally observed." }
         guard observation.count <= 5_000 else {
             return "The firsthand observation must be 5,000 characters or fewer."
@@ -72,7 +72,7 @@ enum PoliceTipDraftBuilder {
     }
 
     static func subject(for draft: PoliceTipDraft) -> String {
-        singleLine(draft.subject)
+        TestTipText.mark(draft.subject)
     }
 
     static func narrative(for draft: PoliceTipDraft) -> String {
@@ -82,7 +82,8 @@ enum PoliceTipDraftBuilder {
         formatter.timeZone = TimeZone(identifier: "America/New_York")
         formatter.dateFormat = "yyyy-MM-dd h:mm a zzz"
 
-        return [
+        return TestTipText.mark([
+            "POLICE-ASSISTED COLUMBIAWALKS TEST — ANONYMOUS — OTHER — NOT AN EMERGENCY",
             "Incident status: Past / not currently in progress",
             "Date/time observed: \(formatter.string(from: draft.observedAt))",
             "Location: \(valueOrNotProvided(draft.location))",
@@ -95,7 +96,7 @@ enum PoliceTipDraftBuilder {
             draft.sourceWasSubmittedToColumbiaWalks
                 ? "Handoff note: This report was saved to ColumbiaWalks. ColumbiaWalks did not send this draft or any media to CBPD; I am submitting it personally through the official form."
                 : "Local-only privacy note: This draft and any media were not sent to ColumbiaWalks or CBPD."
-        ].joined(separator: "\n\n")
+        ].joined(separator: "\n\n"))
     }
 
     private static func singleLine(_ value: String) -> String {
@@ -113,5 +114,21 @@ enum PoliceTipDraftBuilder {
             .replacingOccurrences(of: "\r", with: "\n")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         return normalized.isEmpty ? "Not provided" : normalized
+    }
+}
+
+
+/// Matches the mandatory Android and official-form test marking.
+enum TestTipText {
+    static func plain(_ value: String) -> String {
+        value.replacingOccurrences(of: #"(?i)\[TEST\]"#, with: " ", options: .regularExpression)
+            .replacingOccurrences(of: #"[\x00-\x1f\x7f-\x9f\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]"#, with: " ", options: .regularExpression)
+            .replacingOccurrences(of: #"[\s\p{Z}]+"#, with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    static func mark(_ value: String) -> String {
+        let clean = plain(value)
+        return "[TEST] " + (clean.isEmpty ? "Not provided" : clean)
+            .replacingOccurrences(of: " ", with: " [TEST] ") + " [TEST]"
     }
 }

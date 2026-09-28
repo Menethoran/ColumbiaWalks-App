@@ -123,7 +123,7 @@ struct ReportFormView: View {
                     Button {
                         saveReport(notifyAuthorities: true)
                     } label: {
-                        Label("Submit to CW & Notify CBPD", systemImage: "building.columns.fill")
+                        Label("Submit to CW & prepare [TEST] tip", systemImage: "building.columns.fill")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
@@ -596,8 +596,8 @@ struct ReportFormView: View {
             vehicleDescription: vehicleDescription,
             firsthandObservation: observation,
             evidenceNotes: hadPhoto
-                ? "CW report \(reportID.uuidString.lowercased()) includes a photo. Attach the original relevant file yourself on the official CBPD form."
-                : "CW report \(reportID.uuidString.lowercased()) did not include a photo.",
+                ? "The saved ColumbiaWalks report includes a photo. Attach the original relevant file yourself on the official CBPD form."
+                : "The saved ColumbiaWalks report did not include a photo.",
             sourceWasSubmittedToColumbiaWalks: true
         )
     }
@@ -695,7 +695,7 @@ struct OfficialEmailDisclosure: View {
     var body: some View {
         Section("Optional test email") {
             DisclosureGroup(isExpanded: $isExpanded) {
-                Text("This is a separate field test for the \(rulePhrase). It is off unless you turn it on. In version 3.16.1, the server addresses any resulting [TEST]-subject message only to a ColumbiaWalks-controlled test mailbox, not Police, the Mayor, or Codes.")
+                Text("This is a separate field test for the \(rulePhrase). It is off unless you turn it on. In version 3.17.10, the server addresses any resulting [TEST]-subject message only to a ColumbiaWalks-controlled test mailbox, not Police, the Mayor, or Codes.")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(Color.cwText)
                 Text("The optional test needs a photo and a confirmed report location within 5 km of Columbia Borough center. Those items remain optional for the CW report itself.")

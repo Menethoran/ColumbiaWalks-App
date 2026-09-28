@@ -147,49 +147,39 @@ final class PoliceTipDraftTests: XCTestCase {
 
         let prepared = PoliceTipDraftBuilder.prepare(draft)
 
-        XCTAssertEqual(prepared.subject, "Unsafe pass near crosswalk")
-        XCTAssertEqual(
-            prepared.narrative,
-            """
-            Incident status: Past / not currently in progress
+        XCTAssertEqual(prepared.subject, "[TEST] Unsafe [TEST] pass [TEST] near [TEST] crosswalk [TEST]")
+        let plain = TestTipText.plain(prepared.narrative)
+        for detail in ["1969-12-31 7:00 PM EST", "Third and Locust Streets", "east toward Fourth Street", "ABC 123", "PA", "Blue four-door sedan", "The driver entered the occupied crosswalk.", "Original plate photo", "POLICE-ASSISTED COLUMBIAWALKS TEST"] {
+            XCTAssertTrue(plain.contains(detail), detail)
+        }
+        let words = prepared.narrative.split(separator: " ")
+        XCTAssertEqual(words.count % 2, 1)
+        for index in stride(from: 0, to: words.count, by: 2) { XCTAssertEqual(words[index], "[TEST]") }
+        XCTAssertTrue(prepared.clipboardText.hasPrefix("[TEST] Subject: [TEST]"))
+        XCTAssertEqual(TestTipText.mark(prepared.narrative), prepared.narrative)
 
-            Date/time observed: 1969-12-31 7:00 PM EST
-
-            Location: Third and Locust Streets
-
-            Direction of travel: east toward Fourth Street
-
-            License plate: ABC 123
-
-            Plate state/jurisdiction: PA
-
-            Vehicle description:
-            Blue four-door sedan
-
-            Firsthand observation:
-            The driver entered the occupied crosswalk.
-
-            Evidence notes:
-            Original plate photo and MOV video are on the device.
-
-            Local-only privacy note: This draft and any media were not sent to ColumbiaWalks or CBPD.
-            """
-        )
-        XCTAssertEqual(
-            prepared.clipboardText,
-            "Subject:\nUnsafe pass near crosswalk\n\nMessage:\n\(prepared.narrative)"
-        )
     }
 
     func testBuilderIdentifiesCwHandoffWithoutClaimingPoliceDelivery() {
         var draft = validDraft()
         draft.sourceWasSubmittedToColumbiaWalks = true
 
-        let narrative = PoliceTipDraftBuilder.prepare(draft).narrative
+        let narrative = TestTipText.plain(PoliceTipDraftBuilder.prepare(draft).narrative)
 
         XCTAssertTrue(narrative.contains("saved to ColumbiaWalks"))
         XCTAssertTrue(narrative.contains("did not send this draft or any media to CBPD"))
         XCTAssertFalse(narrative.contains("not sent to ColumbiaWalks or CBPD"))
+    }
+
+    func testTestMarkersCountTowardOfficialSubjectLimit() {
+        var draft = validDraft()
+        draft.subject = String(repeating: "x", count: 114)
+        XCTAssertNil(PoliceTipValidator.validate(draft, now: Date(timeIntervalSince1970: 100)))
+        draft.subject += "x"
+        XCTAssertNotNil(PoliceTipValidator.validate(draft, now: Date(timeIntervalSince1970: 100)))
+        draft.subject = "[TEST]"
+        XCTAssertNotNil(PoliceTipValidator.validate(draft, now: Date(timeIntervalSince1970: 100)))
+        XCTAssertEqual(TestTipText.mark("a\u{00a0}b\u{200b}c [test]"), "[TEST] a [TEST] b [TEST] c [TEST]")
     }
 
     private func validDraft() -> PoliceTipDraft {

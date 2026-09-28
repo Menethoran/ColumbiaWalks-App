@@ -100,7 +100,16 @@ public class SavedReportsFragment extends Fragment {
                     (window, which) -> retrySubmission(report)
             );
         }
-        dialogBuilder.show();
+        com.google.android.material.button.MaterialButton policeTip =
+                new com.google.android.material.button.MaterialButton(requireContext());
+        policeTip.setText(R.string.saved_report_police_tip);
+        androidx.appcompat.app.AlertDialog dialog = dialogBuilder.setView(policeTip).create();
+        policeTip.setOnClickListener(button -> {
+            dialog.dismiss();
+            ((MainActivity) requireActivity()).navigateToPoliceTip(
+                    PoliceTipFragment.newSavedReportHandoff(report));
+        });
+        dialog.show();
     }
 
     private String reportDetailText(SafetyReport report) {
@@ -190,4 +199,3 @@ public class SavedReportsFragment extends Fragment {
         super.onDestroy();
     }
 }
-

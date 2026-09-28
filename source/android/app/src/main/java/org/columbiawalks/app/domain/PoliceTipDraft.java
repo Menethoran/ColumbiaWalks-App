@@ -66,7 +66,7 @@ public final class PoliceTipDraft {
         if (firsthandObservation.isEmpty()) {
             return ValidationResult.NO_FIRSTHAND_OBSERVATION;
         }
-        if (subject.length() > MAX_SUBJECT_LENGTH
+        if (TestTipText.mark(subject).length() > MAX_SUBJECT_LENGTH
                 || observedTime.length() > MAX_SHORT_FIELD_LENGTH
                 || location.length() > MAX_SHORT_FIELD_LENGTH
                 || direction.length() > MAX_SHORT_FIELD_LENGTH
@@ -88,8 +88,9 @@ public final class PoliceTipDraft {
             );
         }
 
-        String preparedSubject = singleLine(subject);
+        String preparedSubject = TestTipText.mark(subject);
         List<String> sections = new ArrayList<>();
+        sections.add("POLICE-ASSISTED COLUMBIAWALKS TEST — ANONYMOUS — OTHER — NOT AN EMERGENCY");
         sections.add("ANONYMOUS TIP — PAST / NOT IN PROGRESS");
         sections.add("Subject: " + subject);
         sections.add("Observed date/time: " + observedTime);
@@ -117,12 +118,12 @@ public final class PoliceTipDraft {
                 : "Prepared locally in ColumbiaWalks. No tip text or media "
                 + "was sent to ColumbiaWalks or CBPD.");
 
-        String narrative = String.join("\n\n", sections);
+        String narrative = TestTipText.mark(String.join("\n\n", sections));
         return new PreparedTip(
                 preparedSubject,
                 narrative,
-                "Subject:\n" + preparedSubject
-                        + "\n\nMessage:\n" + narrative
+                TestTipText.mark("Subject:") + "\n" + preparedSubject
+                        + "\n\n" + TestTipText.mark("Message:") + "\n" + narrative
         );
     }
 
@@ -131,22 +132,11 @@ public final class PoliceTipDraft {
             String label,
             String value
     ) {
-        if (!value.isEmpty()) {
-            sections.add(label + value);
-        }
+        sections.add(label + (value.isEmpty() ? "Not provided" : value));
     }
 
     private static String clean(String value) {
-        if (value == null) {
-            return "";
-        }
-        return value.replace("\r\n", "\n")
-                .replace('\r', '\n')
-                .trim();
-    }
-
-    private static String singleLine(String value) {
-        return value.replaceAll("\\s+", " ").trim();
+        return TestTipText.plain(value);
     }
 
     public static final class PreparedTip {
