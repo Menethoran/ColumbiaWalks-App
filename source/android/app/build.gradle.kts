@@ -3,7 +3,7 @@ plugins {
 }
 
 val appVersionName = "3.17.1"
-val internalTestBuild = appVersionName.substringAfterLast(".") == "0"
+val internalTestBuild = appVersionName.substringAfterLast(".").endsWith("0")
 val internalPlayRequested = gradle.startParameter.taskNames.any {
     it.contains("internalTesting", ignoreCase = true)
 }
@@ -11,14 +11,14 @@ val distributionChannel = providers.gradleProperty("cwDistributionChannel").orNu
 if (internalTestBuild && gradle.startParameter.taskNames.any {
         it.contains("release", ignoreCase = true) || it.contains("publish", ignoreCase = true)
     }) {
-    throw GradleException("Versions ending in .0 are INTERNAL TEST ONLY. Use assembleDebug or the signed Internal testing build script.")
+    throw GradleException("Versions whose patch ends in 0 are INTERNAL TEST ONLY. Use assembleDebug or the signed Internal testing build script.")
 }
 
 gradle.taskGraph.whenReady {
     if (internalTestBuild && allTasks.any {
             it.name.contains("release", ignoreCase = true) || it.name.contains("publish", ignoreCase = true)
         }) {
-        throw GradleException("Internal .0 versions cannot build or publish public release variants.")
+        throw GradleException("Internal test versions cannot build or publish public release variants.")
     }
 }
 
