@@ -37,6 +37,8 @@ test("stores a JSON public comment as moderation pending", async () => {
     assert.equal(url.pathname, "/items/trash_can_comments");
     const payload = JSON.parse(options.body);
     assert.equal(payload.moderation_status, "moderation_pending");
+    assert.equal(payload.hauler, "bl_carson");
+    assert.equal(payload.property_type, "residential");
     assert.equal(payload.comment, publicComment().comment);
     assert.equal(payload.public_trash_can_id, CAN_ID);
     assert.equal(payload.kind, undefined);
@@ -56,7 +58,7 @@ test("stores a JSON public comment as moderation pending", async () => {
   const response = await app.inject({
     method: "POST",
     url: "/columbiawalks-api/trash-can-submissions",
-    payload: publicComment()
+    payload: { ...publicComment(), hauler: "bl_carson" }
   });
   assert.equal(response.statusCode, 201, response.body);
   assert.deepEqual(response.json(), {
@@ -75,6 +77,8 @@ test("stores a JSON complaint in its separate private collection", async () => {
   const payload = {
     ...publicComment(),
     kind: "private_complaint",
+    hauler: "goods",
+    property_type: "commercial",
     asset_scope: "unknown",
     public_trash_can_id: undefined,
     address: "Locust Street near Third Street",
@@ -101,6 +105,8 @@ test("stores a JSON complaint in its separate private collection", async () => {
   assert.equal(response.statusCode, 201, response.body);
   assert.equal(stored.status, "new");
   assert.equal(stored.privacy_status, "private");
+  assert.equal(stored.hauler, "goods");
+  assert.equal(stored.property_type, "commercial");
   assert.equal(stored.moderation_status, undefined);
   assert.equal(response.json().data.status, "new");
   await app.close();
@@ -353,7 +359,9 @@ test("public feed returns only allowlisted approved comments linked to active ca
           submission_source: "ios",
           latitude: 1,
           status: "new",
-          complaint_text: "must never appear"
+          complaint_text: "must never appear",
+          hauler: "wm_com",
+          property_type: "commercial"
         },
         {
           public_trash_can_id: OTHER_CAN_ID,

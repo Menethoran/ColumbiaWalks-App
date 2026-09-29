@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.File;
 
 public final class TrashCanSubmissionWorker extends Worker {
     static final String INPUT_SUBMISSION_ID = "submission_id";
@@ -44,8 +45,16 @@ public final class TrashCanSubmissionWorker extends Worker {
             return Result.success();
         }
 
+        final String submissionPayload;
+        final File photo;
         try {
-            JSONObject parsed = new JSONObject(payload);
+            JSONObject entry = new JSONObject(payload);
+            JSONObject parsed = entry.optJSONObject("submission");
+            if (parsed == null) parsed = entry; // Existing text-only queue entries.
+            submissionPayload = parsed.toString();
+            photo = entry.optBoolean("has_photo", false)
+                    ? TrashCanQueueStore.photoFile(getApplicationContext(), submissionId) : null;
+            if (photo != null && !photo.isFile()) return retryOrStop();
             String kind = parsed.optString("kind");
             boolean knownKind = TrashCanSubmissionDraft.KIND_PUBLIC_COMMENT
                     .equals(kind)
@@ -66,7 +75,7 @@ public final class TrashCanSubmissionWorker extends Worker {
 
         try {
             TrashCanSubmissionClient.SubmissionResponse response =
-                    new TrashCanSubmissionClient().submit(payload);
+                    new TrashCanSubmissionClient().submit(submissionPayload, photo);
             if (response.isSuccessful()) {
                 TrashCanQueueStore.delete(
                         getApplicationContext(),
@@ -77,7 +86,7 @@ public final class TrashCanSubmissionWorker extends Worker {
             if (response.isRetryable()) {
                 return retryOrStop();
             }
-            TrashCanQueueStore.delete(getApplicationContext(), submissionId);
+            // Keep an unaccepted submission locally, including its photo.
             return Result.failure();
         } catch (IOException exception) {
             return retryOrStop();

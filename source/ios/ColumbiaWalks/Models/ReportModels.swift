@@ -99,6 +99,7 @@ enum RapidReportKind: String, Codable, CaseIterable, Identifiable, Hashable {
     case schoolRoute = "school_route"
     case policeResponse = "police_response"
     case other
+    case trashCan = "trash_can"
 
     var id: String { rawValue }
 
@@ -113,6 +114,7 @@ enum RapidReportKind: String, Codable, CaseIterable, Identifiable, Hashable {
         case .schoolRoute: "School route"
         case .policeResponse: "Police response"
         case .other: "Other"
+        case .trashCan: "Trash can"
         }
     }
 
@@ -127,6 +129,7 @@ enum RapidReportKind: String, Codable, CaseIterable, Identifiable, Hashable {
         case .schoolRoute: .schoolRouteSafety
         case .policeResponse: .policeResponse
         case .other: .notIncludedElsewhere
+        case .trashCan: .notIncludedElsewhere // Routed to the private trash-can intake.
         }
     }
 }
@@ -439,9 +442,9 @@ struct OfficialEmailServerState: Codable, Equatable {
         case "test":
             "The server reports test mode: any authorized message is addressed only to a ColumbiaWalks-controlled test mailbox with [TEST] in its subject, not to Police, the Mayor, or Codes."
         case "official":
-            "ColumbiaWalks 3.16.1 authorizes only its controlled test-mailbox field test, but the server reported an inconsistent non-test mode. This app does not confirm any recipient or delivery."
+            "ColumbiaWalks 3.17.1 authorizes only its controlled test-mailbox field test, but the server reported an inconsistent non-test mode. This app does not confirm any recipient or delivery."
         default:
-            "ColumbiaWalks 3.16.1 authorizes only a [TEST]-subject message to its controlled test mailbox, never Police, the Mayor, or Codes. The server did not confirm test mode, so no recipient or delivery is confirmed."
+            "ColumbiaWalks 3.17.1 authorizes only a [TEST]-subject message to its controlled test mailbox, never Police, the Mayor, or Codes. The server did not confirm test mode, so no recipient or delivery is confirmed."
         }
     }
 

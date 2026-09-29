@@ -1,10 +1,36 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { validateTrashCanSubmission } from "../src/trash-can-validation.js";
+import { validateTrashCanSubmission, TRASH_CAN_HAULERS } from "../src/trash-can-validation.js";
 
 const SUBMISSION_ID = "a9927f31-6d65-4bf0-8fa6-7a92481de4a1";
 const CAN_ID = "b046815a-1bb7-43a2-bb8f-ddd9cd7a8c84";
+
+test("defaults new submissions to Residential and accepts Commercial", () => {
+  assert.equal(validateTrashCanSubmission(publicComment()).submission.property_type, "residential");
+  assert.equal(validateTrashCanSubmission({ ...publicComment(), property_type: "commercial" }).submission.property_type, "commercial");
+  for (const property_type of ["other", "Residential", "", 1, {}]) {
+    assert.equal(validateTrashCanSubmission({ ...publicComment(), property_type }).ok, false);
+  }
+});
+
+test("accepts all seven haulers for both intake kinds and preserves older clients", () => {
+  for (const kind of ["public_comment", "private_complaint"]) {
+    for (const hauler of TRASH_CAN_HAULERS) {
+      const result = validateTrashCanSubmission({ ...publicComment(), kind, categories: ["damaged"], hauler });
+      assert.equal(result.ok, true);
+      assert.equal(result.submission.hauler, hauler);
+    }
+  }
+  for (const hauler of [undefined, null, ""]) {
+    const result = validateTrashCanSubmission({ ...publicComment(), hauler });
+    assert.equal(result.ok, true);
+    assert.equal(result.submission.hauler, null);
+  }
+  for (const hauler of ["fake", "Good's", {}, ["goods"], 3]) {
+    assert.equal(validateTrashCanSubmission({ ...publicComment(), hauler }).ok, false);
+  }
+});
 
 function publicComment() {
   return {
@@ -151,4 +177,3 @@ test("rejects contact, account, device, and unsupported fields", () => {
   value.internal_notes = "not accepted";
   assert.equal(validateTrashCanSubmission(value).ok, false);
 });
-

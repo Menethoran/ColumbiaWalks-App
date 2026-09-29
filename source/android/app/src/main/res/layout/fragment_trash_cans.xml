@@ -96,6 +96,37 @@
             android:minHeight="52dp"
             android:prompt="@string/trash_can_category_label" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:labelFor="@id/trash_can_property_type_spinner"
+            android:text="@string/trash_can_property_type_label"
+            android:textColor="@color/cw_text"
+            android:textStyle="bold" />
+        <Spinner
+            android:id="@+id/trash_can_property_type_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:prompt="@string/trash_can_property_type_label" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:labelFor="@id/trash_can_hauler_spinner"
+            android:text="@string/trash_can_hauler_label"
+            android:textColor="@color/cw_text"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/trash_can_hauler_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:prompt="@string/trash_can_hauler_label" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/trash_can_comment_layout"
             style="@style/Widget.ColumbiaWalks.TextInputLayout"

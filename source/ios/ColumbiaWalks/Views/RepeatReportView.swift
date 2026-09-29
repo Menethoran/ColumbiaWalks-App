@@ -5,8 +5,13 @@ import UIKit
 struct RepeatReportView: View {
     @EnvironmentObject private var reports: ReportStore
     @EnvironmentObject private var location: LocationService
+    @EnvironmentObject private var trashCanService: TrashCanService
 
     @State private var kind: RapidReportKind = .sidewalk
+    @State private var trashCategory: TrashCanPrivateComplaintCategory?
+    @State private var trashHauler: TrashCanHauler?
+    @State private var trashScope: TrashCanAssetScope = .unknown
+    @State private var trashPropertyType: TrashCanPropertyType = .residential
     @State private var sidewalkIssueType: SidewalkIssueType?
     @State private var sidewalkLipHeight: SidewalkLipHeight?
     @State private var vehicleIssueType: VehicleIssueType?
@@ -72,7 +77,36 @@ struct RepeatReportView: View {
                             .autocorrectionDisabled()
                     }
 
-                    Text("The sidewalk subtype, lip height, vehicle behavior, license plate, and plate state are optional. A picture and confirmed location are required for a repeat report.")
+                    if kind == .trashCan {
+                        Picker("Residential or Commercial", selection: $trashPropertyType) {
+                            ForEach(TrashCanPropertyType.allCases) { value in
+                                Text(value.label).tag(value)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        Picker("Trash-can issue", selection: $trashCategory) {
+                            Text("Select an issue…").tag(TrashCanPrivateComplaintCategory?.none)
+                            ForEach(TrashCanPrivateComplaintCategory.allCases, id: \.rawValue) { value in
+                                Text(value.label).tag(Optional(value))
+                            }
+                        }
+                        Picker("Hauler (optional)", selection: $trashHauler) {
+                            Text("Not sure / not selected").tag(TrashCanHauler?.none)
+                            ForEach(TrashCanHauler.allCases) { value in
+                                Text(value.label).tag(Optional(value))
+                            }
+                        }
+                        Picker("Trash-can property scope", selection: $trashScope) {
+                            ForEach(TrashCanAssetScope.allCases) { value in
+                                Text(value.label).tag(value)
+                            }
+                        }
+                        Text("Trash-can repeat reports are private complaints to ColumbiaWalks. They are not automatically sent to the hauler or Borough. Your issue, hauler, Residential/Commercial selection, and property scope stay selected for the next can.")
+                            .font(.footnote)
+                            .foregroundStyle(Color.cwTextSecondary)
+                    }
+
+                    Text("A picture and confirmed location are required for each repeat report. Sidewalk and vehicle details are optional; trash-can reports also need an issue category.")
                         .font(.footnote)
                         .foregroundStyle(Color.cwTextSecondary)
                 }
@@ -227,6 +261,37 @@ struct RepeatReportView: View {
         }
         guard let photoData, let coordinate = locationDraft.coordinate else {
             errorMessage = "The picture or report location is no longer available."
+            return
+        }
+        if kind == .trashCan {
+            guard let trashCategory else {
+                errorMessage = "Select a trash-can issue."
+                return
+            }
+            let details = comments.trimmingCharacters(in: .whitespacesAndNewlines)
+            let submission = TrashCanSubmission(
+                id: UUID(), kind: .privateComplaint, categories: [trashCategory.rawValue],
+                comment: trashCategory.label + (details.isEmpty ? "" : "\n" + details),
+                address: String(format: "Confirmed coordinates: %.6f, %.6f", coordinate.latitude, coordinate.longitude),
+                latitude: coordinate.latitude, longitude: coordinate.longitude,
+                assetScope: trashScope, appVersion: "ios-\(APIClient.version)",
+                submissionSource: "ios", hauler: trashHauler, propertyType: trashPropertyType
+            )
+            do {
+                try trashCanService.enqueue(submission, photoData: photoData)
+            } catch {
+                errorMessage = "The trash-can report could not be saved locally. Your form is still here; try again."
+                return
+            }
+            savedMessage = "Trash-can report #\(sequence) saved privately and queued to ColumbiaWalks. Ready for the next can."
+            sequence += 1
+            comments = ""
+            photoItem = nil
+            self.photoData = nil
+            locationDraft.reset()
+            testEmailOptIn = false
+            showTestEmailDetails = false
+            requestDeviceLocation()
             return
         }
         if kind == .vehicle, let validationError = vehicleDetails.validationError {

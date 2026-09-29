@@ -2,6 +2,26 @@ plugins {
     id("com.android.application")
 }
 
+val appVersionName = "3.17.1"
+val internalTestBuild = appVersionName.substringAfterLast(".") == "0"
+val internalPlayRequested = gradle.startParameter.taskNames.any {
+    it.contains("internalTesting", ignoreCase = true)
+}
+val distributionChannel = providers.gradleProperty("cwDistributionChannel").orNull
+if (internalTestBuild && gradle.startParameter.taskNames.any {
+        it.contains("release", ignoreCase = true) || it.contains("publish", ignoreCase = true)
+    }) {
+    throw GradleException("Versions whose final dot-separated component is exactly 0 are INTERNAL TEST ONLY. Use assembleDebug or the signed Internal testing build script.")
+}
+
+gradle.taskGraph.whenReady {
+    if (internalTestBuild && allTasks.any {
+            it.name.contains("release", ignoreCase = true) || it.name.contains("publish", ignoreCase = true)
+        }) {
+        throw GradleException("Internal test versions cannot build or publish public release variants.")
+    }
+}
+
 val releaseStorePath = providers.environmentVariable("CW_ANDROID_KEYSTORE").orNull
 val releaseStorePassword = providers.environmentVariable(
     "CW_ANDROID_KEYSTORE_PASSWORD"
@@ -14,16 +34,27 @@ val releaseSigningReady = listOf(
     releaseKeyAlias,
     releaseKeyPassword
 ).all { !it.isNullOrBlank() }
-val releaseTaskRequested = gradle.startParameter.taskNames.any {
+val signedTaskRequested = internalPlayRequested || gradle.startParameter.taskNames.any {
     it.contains("release", ignoreCase = true)
 }
 
-if (releaseTaskRequested && !releaseSigningReady) {
+if (internalPlayRequested && distributionChannel != "internal") {
+    throw GradleException("The Internal testing bundle requires -PcwDistributionChannel=internal and must only be uploaded to Play Internal testing.")
+}
+
+if (signedTaskRequested && !releaseSigningReady) {
     throw GradleException(
         "Release signing is not configured. Set CW_ANDROID_KEYSTORE, " +
             "CW_ANDROID_KEYSTORE_PASSWORD, CW_ANDROID_KEY_ALIAS, and " +
             "CW_ANDROID_KEY_PASSWORD."
     )
+}
+
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.name.contains("internalTesting", ignoreCase = true) } &&
+        (distributionChannel != "internal" || !releaseSigningReady)) {
+        throw GradleException("Internal testing tasks require the internal channel and the existing upload-signing key.")
+    }
 }
 
 android {
@@ -34,8 +65,8 @@ android {
         applicationId = "org.columbiawalks.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 31601
-        versionName = "3.16.1"
+        versionCode = 31701
+        versionName = appVersionName
         buildConfigField(
             "String",
             "REPORT_ENDPOINT",
@@ -66,7 +97,9 @@ android {
             "WALKING_METRIC_ENDPOINT",
             "\"https://directus.rndtech.org/columbiawalks-api/walking-metrics\""
         )
-        buildConfigField("boolean", "SELF_UPDATE_ENABLED", "true")
+        buildConfigField("boolean", "SELF_UPDATE_ENABLED", (!internalTestBuild).toString())
+        buildConfigField("boolean", "INTERNAL_TEST_BUILD", internalTestBuild.toString())
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -91,6 +124,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = if (internalTestBuild) ".internal" else ".qa"
+            buildConfigField("boolean", "SELF_UPDATE_ENABLED", "false")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -114,6 +151,14 @@ android {
             if (releaseSigningReady) {
                 signingConfig = signingConfigs.getByName("release")
             }
+        }
+        create("internalTesting") {
+            initWith(getByName("playRelease"))
+            matchingFallbacks += listOf("release")
+            // Keeps the existing Play package and upload certificate. The .0
+            // public tasks stay blocked; only the Internal testing track is allowed.
+            isDebuggable = false
+            buildConfigField("boolean", "SELF_UPDATE_ENABLED", "false")
         }
     }
 
@@ -140,7 +185,17 @@ val packagePlayReleaseNativeDebugSymbols by tasks.registering(Zip::class) {
     )
 }
 
+val packageInternalTestingNativeDebugSymbols by tasks.registering(Zip::class) {
+    dependsOn("mergeInternalTestingNativeLibs")
+    from(layout.buildDirectory.dir("intermediates/merged_native_libs/internalTesting/mergeInternalTestingNativeLibs/out/lib"))
+    archiveFileName.set("native-debug-symbols.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("outputs/native-debug-symbols/internalTesting"))
+}
+
 tasks.configureEach {
+    if (name == "bundleInternalTesting") {
+        finalizedBy(packageInternalTestingNativeDebugSymbols)
+    }
     if (name == "bundlePlayRelease") {
         finalizedBy(packagePlayReleaseNativeDebugSymbols)
     }

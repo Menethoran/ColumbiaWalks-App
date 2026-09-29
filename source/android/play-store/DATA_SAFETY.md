@@ -63,7 +63,9 @@ device by a foreground service to calculate distance. Raw walk routes are not
 uploaded or shared through official email.
 
 Trash-can submissions require a written address or location description and
-can optionally include an already confirmed report-map pin. Submitted
+can optionally include an already confirmed report-map pin. Trash-can Repeat
+Reporting requires a picture and confirmed coordinates for each private
+complaint. Submitted
 trash-can addresses and coordinates stay in the private moderation or complaint
 record and are not returned by the public trash-can feed.
 
@@ -95,7 +97,10 @@ be published only after the user chooses that path and a ColumbiaWalks
 administrator approves the sanitized copy. That separate path is not an
 optional field-test email.
 
-The 3.16 mobile trash-can form does not accept photos or video. The
+Trash-can Repeat Reporting attaches a metadata-stripped picture to a private
+complaint. These pictures are collected for app functionality and are not
+published or automatically forwarded. The standalone Community form remains
+text-only. The
 police-tip assistant does not select, read, or upload evidence to CBPD; if the user
 continues, evidence is chosen directly on the external Police Department form
 under that site's handling and privacy terms.
@@ -140,6 +145,8 @@ location. For a police-route template, any license plate
 and plate jurisdiction typed by the user are displayed prominently in the email.
 ColumbiaWalks does not infer or guarantee a plate number from the photograph.
 
+Trash-can submissions include a Residential/Commercial selection (Residential by default) and may include an optional selected hauler, retained as
+private intake metadata and never automatically sent to that hauler.
 Trash-can public comments are collected for moderation. Only approved or
 redacted comment text and fixed categories may later be published, and only
 when linked to a verified active public-can inventory item. The raw comment,
@@ -198,3 +205,8 @@ Before rollout, verify that the Play Console form matches this file:
   tracking, adds no phone permission, and cannot block report acceptance.
 - Data is encrypted in transit, deletion requests are supported, and account
   creation is not required.
+
+
+## 3.17.1 official police-tip form
+
+On a deliberate user action, the app opens CBPD's official CRIMEWATCH form inside WebView/WKWebView and makes the prepared `[TEST]` subject/message available to that site. Report time, location, vehicle/plate, observations, and evidence notes can be carried from a new or saved CW complaint. Contact fields are cleared, Anonymous and Other are selected, and only the optional subscription notice is dismissed. The app does not proxy the tip through CW intake. CRIMEWATCH controls its page data handling. The user alone selects files, accepts the agreement, completes CAPTCHA, and presses Submit. Autofill and popup dismissal do not confirm police receipt. Review this third-party form behavior alongside the unchanged CW collection and optional test-email declarations before a store submission.

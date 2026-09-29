@@ -89,15 +89,8 @@ Maps & Navigation
 
 ## Release name
 
-3.16.1 — Simpler Quick Report and Contact Us
+3.17.1 — Trash reporting and manual police-tip preparation
 
 ## Release notes
 
-Quick Report now keeps Location collapsed, makes the standard-report photo
-optional, and offers separate Submit to CW and Submit to CW & Notify CBPD
-actions. The second saves the CW report and prepares a draft that the user must
-personally review and submit on CBPD's official form; ColumbiaWalks does not
-send it to police. The test-email control is now collapsed, off by default, and
-still pinned to the ColumbiaWalks test mailbox—not Police, Mayor, or Codes.
-Contact Us lists Robert at (717) 466-9069 with call, text, and private-message
-paths.
+Trash reports now include a hauler and Residential/Commercial, defaulting to Residential. Repeat Reporting adds trash cans and keeps selections for the next photo and location. Police-tip drafts carry report details into the official CBPD CRIMEWATCH form with mandatory [TEST] labels, Anonymous and Other selected. Review and submit the official form yourself; the app never submits it.

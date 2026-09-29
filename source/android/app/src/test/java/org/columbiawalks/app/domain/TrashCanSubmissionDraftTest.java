@@ -10,6 +10,30 @@ import org.junit.Test;
 import java.util.Set;
 
 public class TrashCanSubmissionDraftTest {
+    @Test public void defaultsToResidentialAndPreservesCommercial() throws Exception {
+        String id = "8c7031d4-f883-4c74-a865-d2b22009bcf8";
+        assertEquals("residential", validPublicBuilder().build().toJson(id, "3.17.1").getString("property_type"));
+        assertEquals("commercial", validPublicBuilder().setPropertyType("commercial").build()
+                .toJson(id, "3.17.1").getString("property_type"));
+        assertEquals(TrashCanSubmissionDraft.ValidationResult.UNSUPPORTED_PROPERTY_TYPE,
+                validPublicBuilder().setPropertyType("other").build().validate());
+    }
+
+    @Test
+    public void haulerSurvivesSubmissionAndInvalidValuesAreRejected() throws Exception {
+        for (String hauler : TrashCanSubmissionDraft.HAULER_VALUES) {
+            TrashCanSubmissionDraft draft = validPublicBuilder().setHauler(hauler).build();
+            assertEquals(TrashCanSubmissionDraft.ValidationResult.VALID, draft.validate());
+            JSONObject json = draft.toJson("8c7031d4-f883-4c74-a865-d2b22009bcf8", "3.17.1");
+            assertEquals(hauler, json.optString("hauler"));
+            assertEquals(!hauler.isEmpty(), json.has("hauler"));
+        }
+        assertEquals(TrashCanSubmissionDraft.ValidationResult.UNSUPPORTED_HAULER,
+                validPublicBuilder().setHauler("unlisted").build().validate());
+        assertEquals(TrashCanSubmissionDraft.ValidationResult.VALID,
+                validPublicBuilder().setHauler(null).build().validate());
+    }
+
     @Test
     public void categoryContractsAreExact() {
         assertEquals(

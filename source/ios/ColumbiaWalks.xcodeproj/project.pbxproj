@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		317010000000000000000001 /* crimewatch-test-autofill.js in Resources */ = {isa = PBXBuildFile; fileRef = 317010000000000000000002 /* crimewatch-test-autofill.js */; };
 		07C91F83382C9125D0E988E6 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E070DFB7D8BADA308F7495 /* AppState.swift */; };
 		10A8E5F5E94611C19C1F5ABB /* SavedReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C6209733803082F0C53D92 /* SavedReportsView.swift */; };
 		191267FE095A87552CD597A8 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5C501107FA8EA5523C9AE7 /* CameraPicker.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		317010000000000000000002 /* crimewatch-test-autofill.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "crimewatch-test-autofill.js"; sourceTree = "<group>"; };
 		0B5C501107FA8EA5523C9AE7 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		0CF56B40DE86D6EB428E2020 /* ColumbiaWalks.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ColumbiaWalks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12DDA6A7F55CAE9EAFAF3585 /* ChecklistCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistCatalog.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			children = (
 				A2D335ED9A1EE3BD3716957E /* Assets.xcassets */,
 				ACCD9C4B017FF395F92DD671 /* checklist_catalog.json */,
+				317010000000000000000002 /* crimewatch-test-autofill.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -179,6 +182,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8451295165C4F2414B88CAF7 /* Build configuration list for PBXNativeTarget "ColumbiaWalks" */;
 			buildPhases = (
+				317000000000000000000001 /* Enforce internal build policy */,
 				F56C5B0557AB42B2D8FCD850 /* Sources */,
 				A0DBB1BCB5400BCF8C3834B3 /* Resources */,
 			);
@@ -257,10 +261,26 @@
 			files = (
 				3EC877855442BBBB093D9AAA /* Assets.xcassets in Resources */,
 				90556024DD5E7A8FA25BE8A8 /* checklist_catalog.json in Resources */,
+				317010000000000000000001 /* crimewatch-test-autofill.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+        317000000000000000000001 /* Enforce internal build policy */ = {
+            isa = PBXShellScriptBuildPhase;
+            alwaysOutOfDate = 1;
+            buildActionMask = 2147483647;
+            files = ();
+            inputPaths = ("$(SRCROOT)/scripts/check-internal-build.sh");
+            outputPaths = ();
+            name = "Enforce internal build policy";
+            runOnlyForDeploymentPostprocessing = 0;
+            shellPath = /bin/sh;
+            shellScript = "/bin/sh \"$SRCROOT/scripts/check-internal-build.sh\"";
+        };
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D49ECFB2AF86E208892528B3 /* Sources */ = {
@@ -348,7 +368,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 31601;
+				CURRENT_PROJECT_VERSION = 31701;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = JKA6EGL5J2;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -362,7 +382,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 3.16.1;
+				MARKETING_VERSION = 3.17.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -478,7 +498,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 31601;
+				CURRENT_PROJECT_VERSION = 31701;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = JKA6EGL5J2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -498,7 +518,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 3.16.1;
+				MARKETING_VERSION = 3.17.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

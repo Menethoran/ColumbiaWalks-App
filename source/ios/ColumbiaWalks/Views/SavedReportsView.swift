@@ -153,15 +153,15 @@ private struct ReportDetailView: View {
 
                     if report.officialEmailAuthorized == true ||
                         report.officialEmailServerState != nil {
-                        Section("3.16.1 field-test email") {
+                        Section("3.17.1 field-test email") {
                             if report.hasAuthorizedOfficialEmail {
                                 Label("Authorized only for test-mailbox processing after upload", systemImage: "envelope.fill")
                                     .foregroundStyle(Color.cwText)
                             } else if report.officialEmailServerState == nil {
-                                Label("No valid 3.16.1 test-mailbox authorization", systemImage: "envelope.badge.shield.half.filled")
+                                Label("No valid 3.17.1 test-mailbox authorization", systemImage: "envelope.badge.shield.half.filled")
                                     .foregroundStyle(Color.cwWarning)
                             }
-                            Text("Version 3.16.1 sends these authorized messages only to a ColumbiaWalks-controlled test mailbox with [TEST] in the subject—not to Police, the Mayor, or Codes.")
+                            Text("Version 3.17.1 sends these authorized messages only to a ColumbiaWalks-controlled test mailbox with [TEST] in the subject—not to Police, the Mayor, or Codes.")
                                 .font(.footnote.weight(.semibold))
                                 .foregroundStyle(Color.cwText)
                             if let emailState = report.officialEmailServerState {
@@ -187,7 +187,7 @@ private struct ReportDetailView: View {
                             } else {
                                 Text(report.hasAuthorizedOfficialEmail
                                      ? "The report is saved locally and authorizes the ColumbiaWalks server to attempt only a [TEST]-subject message to its controlled test mailbox after successful upload, subject to the 5 km service-area and delivery safeguards. No message is authorized for Police, the Mayor, or Codes, and delivery is not confirmed."
-                                     : "This locally saved or legacy report does not contain the complete 3.16.1 test-destination consent pin. It does not authorize a field-test or official-recipient email.")
+                                     : "This locally saved or legacy report does not contain the complete 3.17.1 test-destination consent pin. It does not authorize a field-test or official-recipient email.")
                                     .font(.footnote)
                                     .foregroundStyle(Color.cwTextSecondary)
                             }
@@ -253,6 +253,11 @@ private struct ReportDetailView: View {
                     }
 
                     Section {
+                        NavigationLink {
+                            PoliceTipView(initialDraft: report.policeTestDraft)
+                        } label: {
+                            Label("Prepare [TEST] police tip from this report", systemImage: "doc.text.fill")
+                        }
                         ShareLink(item: report.shareText) {
                             Label("Share report", systemImage: "square.and.arrow.up")
                         }
@@ -276,4 +281,27 @@ private struct ReportDetailView: View {
         }
     }
 
+}
+
+private extension SafetyReport {
+    var policeTestDraft: PoliceTipDraft {
+        let vehicle = vehicleDetails
+        let description = [vehicle.year, vehicle.color, vehicle.make, vehicle.model,
+                           vehicle.bodyStyle, vehicle.description]
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }.joined(separator: " ")
+        let location = nearestIntersection?.label ?? coordinate.map {
+            String(format: "%.6f, %.6f", $0.latitude, $0.longitude)
+        } ?? ""
+        return PoliceTipDraft(
+            subject: "ColumbiaWalks report", observedAt: observedAt, location: location,
+            licensePlate: vehicle.licensePlate, plateState: vehicle.plateState,
+            vehicleDescription: description,
+            firsthandObservation: ["Issue type(s): " + categorySummary, details, policeComplaintDetails]
+                .filter { !$0.isEmpty }.joined(separator: "\n\n"),
+            evidenceNotes: photoFilename == nil ? "The saved report does not include a photo."
+                : "The saved report includes a photo. Attach the original yourself if relevant.",
+            sourceWasSubmittedToColumbiaWalks: true
+        )
+    }
 }

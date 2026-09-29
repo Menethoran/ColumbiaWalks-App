@@ -7,14 +7,14 @@ Suggested review:
 4. Repeat requires its own picture and location and keeps the selected hierarchy ready while per-event fields reset. Missing sidewalk and Crosswalk incursion show the same off-by-default test-email control. Camera and library pickers are cancellable.
 5. Saved shows local queue/submission state. Report acceptance and test-email state are separate; neither claims guaranteed delivery.
 6. Community includes:
-   - Contact Us, listing Robert at (717) 466-9069 with Call, Text, and private app/project feedback paths.
+   - Contact Us, listing Robert at (717) 992-3102 with Call, Text, and private app/project feedback paths.
    - Prepare an Anonymous Police Tip for a past, non-active matter. A standalone draft stays local. A draft prepared after a CW report clearly states that the report was saved to CW but nothing was sent to CBPD. Opening the official site is not submission; the user must select anonymous, paste, attach evidence, personally attest, complete reCAPTCHA, and submit there. Please do not file a sample police tip during review.
    - Trash Cans, separating moderated public comments from private complaints. Private complaints are not published or automatically forwarded to the Borough.
    - App Feedback, anonymous by default with optional contact and separate follow-up consent.
 
 The app has no public in-app user-content feed, messaging, ads, analytics, tracking, purchases, or third-party login. It is an independent community pedestrian-safety tool, not a government, police, emergency, medical, legal, or financial service. Emergencies and incidents in progress are directed to 911.
 
-Core services are Apple MapKit, Core Location, PhotosUI, UIPasteboard, camera access, and ColumbiaWalks HTTPS endpoints at directus.rndtech.org/columbiawalks-api. The police-tip tool opens the official CRIMEWATCH site externally and has no path that submits a tip or media to CBPD. No Gmail credential or recipient address is in the app.
+Core services are Apple MapKit, Core Location, PhotosUI, UIPasteboard, camera access, and ColumbiaWalks HTTPS endpoints at directus.rndtech.org/columbiawalks-api. The police-tip tool opens the official CRIMEWATCH form in WKWebView, fills a mandatory [TEST] subject/message, selects Anonymous and Other, and dismisses only the optional subscription notice. The user alone chooses files, accepts the agreement, completes CAPTCHA, and presses Submit. Autofill is not receipt. No Gmail credential or recipient address is in the app.
 
 After upload, the server may request model-derived incident weather from Open-Meteo using only two-decimal incident coordinates and the incident date/hour. It sends no live phone location, precise coordinates, narrative, photo, contact, or report ID. The app contacts no weather service, adds no permission, and weather failure never blocks a report.
 

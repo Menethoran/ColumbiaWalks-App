@@ -62,6 +62,8 @@ public final class TrashCanFragment extends Fragment {
     private RadioGroup modeGroup;
     private Spinner categorySpinner;
     private Spinner scopeSpinner;
+    private Spinner haulerSpinner;
+    private Spinner propertyTypeSpinner;
     private TextView disclosure;
     private TextInputLayout commentLayout;
     private TextInputLayout addressLayout;
@@ -89,6 +91,16 @@ public final class TrashCanFragment extends Fragment {
         modeGroup = view.findViewById(R.id.trash_can_mode_group);
         categorySpinner = view.findViewById(R.id.trash_can_category_spinner);
         scopeSpinner = view.findViewById(R.id.trash_can_scope_spinner);
+        haulerSpinner = view.findViewById(R.id.trash_can_hauler_spinner);
+        ArrayAdapter<CharSequence> haulerAdapter = ArrayAdapter.createFromResource(
+                requireContext(), R.array.trash_can_hauler_labels, R.layout.spinner_item);
+        haulerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        haulerSpinner.setAdapter(haulerAdapter);
+        propertyTypeSpinner = view.findViewById(R.id.trash_can_property_type_spinner);
+        ArrayAdapter<CharSequence> propertyTypeAdapter = ArrayAdapter.createFromResource(
+                requireContext(), R.array.trash_can_property_type_labels, R.layout.spinner_item);
+        propertyTypeAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        propertyTypeSpinner.setAdapter(propertyTypeAdapter);
         disclosure = view.findViewById(R.id.trash_can_disclosure);
         commentLayout = view.findViewById(R.id.trash_can_comment_layout);
         addressLayout = view.findViewById(R.id.trash_can_address_layout);
@@ -186,6 +198,10 @@ public final class TrashCanFragment extends Fragment {
                         .setCategory(categoryValue(publicComment))
                         .setComment(value(comment))
                         .setAddress(value(address))
+                        .setPropertyType(TrashCanSubmissionDraft.PROPERTY_TYPE_VALUES[
+                                Math.max(0, propertyTypeSpinner.getSelectedItemPosition())])
+                        .setHauler(TrashCanSubmissionDraft.HAULER_VALUES[
+                                Math.max(0, haulerSpinner.getSelectedItemPosition())])
                         .setAssetScope(scopeValue());
 
         MainActivity activity = (MainActivity) requireActivity();
@@ -273,6 +289,8 @@ public final class TrashCanFragment extends Fragment {
         address.setText("");
         useMapPin.setChecked(false);
         categorySpinner.setSelection(0);
+        haulerSpinner.setSelection(0);
+        propertyTypeSpinner.setSelection(0);
     }
 
     private boolean isPublicComment() {

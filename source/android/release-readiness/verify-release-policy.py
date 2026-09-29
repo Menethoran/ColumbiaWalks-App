@@ -269,48 +269,43 @@ def verify_limited_routing_documents() -> None:
 
 
 def verify_website_public_download_boundary() -> None:
-    website = SOURCE / "ghost-theme-overlay-3.14.1"
+    website = SOURCE.parent / "website" / "ghost-theme"
+    pages = SOURCE.parent / "website" / "pages"
     required_by_file = {
         website / "default.hbs": (
-            "columbiawalks website v3.16.1",
-            "https://github.com/menethoran/columbiawalks-app/releases/latest",
+            "columbiawalks website v3.17.1", "/contact/", "/police-tip/",
+            "callie jo thompson", "robert burton thompson v", "tel:+17179923102",
         ),
         website / "index.hbs": (
-            "downloads/columbiawalks-3.14.1.apk",
-            "https://github.com/menethoran/columbiawalks-app/releases/tag/v3.14.1",
-            "the website apk updates website-distributed 3.13.0 or 3.14.0 installs",
-            "google play and website downloads are separate signing channels and cannot update each other",
-        ),
-        website / "package.json": (
-            '"description": "independent columbiawalks community safety theme"',
-            '"version": "3.14.1"',
-        ),
-        website / "page-report.hbs": (
-            '"version":"3.16.1"',
+            "downloads/columbiawalks-3.14.0.apk",
+            "https://apps.apple.com/us/app/columbiawalks/id6803712364",
             "https://play.google.com/apps/testing/org.columbiawalks.app",
+            "different signing identities and cannot update each other",
+            "closed beta",
         ),
-        website / "PUBLICATION_SETTINGS.md": (
-            "independent community initiative documenting pedestrian-safety concerns in columbia, pennsylvania.",
+        pages / "contact.html": (
+            "columbiawalks@gmail.com", "tel:+17179923102",
+            "callie jo thompson", "robert burton thompson v", "founder",
+            "https://apps.apple.com/us/app/columbiawalks/id6803712364",
+            "https://play.google.com/store/apps/details?id=org.columbiawalks.app",
+        ),
+        pages / "police-tip.html": (
+            "https://crimewatch.net/us/pa/lancaster/columbia-boro-pd/10552/submit-tip",
+            "i wish to remain anonymous", "does not send a tip",
+            "cannot confirm receipt", "no-referrer", "tel:911",
         ),
     }
     for path, required in required_by_file.items():
-        content = require_all(path, required, "published website and Android-download fact")
-    index = normalized_text(website / "index.hbs")
-    for required_download_fact in (
-        "columbiawalks-3.14.1.apk",
-        "download columbiawalks 3.14.1 apk",
-        "latest android app",
-    ):
-        if required_download_fact not in index:
-            fail(
-                "Website must keep the public Android download on verified "
-                f"3.14.1: {required_download_fact}"
-            )
-
-    report = normalized_text(website / "page-report.hbs")
-    if "play.google.com/apps/internaltest/" in report:
-        fail("Website report page still links to the obsolete Play internal-test track.")
-    print("PASS public Android download remains 3.14.1 and web intake identifies as 3.16.1")
+        content = normalized_text(path)
+        for phrase in required:
+            if phrase not in content:
+                fail(f"{path.name} is missing verified website copy: {phrase}")
+    website_source = "\n".join(path.read_text() for path in website.rglob("*.hbs"))
+    if re.search(r"ColumbiaWalks-3\.17\.[01]\.(?:apk|aab)", website_source, re.I):
+        fail("Do not advertise an internal or unsigned 3.17 artifact as a public download.")
+    if "anonymous-tip-tests" in (pages / "police-tip.html").read_text():
+        fail("The public police-tip page must not send tips to private test intake.")
+    print("PASS public website contacts, official handoff, app links and verified 3.14.0 download")
 
 
 def verify_privacy_and_play_boundaries() -> None:
@@ -399,8 +394,8 @@ def verify_privacy_and_play_boundaries() -> None:
 
 def verify_release_identity_and_tooling() -> None:
     gradle = normalized_text(SOURCE / "app" / "build.gradle.kts")
-    if "versioncode = 31601" not in gradle or 'versionname = "3.16.1"' not in gradle:
-        fail("Android app must be 3.16.1 (31601).")
+    if "versioncode = 31701" not in gradle or 'appversionname = "3.17.1"' not in gradle:
+        fail("Android app must be 3.17.1 (31701).")
 
     android_stage = normalized_text(
         SOURCE / "release-readiness" / "verify-and-stage-android-release.sh"
@@ -409,15 +404,15 @@ def verify_release_identity_and_tooling() -> None:
         SOURCE / "release-readiness" / "verify-and-stage-play-release.sh"
     )
     for name, content in (("APK", android_stage), ("AAB", play_stage)):
-        for phrase in ('expected_version_name="3.16.1"', 'expected_version_code="31601"'):
+        for phrase in ('expected_version_name="3.17.1"', 'expected_version_code="31701"'):
             if phrase not in content:
-                fail(f"{name} staging verifier is missing 3.16.1 identity: {phrase}")
-    if "columbiawalks-3.16.1.apk" not in android_stage:
-        fail("APK staging verifier does not use the 3.16.1 artifact filename.")
+                fail(f"{name} staging verifier is missing 3.17.1 identity: {phrase}")
+    if "columbiawalks-3.17.1.apk" not in android_stage:
+        fail("APK staging verifier does not use the 3.17.1 artifact filename.")
     for filename in (
-        "columbiawalks-3.16.1-play.aab",
-        "columbiawalks-3.16.1-native-debug-symbols.zip",
-        "columbiawalks-3.16.1-mapping.txt",
+        "columbiawalks-3.17.1-play.aab",
+        "columbiawalks-3.17.1-native-debug-symbols.zip",
+        "columbiawalks-3.17.1-mapping.txt",
     ):
         if filename not in play_stage:
             fail(f"Play staging verifier is missing artifact filename: {filename}")
@@ -430,7 +425,7 @@ def verify_release_identity_and_tooling() -> None:
     ):
         if expected_cert not in normalized_text(path):
             fail(f"{path.relative_to(SOURCE)} lost the pinned production signer.")
-    print("PASS 3.16.1 staging identity and established signer pin")
+    print("PASS 3.17.1 staging identity and established signer pin")
 
 
 def main() -> int:
@@ -444,7 +439,7 @@ def main() -> int:
     except (AssertionError, ET.ParseError, OSError) as error:
         print(f"FAIL {error}", file=sys.stderr)
         return 1
-    print("Android 3.16.1 release-policy verification passed.")
+    print("Android 3.17.1 release-policy verification passed.")
     return 0
 
 

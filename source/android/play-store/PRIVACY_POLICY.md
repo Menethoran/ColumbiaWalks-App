@@ -22,7 +22,11 @@ The Community tab also lets you submit a public trash-can comment or a private
 can complaint. A trash-can submission includes its type, one fixed category, a
 3-2,000-character comment, a written address or location description, the
 public/private/unknown property scope where applicable, and an optional
-confirmed map pin. These forms do not ask for an account or contact details.
+confirmed map pin. The optional Hauler selection is saved with either type of
+submission, along with a Residential or Commercial selection that defaults to Residential. Repeat Reporting also supports private trash-can complaints, each
+with a picture and confirmed location; the selected issue, hauler, and property
+scope remain ready for the next report. These forms do not ask for an account
+or contact details and do not automatically contact a hauler or the Borough.
 
 The separate police-tip assistant prepares text only on your device. A
 standalone draft is not uploaded to or stored by ColumbiaWalks. After saving a
@@ -170,11 +174,11 @@ transmitted over HTTPS. Reasonable administrative and technical safeguards are
 used, but no storage or transmission system can be guaranteed completely
 secure.
 
-Trash-can JSON is stored in Android's no-backup application directory while it
-waits for a network retry. Version 3.16 does not attach trash-can media. The
-server can support a future optional photo only after re-encoding it and
-removing embedded metadata; introducing that client capability requires a new
-disclosure review.
+Trash-can submissions and any attached Repeat Reporting pictures are stored in
+the app's private, backup-excluded local queue until accepted. Photos are
+re-encoded to remove embedded metadata before upload and again on the server.
+Submitted hauler selections, raw comments, photos, and locations remain private
+and are not included in the public trash-can feed.
 
 The website-distributed Android app may send anonymous self-update lifecycle
 events containing a random event identifier, event type, current and target app
@@ -208,3 +212,8 @@ personal information from children under 13.
 This policy may be updated as the service changes. The current version and its
 effective date will remain available at
 https://www.columbiawalks.com/privacy-policy/.
+
+
+## 3.17.1 official police-tip form
+
+On a deliberate user action, the app opens CBPD's official CRIMEWATCH form inside WebView/WKWebView and makes the prepared `[TEST]` subject/message available to that site. Report time, location, vehicle/plate, observations, and evidence notes can be carried from a new or saved CW complaint. Contact fields are cleared, Anonymous and Other are selected, and only the optional subscription notice is dismissed. The app does not proxy the tip through CW intake. CRIMEWATCH controls its page data handling. The user alone selects files, accepts the agreement, completes CAPTCHA, and presses Submit. Autofill and popup dismissal do not confirm police receipt. Review this third-party form behavior alongside the unchanged CW collection and optional test-email declarations before a store submission.

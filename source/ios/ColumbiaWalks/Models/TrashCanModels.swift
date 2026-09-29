@@ -1,5 +1,40 @@
 import Foundation
 
+enum TrashCanPropertyType: String, Codable, CaseIterable, Identifiable {
+    case residential
+    case commercial
+    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .residential: "Residential"
+        case .commercial: "Commercial"
+        }
+    }
+}
+
+enum TrashCanHauler: String, Codable, CaseIterable, Identifiable {
+    case blCarson = "bl_carson"
+    case cauler
+    case goods
+    case pennWaste = "penn_waste"
+    case wasteConnections = "waste_connections"
+    case shells
+    case wmCom = "wm_com"
+
+    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .blCarson: "B&L Carson"
+        case .cauler: "Cauler"
+        case .goods: "Good's"
+        case .pennWaste: "Penn Waste"
+        case .wasteConnections: "Waste Connections"
+        case .shells: "Shell's"
+        case .wmCom: "WM.COM"
+        }
+    }
+}
+
 enum TrashCanSubmissionKind: String, Codable, CaseIterable, Identifiable {
     case publicComment = "public_comment"
     case privateComplaint = "private_complaint"
@@ -111,13 +146,18 @@ struct TrashCanSubmission: Codable, Identifiable, Equatable {
     let assetScope: TrashCanAssetScope
     let appVersion: String
     let submissionSource: String
+    var hauler: TrashCanHauler? = nil
+    // Optional decoding preserves old queued submissions; intake defaults new
+    // submissions without this field to Residential, without relabeling history.
+    var propertyType: TrashCanPropertyType? = .residential
 
     enum CodingKeys: String, CodingKey {
         case id = "submission_id"
-        case kind, categories, comment, address, latitude, longitude
+        case kind, categories, comment, address, latitude, longitude, hauler
         case assetScope = "asset_scope"
         case appVersion = "app_version"
         case submissionSource = "submission_source"
+        case propertyType = "property_type"
     }
 }
 

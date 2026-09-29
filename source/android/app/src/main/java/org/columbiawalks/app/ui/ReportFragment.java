@@ -2034,8 +2034,8 @@ public class ReportFragment extends Fragment implements LocationListener {
         String subjectText = issueLabels.isEmpty()
                 ? "Pedestrian safety concern"
                 : "Pedestrian safety: " + issueLabels.get(0);
-        if (subjectText.length() > 128) {
-            subjectText = subjectText.substring(0, 128);
+        if (org.columbiawalks.app.domain.TestTipText.mark(subjectText).length() > 128) {
+            subjectText = "ColumbiaWalks report";
         }
         StringBuilder observationText = new StringBuilder();
         if (!issueSummary.isEmpty()) {
@@ -2083,11 +2083,9 @@ public class ReportFragment extends Fragment implements LocationListener {
         }
 
         String evidenceText = hadPhoto
-                ? "CW report " + clientReportId
-                + " includes a photo. Attach the original relevant file "
+                ? "The saved ColumbiaWalks report includes a photo. Attach the original relevant file "
                 + "yourself on the official CBPD form."
-                : "CW report " + clientReportId
-                + " did not include a photo.";
+                : "The saved ColumbiaWalks report did not include a photo.";
         return PoliceTipFragment.newReportHandoff(
                 subjectText,
                 observedText,

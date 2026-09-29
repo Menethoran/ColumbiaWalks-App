@@ -26,6 +26,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.columbiawalks.app.MainActivity;
 import org.columbiawalks.app.R;
 import org.columbiawalks.app.domain.PoliceTipDraft;
+import org.columbiawalks.app.data.SafetyReport;
+import org.json.JSONObject;
+import org.json.JSONException;
 
 public final class PoliceTipFragment extends Fragment {
     public static final String REPORT_HANDOFF_REQUEST =
@@ -100,6 +103,33 @@ public final class PoliceTipFragment extends Fragment {
         Bundle request = new Bundle();
         request.putBoolean(HANDOFF_SOURCE_WAS_CW, false);
         return request;
+    }
+
+    static Bundle newSavedReportHandoff(SafetyReport report) {
+        String plate = "", state = "", vehicleText = "";
+        try {
+            JSONObject vehicle = new JSONObject(report.getVehicleDetails() == null ? "{}" : report.getVehicleDetails());
+            plate = vehicle.optString("license_plate", "");
+            state = vehicle.optString("plate_state", "");
+            java.util.List<String> parts = new java.util.ArrayList<>();
+            for (String key : new String[]{"year", "color", "make", "model", "body_style", "description"}) {
+                String value = vehicle.optString(key, "").trim();
+                if (!value.isEmpty()) parts.add(value);
+            }
+            vehicleText = String.join(" ", parts);
+        } catch (JSONException ignored) { /* Optional legacy vehicle details may be absent. */ }
+        String locationText = report.getCoordinateText();
+        try {
+            JSONObject intersection = new JSONObject(report.getNearestIntersection() == null ? "{}" : report.getNearestIntersection());
+            String label = intersection.optString("label", "").trim();
+            if (!label.isEmpty()) locationText = label + " (" + locationText + ")";
+        } catch (JSONException ignored) { /* Keep the saved coordinates. */ }
+        return newReportHandoff("ColumbiaWalks report", report.getObservedAt(), locationText,
+                plate, state, vehicleText,
+                "Issue type(s): " + report.getCategoriesForDisplay() + "\n\n" + report.getDetails()
+                        + "\n\n" + report.getPoliceComplaintDetails(),
+                report.hasPhoto() ? "The saved report includes a photo. Attach the original yourself if relevant."
+                        : "The saved report does not include a photo.");
     }
 
     @Nullable
@@ -187,7 +217,8 @@ public final class PoliceTipFragment extends Fragment {
                             R.string.police_tip_opening_not_submitted,
                             Toast.LENGTH_LONG
                     ).show();
-                    openExternal(OFFICIAL_TIP_URL);
+                    startActivity(CrimewatchTipActivity.intent(requireContext(),
+                            preparedTip.getSubject(), preparedTip.getNarrative()));
                 });
         view.findViewById(R.id.police_tip_formal_report)
                 .setOnClickListener(button -> openExternal(FORMAL_REPORT_URL));

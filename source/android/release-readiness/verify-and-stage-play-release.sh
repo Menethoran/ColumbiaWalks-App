@@ -2,12 +2,13 @@
 set -euo pipefail
 
 readonly EXPECTED_PACKAGE="org.columbiawalks.app"
-readonly EXPECTED_VERSION_NAME="3.16.1"
-readonly EXPECTED_VERSION_CODE="31601"
+readonly EXPECTED_VERSION_NAME="3.17.1"
+readonly EXPECTED_VERSION_CODE="31701"
 readonly EXPECTED_UPLOAD_CERT_SHA256="a0c9e5abc99caec8d2ec31181c75c577d00963e0af3f654aca19bb3f7355dcc4"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source_dir="$(cd "$script_dir/.." && pwd)"
+python3 "$script_dir/verify-distribution.py" --channel public
 artifact_dir="${CW_ANDROID_ARTIFACT_DIR:-$source_dir/../artifacts}"
 play_artifact_dir="$artifact_dir/play"
 bundletool_path="${BUNDLETOOL:-/home/robert/.cache/columbiawalks-tools/bundletool-all-1.18.3.jar}"
@@ -105,11 +106,11 @@ echo "Mapping SHA:  $mapping_sha256"
 if [[ "$stage_requested" == true ]]; then
     install -d -m 700 "$play_artifact_dir"
     install -m 644 "$aab_path" \
-        "$play_artifact_dir/ColumbiaWalks-3.16.1-play.aab"
+        "$play_artifact_dir/ColumbiaWalks-3.17.1-play.aab"
     install -m 600 "$native_symbols" \
-        "$play_artifact_dir/ColumbiaWalks-3.16.1-native-debug-symbols.zip"
+        "$play_artifact_dir/ColumbiaWalks-3.17.1-native-debug-symbols.zip"
     install -m 600 "$mapping_file" \
-        "$play_artifact_dir/ColumbiaWalks-3.16.1-mapping.txt"
-    echo "Staged AAB:  $play_artifact_dir/ColumbiaWalks-3.16.1-play.aab"
+        "$play_artifact_dir/ColumbiaWalks-3.17.1-mapping.txt"
+    echo "Staged AAB:  $play_artifact_dir/ColumbiaWalks-3.17.1-play.aab"
     echo "Staged symbols and mapping privately in: $play_artifact_dir"
 fi

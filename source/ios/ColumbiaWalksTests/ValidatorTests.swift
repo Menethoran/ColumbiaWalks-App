@@ -147,49 +147,39 @@ final class PoliceTipDraftTests: XCTestCase {
 
         let prepared = PoliceTipDraftBuilder.prepare(draft)
 
-        XCTAssertEqual(prepared.subject, "Unsafe pass near crosswalk")
-        XCTAssertEqual(
-            prepared.narrative,
-            """
-            Incident status: Past / not currently in progress
+        XCTAssertEqual(prepared.subject, "[TEST] Unsafe [TEST] pass [TEST] near [TEST] crosswalk [TEST]")
+        let plain = TestTipText.plain(prepared.narrative)
+        for detail in ["1969-12-31 7:00 PM EST", "Third and Locust Streets", "east toward Fourth Street", "ABC 123", "PA", "Blue four-door sedan", "The driver entered the occupied crosswalk.", "Original plate photo", "POLICE-ASSISTED COLUMBIAWALKS TEST"] {
+            XCTAssertTrue(plain.contains(detail), detail)
+        }
+        let words = prepared.narrative.split(separator: " ")
+        XCTAssertEqual(words.count % 2, 1)
+        for index in stride(from: 0, to: words.count, by: 2) { XCTAssertEqual(words[index], "[TEST]") }
+        XCTAssertTrue(prepared.clipboardText.hasPrefix("[TEST] Subject: [TEST]"))
+        XCTAssertEqual(TestTipText.mark(prepared.narrative), prepared.narrative)
 
-            Date/time observed: 1969-12-31 7:00 PM EST
-
-            Location: Third and Locust Streets
-
-            Direction of travel: east toward Fourth Street
-
-            License plate: ABC 123
-
-            Plate state/jurisdiction: PA
-
-            Vehicle description:
-            Blue four-door sedan
-
-            Firsthand observation:
-            The driver entered the occupied crosswalk.
-
-            Evidence notes:
-            Original plate photo and MOV video are on the device.
-
-            Local-only privacy note: This draft and any media were not sent to ColumbiaWalks or CBPD.
-            """
-        )
-        XCTAssertEqual(
-            prepared.clipboardText,
-            "Subject:\nUnsafe pass near crosswalk\n\nMessage:\n\(prepared.narrative)"
-        )
     }
 
     func testBuilderIdentifiesCwHandoffWithoutClaimingPoliceDelivery() {
         var draft = validDraft()
         draft.sourceWasSubmittedToColumbiaWalks = true
 
-        let narrative = PoliceTipDraftBuilder.prepare(draft).narrative
+        let narrative = TestTipText.plain(PoliceTipDraftBuilder.prepare(draft).narrative)
 
         XCTAssertTrue(narrative.contains("saved to ColumbiaWalks"))
         XCTAssertTrue(narrative.contains("did not send this draft or any media to CBPD"))
         XCTAssertFalse(narrative.contains("not sent to ColumbiaWalks or CBPD"))
+    }
+
+    func testTestMarkersCountTowardOfficialSubjectLimit() {
+        var draft = validDraft()
+        draft.subject = String(repeating: "x", count: 114)
+        XCTAssertNil(PoliceTipValidator.validate(draft, now: Date(timeIntervalSince1970: 100)))
+        draft.subject += "x"
+        XCTAssertNotNil(PoliceTipValidator.validate(draft, now: Date(timeIntervalSince1970: 100)))
+        draft.subject = "[TEST]"
+        XCTAssertNotNil(PoliceTipValidator.validate(draft, now: Date(timeIntervalSince1970: 100)))
+        XCTAssertEqual(TestTipText.mark("a\u{00a0}b\u{200b}c [test]"), "[TEST] a [TEST] b [TEST] c [TEST]")
     }
 
     private func validDraft() -> PoliceTipDraft {
@@ -209,6 +199,29 @@ final class PoliceTipDraftTests: XCTestCase {
 }
 
 final class TrashCanSubmissionTests: XCTestCase {
+    func testHaulersRoundTripWithoutBreakingOldQueuedSubmissions() throws {
+        XCTAssertEqual(TrashCanHauler.allCases.map(\.label),
+                       ["B&L Carson", "Cauler", "Good's", "Penn Waste", "Waste Connections", "Shell's", "WM.COM"])
+        var submission = TrashCanSubmission(id: UUID(), kind: .privateComplaint,
+            categories: ["damaged"], comment: "Damaged trash can", address: "Third and Locust",
+            latitude: nil, longitude: nil, assetScope: .unknown,
+            appVersion: "ios-3.17.1", submissionSource: "ios")
+        XCTAssertEqual(submission.propertyType, .residential)
+        var legacyJSON = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder.api.encode(submission)) as? [String: Any])
+        legacyJSON.removeValue(forKey: "property_type")
+        let legacy = try JSONSerialization.data(withJSONObject: legacyJSON)
+        XCTAssertNil(try JSONDecoder().decode(TrashCanSubmission.self, from: legacy).hauler)
+        submission.propertyType = .commercial
+        for hauler in TrashCanHauler.allCases {
+            submission.hauler = hauler
+            let data = try JSONEncoder.api.encode(submission)
+            XCTAssertEqual(try JSONDecoder().decode(TrashCanSubmission.self, from: data).hauler, hauler)
+            let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+            XCTAssertEqual(json["hauler"] as? String, hauler.rawValue)
+            XCTAssertEqual(json["property_type"] as? String, "commercial")
+        }
+    }
+
     func testCategoryKeysExactlyMatchThe316Contract() {
         XCTAssertEqual(
             TrashCanPublicCommentCategory.allCases.map(\.rawValue),
@@ -318,6 +331,7 @@ final class TrashCanSubmissionTests: XCTestCase {
                 "latitude",
                 "longitude",
                 "asset_scope",
+                "property_type",
                 "app_version",
                 "submission_source"
             ])
@@ -328,6 +342,7 @@ final class TrashCanSubmissionTests: XCTestCase {
         XCTAssertEqual(json["comment"] as? String, "Bags were left beside the can.")
         XCTAssertEqual(json["address"] as? String, "Fourth and Locust Streets")
         XCTAssertEqual(json["asset_scope"] as? String, "unknown")
+        XCTAssertEqual(json["property_type"] as? String, "residential")
         XCTAssertEqual(json["app_version"] as? String, "ios-3.16.0")
         XCTAssertEqual(json["submission_source"] as? String, "ios")
     }

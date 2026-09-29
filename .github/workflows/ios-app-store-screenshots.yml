@@ -26,6 +26,9 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v4
 
+      - name: Verify public distribution policy
+        run: python3 source/android/release-readiness/verify-distribution.py --channel public
+
       - name: Install XcodeGen
         run: brew install xcodegen
 

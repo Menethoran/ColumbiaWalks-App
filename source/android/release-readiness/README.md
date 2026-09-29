@@ -1,3 +1,56 @@
+# 3.17.1 release handoff
+
+The current app identity is 3.17.1 / 31701. A final dot-separated numeric component exactly `0` means internal testing only, including four-component logical versions. `.10` and `.20` do not mean internal by themselves. Mandatory police-tip `[TEST]` marking remains enabled independently of this classification.
+
+- `build-qa-android.sh` runs unit tests/lint and produces the separate `org.columbiawalks.app.qa` APK for local QA. Never publish this debug signer as the website update.
+- `build-play-internal.sh` uses privately configured upload signing and stages the signed 3.17.1 AAB, symbols, and mapping for Play Internal testing. No upload is performed by this script. The replacement upload key is blocked by Google's reset waiting period until September 29, 2026 at 19:30 UTC.
+- `build-production-android.sh` and public APK staging require the established original website signer. Its password is still unavailable here; a Play upload signature is not interchangeable with that signer.
+- `verify-distribution.py` gates both source and artifact versions. `test-distribution-policy.py` covers final-component classification and iOS guards.
+- `source/form-tests` contains the shared form/popup and website-helper tests. Run `npm ci && npm test` in `source/form-tests` from the repository root.
+
+See the repository's `DEVELOPMENT_3.17.1.md` for current verification and exact artifact hashes. The following notes are historical and must not be used to choose this release's version or distribution channel.
+
+## Historical build notes
+
+### 3.17.0 internal builds
+
+For the current internal source, use `build-internal-android.sh` for a separate local test APK or `build-play-internal.sh` for a signed Play **Internal testing** bundle. The latter pins the replacement upload key prepared on 2026-09-27; it does not upload automatically. See [the current development record](../../../DEVELOPMENT_3.17.md).
+
+## Play upload-key recovery, 2026-09-27
+
+The original encrypted keystore was recovered but its password could not be
+unlocked. The owner authorized an upload-key reset. The replacement key is
+RSA 4096-bit, with alias `columbiawalks-upload-20260927`. Only its
+[public certificate](play-upload-certificate.pem) is included here:
+
+```text
+SHA-256: 9B:E8:E6:85:54:F0:F9:90:2E:87:FC:CB:81:99:77:2D:B3:1E:41:86:A4:41:C8:75:4E:36:53:A4:50:60:3E:95
+```
+
+The private key and generated password are outside Git; the password is in
+the desktop secure keyring. Two encrypted recovery copies passed restore
+checks, including the separate /Backup disk. The prepared AAB passed the full
+internal verification script with this key.
+
+**Reset status: submitted; activation scheduled for 2026-09-29 at 19:30 UTC
+(3:30 PM America/New_York).** At 20:21 UTC on 2026-09-27, Play Console displayed
+the replacement fingerprint above and a pending reset. Google's notification
+states that no new AAB/APK uploads are allowed until that activation time.
+The displayed certificate does not establish that uploads are enabled yet.
+At or after the scheduled time, verify activation and the replacement
+fingerprint, then upload only to **Internal testing**. A local signing check
+does not prove Google has activated the replacement.
+
+Google's [upload-key reset documentation](https://support.google.com/googleplay/android-developer/answer/9842756?hl=en)
+distinguishes the upload key from the app-signing key used for installed Play
+apps. This recovery does not rotate Google's app-signing key. Historical
+website APK signing and migration instructions below remain separate; their
+old certificate pins are retained.
+
+The release/signing history below is retained for reference. Public staging scripts reject this .0 version.
+
+---
+
 # ColumbiaWalks Android 3.16.1 release readiness
 
 This directory contains non-secret release tooling. It does **not** contain a

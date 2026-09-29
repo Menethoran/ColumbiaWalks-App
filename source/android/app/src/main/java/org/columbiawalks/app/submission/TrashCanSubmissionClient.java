@@ -4,6 +4,9 @@ import org.columbiawalks.app.BuildConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.UUID;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -16,7 +19,12 @@ final class TrashCanSubmissionClient {
     private static final int MAX_RESPONSE_BYTES = 16_384;
 
     SubmissionResponse submit(String payload) throws IOException {
-        byte[] bytes = payload.getBytes(StandardCharsets.UTF_8);
+        return submit(payload, null);
+    }
+
+    SubmissionResponse submit(String payload, File photo) throws IOException {
+        String boundary = "cw-trash-" + UUID.randomUUID();
+        byte[] bytes = requestBody(payload, photo, boundary);
         URL endpoint = new URL(BuildConfig.TRASH_CAN_ENDPOINT);
         HttpURLConnection connection =
                 (HttpURLConnection) endpoint.openConnection();
@@ -28,7 +36,8 @@ final class TrashCanSubmissionClient {
         connection.setFixedLengthStreamingMode(bytes.length);
         connection.setRequestProperty(
                 "Content-Type",
-                "application/json; charset=UTF-8"
+                photo == null ? "application/json; charset=UTF-8"
+                        : "multipart/form-data; boundary=" + boundary
         );
         connection.setRequestProperty("Accept", "application/json");
         connection.setRequestProperty(
@@ -47,6 +56,26 @@ final class TrashCanSubmissionClient {
             );
         } finally {
             connection.disconnect();
+        }
+    }
+
+    static byte[] requestBody(String payload, File photo, String boundary) throws IOException {
+        if (photo == null) return payload.getBytes(StandardCharsets.UTF_8);
+        if (!photo.isFile() || photo.length() == 0 || photo.length() > 10 * 1024 * 1024) {
+            throw new IOException("The queued trash-can photo is unavailable or too large.");
+        }
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream();
+             InputStream input = new FileInputStream(photo)) {
+            output.write(("--" + boundary + "\r\nContent-Disposition: form-data; name=\"submission\"\r\n"
+                    + "Content-Type: application/json; charset=UTF-8\r\n\r\n" + payload
+                    + "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"photo\"; "
+                    + "filename=\"trash-can.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n")
+                    .getBytes(StandardCharsets.UTF_8));
+            byte[] buffer = new byte[8192];
+            int count;
+            while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
+            output.write(("\r\n--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
+            return output.toByteArray();
         }
     }
 
