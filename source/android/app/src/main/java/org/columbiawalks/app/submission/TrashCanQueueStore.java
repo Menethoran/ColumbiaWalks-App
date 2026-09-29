@@ -1,6 +1,7 @@
 package org.columbiawalks.app.submission;
 
 import android.content.Context;
+import android.util.AtomicFile;
 
 import androidx.annotation.Nullable;
 
@@ -14,6 +15,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /** Stores pending trash-can JSON in Android's no-backup files directory. */
 public final class TrashCanQueueStore {
@@ -34,6 +39,11 @@ public final class TrashCanQueueStore {
             String submissionId,
             String payload
     ) throws IOException {
+        save(context, submissionId, payload, null);
+    }
+
+    public static void save(Context context, String submissionId, String payload,
+                            @Nullable String photoPath) throws IOException {
         File file = fileFor(context, submissionId);
         File directory = file.getParentFile();
         if (directory == null
@@ -43,14 +53,49 @@ public final class TrashCanQueueStore {
             );
         }
 
-        byte[] bytes = payload.getBytes(StandardCharsets.UTF_8);
+        String storedPayload = payload;
+        if (photoPath != null) {
+            try {
+                storedPayload = new JSONObject()
+                        .put("submission", new JSONObject(payload))
+                        .put("has_photo", true).toString();
+            } catch (JSONException exception) {
+                throw new IOException("The trash-can payload is invalid.", exception);
+            }
+        }
+        byte[] bytes = storedPayload.getBytes(StandardCharsets.UTF_8);
         if (bytes.length > MAX_PAYLOAD_BYTES) {
             throw new IOException("The trash-can payload is too large.");
         }
-        try (FileOutputStream output = new FileOutputStream(file, false)) {
-            output.write(bytes);
-            output.flush();
+        if (photoPath != null) {
+            File source = new File(photoPath);
+            if (!source.isFile() || source.length() == 0 || source.length() > 10 * 1024 * 1024) {
+                throw new IOException("The trash-can photo is unavailable or too large.");
+            }
+            File photo = photoFile(context, submissionId);
+            File pending = new File(photo.getPath() + ".tmp");
+            try {
+                Files.copy(source.toPath(), pending.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.move(pending.toPath(), photo.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } finally {
+                pending.delete();
+            }
         }
+        AtomicFile atomicFile = new AtomicFile(file);
+        FileOutputStream output = null;
+        try {
+            output = atomicFile.startWrite();
+            output.write(bytes);
+            atomicFile.finishWrite(output);
+        } catch (IOException exception) {
+            atomicFile.failWrite(output);
+            throw exception;
+        }
+    }
+
+    static File photoFile(Context context, String submissionId) {
+        File payloadFile = fileFor(context, submissionId);
+        return new File(payloadFile.getParentFile(), submissionId + ".jpg");
     }
 
     @Nullable
@@ -64,7 +109,7 @@ public final class TrashCanQueueStore {
             throw new IOException("The queued trash-can payload is too large.");
         }
 
-        try (InputStream input = new FileInputStream(file);
+        try (InputStream input = new AtomicFile(file).openRead();
              ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[2048];
             int count;
@@ -84,7 +129,7 @@ public final class TrashCanQueueStore {
         File file = fileFor(context, submissionId);
         if (file.isFile()) {
             // A duplicate retry is harmless if deletion ever fails.
-            file.delete();
+            if (file.delete()) photoFile(context, submissionId).delete();
         }
     }
 

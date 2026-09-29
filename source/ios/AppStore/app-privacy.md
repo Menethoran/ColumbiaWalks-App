@@ -16,7 +16,7 @@ These answers describe ColumbiaWalks 3.16.1 (31601). Reconfirm them if the app o
 - Used for tracking: **No**
 - Purpose: **App Functionality**
 - Sharing: For a report classified with exactly one approved crosswalk or missing-sidewalk selection, the app exposes a collapsed field-test control that is off by default. It can be enabled only with a confirmed location within 5 km of Columbia Borough center and a photo, but those items remain optional for the underlying standard CW report. Mixed, duplicate, or hierarchy-stray keys do not expose or authorize the control. Version 3.16.1 sends an explicitly authorized message only to a ColumbiaWalks-controlled test mailbox with a `[TEST]` subject, not to Police, the Mayor, or Codes. Authorization does not confirm delivery. Other report types are not authorized for this processing.
-- Trash-can handling: A written trash-can location is required; an existing confirmed map pin is optional. Submitted trash-can addresses and coordinates remain in the private moderation/complaint record and are not returned by the public trash-can feed.
+- Trash-can handling: The Community form requires a written location and offers an optional confirmed pin. Repeat Reporting requires a picture and confirmed coordinates for each private complaint. Submitted trash-can locations remain private and are not returned by the public feed.
 - Weather handling: After a safety report reaches ColumbiaWalks, the server may send Open-Meteo only the incident coordinates rounded to two decimal places and the incident calendar date and hour to obtain model-derived estimated conditions. It does not send the phone's live location, precise coordinates, narrative, photo, contact information, report/submission ID, or the reporter's device IP address; the request comes from the ColumbiaWalks server, and Open-Meteo may process that server request under its own terms and privacy information. Estimated conditions and provider/query provenance may be stored with the report. Open-Meteo data is attributed under CC BY 4.0. This is server-side app functionality, not tracking; an outage never blocks the report, the iOS app does not contact Open-Meteo directly, and no new phone permission is added.
 
 ### User Content — Photos or Videos
@@ -27,11 +27,11 @@ These answers describe ColumbiaWalks 3.16.1 (31601). Reconfirm them if the app o
 - Purpose: **App Functionality**
 - Page of Shame pictures can become public only after an administrator reviews and approves them. The submission screen discloses that possibility before upload.
 - Sharing: For the narrowly qualifying field-test email types, a relevant picture is required and is included if the server processes the disclosed message to the ColumbiaWalks-controlled test mailbox after upload and its delivery safeguards.
-- The 3.16 trash-can form does not accept media. The police-tip assistant does not select, read, or upload evidence to CBPD; any evidence is chosen directly on the external official Police Department form after the user leaves ColumbiaWalks. Choosing **Submit to CW & Notify CBPD** first saves the optional CW report photo to ColumbiaWalks, then reminds the user to attach the original relevant file personally on the official form.
+- Trash-can Repeat Reporting attaches a metadata-stripped picture to a private complaint. The picture and submission remain in backup-excluded protected local storage until accepted. The standalone Community form remains text-only. The police-tip assistant does not select, read, or upload evidence to CBPD; any evidence is chosen directly on the official Police Department form. Choosing **Submit to CW & Notify CBPD** first saves the optional CW report photo to ColumbiaWalks, then reminds the user to attach the original relevant file personally on the official form.
 
 ### User Content — Other User Content
 
-- Collected: **Yes** (guided report answers, report notes, feedback text, and trash-can comments/complaints)
+- Collected: **Yes** (guided report answers, report notes, feedback text, trash-can comments/complaints, Residential/Commercial selections (Residential by default), and optional hauler selections). Haulers are private intake metadata and are not automatically contacted.
 - Linked to identity: **No**, unless a user voluntarily includes identifying details in free text
 - Used for tracking: **No**
 - Purpose: **App Functionality**

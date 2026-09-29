@@ -99,6 +99,7 @@ enum RapidReportKind: String, Codable, CaseIterable, Identifiable, Hashable {
     case schoolRoute = "school_route"
     case policeResponse = "police_response"
     case other
+    case trashCan = "trash_can"
 
     var id: String { rawValue }
 
@@ -113,6 +114,7 @@ enum RapidReportKind: String, Codable, CaseIterable, Identifiable, Hashable {
         case .schoolRoute: "School route"
         case .policeResponse: "Police response"
         case .other: "Other"
+        case .trashCan: "Trash can"
         }
     }
 
@@ -127,6 +129,7 @@ enum RapidReportKind: String, Codable, CaseIterable, Identifiable, Hashable {
         case .schoolRoute: .schoolRouteSafety
         case .policeResponse: .policeResponse
         case .other: .notIncludedElsewhere
+        case .trashCan: .notIncludedElsewhere // Routed to the private trash-can intake.
         }
     }
 }

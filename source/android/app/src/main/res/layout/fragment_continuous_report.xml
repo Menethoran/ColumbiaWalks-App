@@ -118,6 +118,81 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <LinearLayout
+            android:id="@+id/continuous_trash_can_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@color/cw_surface_variant"
+            android:orientation="vertical"
+            android:padding="14dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/trash_can_repeat_disclosure"
+                android:textColor="@color/cw_text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:labelFor="@id/continuous_trash_category_spinner"
+                android:text="@string/trash_can_category_label"
+                android:textColor="@color/cw_text"
+                android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/continuous_trash_category_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="52dp"
+                android:prompt="@string/trash_can_category_label" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:labelFor="@id/continuous_trash_property_type_spinner"
+                android:text="@string/trash_can_property_type_label"
+                android:textColor="@color/cw_text"
+                android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/continuous_trash_property_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="52dp"
+                android:prompt="@string/trash_can_property_type_label" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/continuous_trash_hauler_spinner"
+                android:text="@string/trash_can_hauler_label"
+                android:textColor="@color/cw_text"
+                android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/continuous_trash_hauler_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="52dp"
+                android:prompt="@string/trash_can_hauler_label" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/continuous_trash_scope_spinner"
+                android:text="@string/trash_can_scope_label"
+                android:textColor="@color/cw_text"
+                android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/continuous_trash_scope_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="52dp"
+                android:prompt="@string/trash_can_scope_label" />
+        </LinearLayout>
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

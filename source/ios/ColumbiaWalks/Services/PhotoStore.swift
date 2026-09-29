@@ -3,6 +3,20 @@ import UIKit
 
 enum PhotoStore {
     static func saveNormalized(_ sourceData: Data, reportID: UUID) throws -> String {
+        let data = try normalizedData(sourceData)
+        let filename = "\(reportID.uuidString.lowercased()).jpg"
+        let destination = url(for: filename)
+        let directory = destination.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        var mutableDirectory = directory
+        try? mutableDirectory.setResourceValues(values)
+        try data.write(to: destination, options: [.atomic, .completeFileProtection])
+        return filename
+    }
+
+    static func normalizedData(_ sourceData: Data) throws -> Data {
         guard let image = UIImage(data: sourceData) else {
             throw PhotoError.invalidImage
         }
@@ -23,19 +37,7 @@ enum PhotoStore {
         guard let data = normalized.jpegData(compressionQuality: 0.82) else {
             throw PhotoError.invalidImage
         }
-        let filename = "\(reportID.uuidString.lowercased()).jpg"
-        let destination = url(for: filename)
-        let directory = destination.deletingLastPathComponent()
-        try FileManager.default.createDirectory(
-            at: directory,
-            withIntermediateDirectories: true
-        )
-        var values = URLResourceValues()
-        values.isExcludedFromBackup = true
-        var mutableDirectory = directory
-        try? mutableDirectory.setResourceValues(values)
-        try data.write(to: destination, options: [.atomic, .completeFileProtection])
-        return filename
+        return data
     }
 
     static func url(for filename: String) -> URL {
@@ -49,4 +51,3 @@ enum PhotoStore {
         var errorDescription: String? { "That photo could not be prepared. Try another image." }
     }
 }
-

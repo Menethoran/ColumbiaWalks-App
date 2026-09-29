@@ -99,6 +99,7 @@
         <item>School route</item>
         <item>Police response</item>
         <item>Other</item>
+        <item>Trash can</item>
     </string-array>
     <string-array name="continuous_sidewalk_lip_labels">
         <item>Not selected — optional</item>
@@ -454,6 +455,24 @@
     <string name="trash_can_public_disclosure">PUBLIC COMMENT: This submission is sent to ColumbiaWalks for moderation and may be published. It is always marked as a public trash-can asset. Do not include private or sensitive personal information.</string>
     <string name="trash_can_complaint_disclosure">PRIVATE COMPLAINT: This submission is sent privately to ColumbiaWalks and is not published. ColumbiaWalks does not automatically forward it to Columbia Borough or any government agency. This is not an emergency or service-request guarantee.</string>
     <string name="trash_can_category_label">Category *</string>
+    <string name="trash_can_hauler_label">Hauler (optional)</string>
+    <string name="trash_can_property_type_label">Residential or Commercial</string>
+    <string-array name="trash_can_property_type_labels">
+        <item>Residential</item>
+        <item>Commercial</item>
+    </string-array>
+    <string name="trash_can_repeat_disclosure">Trash-can repeat reports are private complaints to ColumbiaWalks. They are not automatically sent to the hauler or Borough. The issue, hauler, Residential/Commercial selection, and property scope stay selected for the next can; each report needs its own picture and confirmed location.</string>
+    <string name="trash_can_repeat_saved_format">Trash-can report #%1$d saved privately and queued to ColumbiaWalks. Ready for the next can.</string>
+    <string-array name="trash_can_hauler_labels">
+        <item>Not sure / not selected</item>
+        <item>B&amp;L Carson</item>
+        <item>Cauler</item>
+        <item>Good\'s</item>
+        <item>Penn Waste</item>
+        <item>Waste Connections</item>
+        <item>Shell\'s</item>
+        <item>WM.COM</item>
+    </string-array>
     <string name="trash_can_category_prompt">Select a category…</string>
     <string name="trash_can_comment_label">Comment *</string>
     <string name="trash_can_comment_helper">Required, 3–2,000 characters. Describe the condition and what action would help.</string>

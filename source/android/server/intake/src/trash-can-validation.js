@@ -8,6 +8,11 @@ const ALLOWED_ASSET_SCOPES = new Set([
   "unknown"
 ]);
 const ALLOWED_SOURCES = new Set(["android", "ios", "web", "unknown"]);
+export const TRASH_CAN_HAULERS = Object.freeze([
+  "bl_carson", "cauler", "goods", "penn_waste",
+  "waste_connections", "shells", "wm_com"
+]);
+const HAULERS = new Set(TRASH_CAN_HAULERS);
 
 export const TRASH_CAN_CATEGORIES = Object.freeze({
   public_comment: Object.freeze([
@@ -41,6 +46,8 @@ const ALLOWED_FIELDS = new Set([
   "submission_id",
   "kind",
   "asset_scope",
+  "hauler",
+  "property_type",
   "public_trash_can_id",
   "categories",
   "comment",
@@ -82,6 +89,14 @@ export function validateTrashCanSubmission(value) {
   }
   if (value.kind === "public_comment" && assetScope !== "public") {
     return invalid("Public comments require asset_scope public.");
+  }
+  const hauler = normalizeOptionalString(value.hauler);
+  if (hauler === null || (hauler && !HAULERS.has(hauler))) {
+    return invalid("hauler contains an unsupported value.");
+  }
+  const propertyType = value.property_type ?? "residential";
+  if (!["residential", "commercial"].includes(propertyType)) {
+    return invalid("property_type must be residential or commercial.");
   }
 
   const publicTrashCanId = normalizeOptionalString(value.public_trash_can_id);
@@ -172,6 +187,8 @@ export function validateTrashCanSubmission(value) {
       submission_id: value.submission_id.toLowerCase(),
       kind: value.kind,
       asset_scope: assetScope,
+      hauler: hauler || null,
+      property_type: propertyType,
       public_trash_can_id: publicTrashCanId
         ? publicTrashCanId.toLowerCase()
         : null,

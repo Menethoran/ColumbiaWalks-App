@@ -13,6 +13,18 @@ public final class TrashCanSubmissionDraft {
     public static final String SCOPE_PUBLIC = "public";
     public static final String SCOPE_PRIVATE_PROPERTY = "private_property";
     public static final String SCOPE_UNKNOWN = "unknown";
+    public static final String[] PROPERTY_TYPE_VALUES = { "residential", "commercial" };
+    public static final String[] HAULER_VALUES = {
+            "", "bl_carson", "cauler", "goods", "penn_waste",
+            "waste_connections", "shells", "wm_com"
+    };
+    public static final String[] COMPLAINT_CATEGORY_VALUES = {
+            "", "full_or_overflowing", "damaged", "missing", "odor_or_pests",
+            "illegal_dumping", "unsafe_or_obstructing", "missed_service", "other"
+    };
+    public static final String[] SCOPE_VALUES = {
+            SCOPE_PUBLIC, SCOPE_PRIVATE_PROPERTY, SCOPE_UNKNOWN
+    };
 
     public static final Set<String> PUBLIC_COMMENT_CATEGORIES = Set.of(
             "clean_well_maintained",
@@ -50,6 +62,8 @@ public final class TrashCanSubmissionDraft {
         COMMENT_TOO_SHORT,
         NO_ADDRESS,
         UNSUPPORTED_ASSET_SCOPE,
+        UNSUPPORTED_HAULER,
+        UNSUPPORTED_PROPERTY_TYPE,
         PARTIAL_COORDINATES,
         INVALID_COORDINATES,
         FIELD_TOO_LONG
@@ -60,6 +74,8 @@ public final class TrashCanSubmissionDraft {
     private final String comment;
     private final String address;
     private final String assetScope;
+    private final String hauler;
+    private final String propertyType;
     private final Double latitude;
     private final Double longitude;
 
@@ -74,6 +90,8 @@ public final class TrashCanSubmissionDraft {
                 : (requestedScope.isEmpty() ? SCOPE_PUBLIC : requestedScope);
         latitude = builder.latitude;
         longitude = builder.longitude;
+        hauler = clean(builder.hauler);
+        propertyType = clean(builder.propertyType);
     }
 
     public ValidationResult validate() {
@@ -104,6 +122,12 @@ public final class TrashCanSubmissionDraft {
         }
         if (!ASSET_SCOPES.contains(assetScope)) {
             return ValidationResult.UNSUPPORTED_ASSET_SCOPE;
+        }
+        if (!java.util.Arrays.asList(HAULER_VALUES).contains(hauler)) {
+            return ValidationResult.UNSUPPORTED_HAULER;
+        }
+        if (!java.util.Arrays.asList(PROPERTY_TYPE_VALUES).contains(propertyType)) {
+            return ValidationResult.UNSUPPORTED_PROPERTY_TYPE;
         }
         if ((latitude == null) != (longitude == null)) {
             return ValidationResult.PARTIAL_COORDINATES;
@@ -144,6 +168,10 @@ public final class TrashCanSubmissionDraft {
             payload.put("longitude", longitude);
         }
         payload.put("asset_scope", assetScope);
+        payload.put("property_type", propertyType);
+        if (!hauler.isEmpty()) {
+            payload.put("hauler", hauler);
+        }
         payload.put("app_version", "android-" + clean(versionName));
         payload.put("submission_source", "android");
         return payload;
@@ -163,6 +191,8 @@ public final class TrashCanSubmissionDraft {
         private String comment;
         private String address;
         private String assetScope = SCOPE_PUBLIC;
+        private String hauler;
+        private String propertyType = "residential";
         private Double latitude;
         private Double longitude;
 
@@ -188,6 +218,16 @@ public final class TrashCanSubmissionDraft {
 
         public Builder setAssetScope(String value) {
             assetScope = value;
+            return this;
+        }
+
+        public Builder setHauler(String value) {
+            hauler = value;
+            return this;
+        }
+
+        public Builder setPropertyType(String value) {
+            propertyType = value;
             return this;
         }
 

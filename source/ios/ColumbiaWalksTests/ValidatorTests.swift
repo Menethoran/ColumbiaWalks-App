@@ -199,6 +199,29 @@ final class PoliceTipDraftTests: XCTestCase {
 }
 
 final class TrashCanSubmissionTests: XCTestCase {
+    func testHaulersRoundTripWithoutBreakingOldQueuedSubmissions() throws {
+        XCTAssertEqual(TrashCanHauler.allCases.map(\.label),
+                       ["B&L Carson", "Cauler", "Good's", "Penn Waste", "Waste Connections", "Shell's", "WM.COM"])
+        var submission = TrashCanSubmission(id: UUID(), kind: .privateComplaint,
+            categories: ["damaged"], comment: "Damaged trash can", address: "Third and Locust",
+            latitude: nil, longitude: nil, assetScope: .unknown,
+            appVersion: "ios-3.17.1", submissionSource: "ios")
+        XCTAssertEqual(submission.propertyType, .residential)
+        var legacyJSON = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder.api.encode(submission)) as? [String: Any])
+        legacyJSON.removeValue(forKey: "property_type")
+        let legacy = try JSONSerialization.data(withJSONObject: legacyJSON)
+        XCTAssertNil(try JSONDecoder().decode(TrashCanSubmission.self, from: legacy).hauler)
+        submission.propertyType = .commercial
+        for hauler in TrashCanHauler.allCases {
+            submission.hauler = hauler
+            let data = try JSONEncoder.api.encode(submission)
+            XCTAssertEqual(try JSONDecoder().decode(TrashCanSubmission.self, from: data).hauler, hauler)
+            let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+            XCTAssertEqual(json["hauler"] as? String, hauler.rawValue)
+            XCTAssertEqual(json["property_type"] as? String, "commercial")
+        }
+    }
+
     func testCategoryKeysExactlyMatchThe316Contract() {
         XCTAssertEqual(
             TrashCanPublicCommentCategory.allCases.map(\.rawValue),
@@ -308,6 +331,7 @@ final class TrashCanSubmissionTests: XCTestCase {
                 "latitude",
                 "longitude",
                 "asset_scope",
+                "property_type",
                 "app_version",
                 "submission_source"
             ])
@@ -318,6 +342,7 @@ final class TrashCanSubmissionTests: XCTestCase {
         XCTAssertEqual(json["comment"] as? String, "Bags were left beside the can.")
         XCTAssertEqual(json["address"] as? String, "Fourth and Locust Streets")
         XCTAssertEqual(json["asset_scope"] as? String, "unknown")
+        XCTAssertEqual(json["property_type"] as? String, "residential")
         XCTAssertEqual(json["app_version"] as? String, "ios-3.16.0")
         XCTAssertEqual(json["submission_source"] as? String, "ios")
     }

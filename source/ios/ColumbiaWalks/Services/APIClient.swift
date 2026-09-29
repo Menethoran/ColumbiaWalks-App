@@ -112,12 +112,24 @@ actor APIClient {
         try validate(response: response, data: data)
     }
 
-    func submit(trashCan submission: TrashCanSubmission) async throws {
+    func submit(trashCan submission: TrashCanSubmission, photoURL: URL? = nil) async throws {
         var request = URLRequest(url: trashCanEndpoint)
         request.httpMethod = "POST"
         request.timeoutInterval = 25
         request.httpBody = try JSONEncoder.api.encode(submission)
         request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        if let photoURL {
+            let boundary = "cw-trash-\(UUID().uuidString)"
+            var body = Data()
+            body.appendMultipart(boundary: boundary, name: "submission",
+                                 contentType: "application/json; charset=UTF-8",
+                                 value: try JSONEncoder.api.encode(submission))
+            body.appendMultipart(boundary: boundary, name: "photo", filename: "trash-can.jpg",
+                                 contentType: "image/jpeg", value: try Data(contentsOf: photoURL))
+            body.append("--\(boundary)--\r\n")
+            request.httpBody = body
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        }
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("ColumbiaWalks-iOS/\(Self.version)", forHTTPHeaderField: "User-Agent")
         let (data, response) = try await URLSession.shared.data(for: request)

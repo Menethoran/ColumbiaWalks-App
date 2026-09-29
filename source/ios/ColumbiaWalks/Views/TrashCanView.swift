@@ -6,6 +6,8 @@ struct TrashCanView: View {
 
     @State private var kind: TrashCanSubmissionKind = .publicComment
     @State private var categoryKey: String?
+    @State private var hauler: TrashCanHauler?
+    @State private var propertyType: TrashCanPropertyType = .residential
     @State private var comment = ""
     @State private var address = ""
     @State private var assetScope: TrashCanAssetScope = .publicProperty
@@ -56,6 +58,20 @@ struct TrashCanView: View {
                     Text("Select a category…").tag(String?.none)
                     ForEach(kind.categoryOptions) { option in
                         Text(option.label).tag(Optional(option.id))
+                    }
+                }
+
+                Picker("Residential or Commercial", selection: $propertyType) {
+                    ForEach(TrashCanPropertyType.allCases) { value in
+                        Text(value.label).tag(value)
+                    }
+                }
+                .pickerStyle(.segmented)
+
+                Picker("Hauler (optional)", selection: $hauler) {
+                    Text("Not sure / not selected").tag(TrashCanHauler?.none)
+                    ForEach(TrashCanHauler.allCases) { value in
+                        Text(value.label).tag(Optional(value))
                     }
                 }
 
@@ -214,7 +230,9 @@ struct TrashCanView: View {
             longitude: coordinate?.longitude,
             assetScope: effectiveScope,
             appVersion: "ios-\(APIClient.version)",
-            submissionSource: "ios"
+            submissionSource: "ios",
+            hauler: hauler,
+            propertyType: propertyType
         )
 
         do {
@@ -230,6 +248,8 @@ struct TrashCanView: View {
 
     private func resetForm() {
         categoryKey = nil
+        hauler = nil
+        propertyType = .residential
         comment = ""
         address = ""
         if kind == .publicComment {

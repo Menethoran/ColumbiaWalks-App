@@ -47,18 +47,23 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.columbiawalks.app.MainActivity;
+import org.columbiawalks.app.BuildConfig;
 import org.columbiawalks.app.R;
 import org.columbiawalks.app.data.PhotoStorage;
 import org.columbiawalks.app.data.ReportDatabaseHelper;
 import org.columbiawalks.app.data.ReportLocationSource;
 import org.columbiawalks.app.data.SafetyReport;
 import org.columbiawalks.app.domain.OfficialEmailPolicy;
+import org.columbiawalks.app.domain.TrashCanSubmissionDraft;
+import org.columbiawalks.app.submission.TrashCanQueueStore;
+import org.columbiawalks.app.submission.TrashCanUploadScheduler;
 import org.columbiawalks.app.submission.ReportUploadScheduler;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -111,7 +116,8 @@ public final class ContinuousReportFragment extends Fragment
             "accessibility_ada",
             "school_route",
             "police_response",
-            "other"
+            "other",
+            "trash_can"
     };
     private static final String[] CATEGORY_VALUES = {
             "sidewalk_safety",
@@ -169,6 +175,11 @@ public final class ContinuousReportFragment extends Fragment
             );
 
     private Spinner hierarchySpinner;
+    private View trashCanSection;
+    private Spinner trashCategorySpinner;
+    private Spinner trashHaulerSpinner;
+    private Spinner trashScopeSpinner;
+    private Spinner trashPropertyTypeSpinner;
     private ScrollView reportScroll;
     private Spinner sidewalkLipSpinner;
     private Spinner vehicleIssueSpinner;
@@ -262,6 +273,11 @@ public final class ContinuousReportFragment extends Fragment
     }
 
     private void bindViews(View root) {
+        trashCanSection = root.findViewById(R.id.continuous_trash_can_section);
+        trashCategorySpinner = root.findViewById(R.id.continuous_trash_category_spinner);
+        trashHaulerSpinner = root.findViewById(R.id.continuous_trash_hauler_spinner);
+        trashScopeSpinner = root.findViewById(R.id.continuous_trash_scope_spinner);
+        trashPropertyTypeSpinner = root.findViewById(R.id.continuous_trash_property_type_spinner);
         reportScroll = root.findViewById(R.id.continuous_scroll);
         hierarchySpinner = root.findViewById(
                 R.id.continuous_hierarchy_spinner);
@@ -318,6 +334,15 @@ public final class ContinuousReportFragment extends Fragment
     }
 
     private void configureSpinners() {
+        trashCategorySpinner.setAdapter(spinnerAdapter(getResources().getStringArray(
+                R.array.trash_can_complaint_category_labels)));
+        trashHaulerSpinner.setAdapter(spinnerAdapter(getResources().getStringArray(
+                R.array.trash_can_hauler_labels)));
+        trashScopeSpinner.setAdapter(spinnerAdapter(getResources().getStringArray(
+                R.array.trash_can_scope_labels)));
+        trashScopeSpinner.setSelection(2);
+        trashPropertyTypeSpinner.setAdapter(spinnerAdapter(getResources().getStringArray(
+                R.array.trash_can_property_type_labels)));
         hierarchyLabels = getResources().getStringArray(
                 R.array.continuous_hierarchy_labels);
         sidewalkLipLabels = getResources().getStringArray(
@@ -409,6 +434,14 @@ public final class ContinuousReportFragment extends Fragment
                 ""
         ));
         comments.setText(savedInstanceState.getString(STATE_COMMENTS, ""));
+        trashCategorySpinner.setSelection(validPosition(savedInstanceState.getInt("trash_category", 0),
+                TrashCanSubmissionDraft.COMPLAINT_CATEGORY_VALUES.length));
+        trashHaulerSpinner.setSelection(validPosition(savedInstanceState.getInt("trash_hauler", 0),
+                TrashCanSubmissionDraft.HAULER_VALUES.length));
+        trashScopeSpinner.setSelection(validPosition(savedInstanceState.getInt("trash_scope", 2),
+                TrashCanSubmissionDraft.SCOPE_VALUES.length));
+        trashPropertyTypeSpinner.setSelection(validPosition(savedInstanceState.getInt("trash_property_type", 0),
+                TrashCanSubmissionDraft.PROPERTY_TYPE_VALUES.length));
         officialEmailOptIn.setChecked(savedInstanceState.getBoolean(
                 STATE_TEST_EMAIL_OPT_IN,
                 false
@@ -490,6 +523,7 @@ public final class ContinuousReportFragment extends Fragment
         String kind = selectedHierarchy();
         boolean sidewalk = "sidewalk".equals(kind);
         boolean vehicle = "vehicle".equals(kind);
+        trashCanSection.setVisibility("trash_can".equals(kind) ? View.VISIBLE : View.GONE);
         sidewalkLipSection.setVisibility(
                 sidewalk ? View.VISIBLE : View.GONE);
         vehicleIssueSection.setVisibility(
@@ -1273,6 +1307,11 @@ public final class ContinuousReportFragment extends Fragment
         photoError.setVisibility(View.GONE);
         locationError.setVisibility(View.GONE);
 
+        if ("trash_can".equals(selectedHierarchy())) {
+            saveTrashCanAndReportNext(activity, selectedPhotoPath);
+            return;
+        }
+
         String hierarchy = selectedHierarchy();
         String category = selectedCategory();
         String lipHeight = selectedLipHeight();
@@ -1346,6 +1385,71 @@ public final class ContinuousReportFragment extends Fragment
                     locationOverridden,
                     officialEmailAuthorized
             ));
+        } catch (RejectedExecutionException exception) {
+            operations.failSave(true);
+        }
+    }
+
+    private void saveTrashCanAndReportNext(MainActivity activity, String photoPath) {
+        int categoryPosition = Math.max(0, trashCategorySpinner.getSelectedItemPosition());
+        if (categoryPosition == 0) {
+            Toast.makeText(requireContext(), R.string.trash_can_category_error, Toast.LENGTH_LONG).show();
+            trashCategorySpinner.requestFocus();
+            return;
+        }
+        String categoryLabel = getResources().getStringArray(
+                R.array.trash_can_complaint_category_labels)[categoryPosition];
+        String commentText = textValue(comments);
+        TrashCanSubmissionDraft draft = new TrashCanSubmissionDraft.Builder()
+                .setKind(TrashCanSubmissionDraft.KIND_PRIVATE_COMPLAINT)
+                .setCategory(TrashCanSubmissionDraft.COMPLAINT_CATEGORY_VALUES[categoryPosition])
+                .setPropertyType(TrashCanSubmissionDraft.PROPERTY_TYPE_VALUES[
+                        Math.max(0, trashPropertyTypeSpinner.getSelectedItemPosition())])
+                .setHauler(TrashCanSubmissionDraft.HAULER_VALUES[
+                        Math.max(0, trashHaulerSpinner.getSelectedItemPosition())])
+                .setAssetScope(TrashCanSubmissionDraft.SCOPE_VALUES[
+                        Math.max(0, trashScopeSpinner.getSelectedItemPosition())])
+                .setComment(categoryLabel + (commentText.isEmpty() ? "" : "\n" + commentText))
+                .setAddress(String.format(Locale.US, "Confirmed coordinates: %.6f, %.6f",
+                        activity.getContinuousReportLatitude(), activity.getContinuousReportLongitude()))
+                .setCoordinates(activity.getContinuousReportLatitude(), activity.getContinuousReportLongitude())
+                .build();
+        if (draft.validate() != TrashCanSubmissionDraft.ValidationResult.VALID) {
+            Toast.makeText(requireContext(), R.string.trash_can_validation_error, Toast.LENGTH_LONG).show();
+            return;
+        }
+        int sequence = operations.getNextSequence();
+        String submissionId = UUID.nameUUIDFromBytes(("trash-can:"
+                + operations.getSessionId() + ":" + sequence).getBytes(StandardCharsets.UTF_8)).toString();
+        final String payload;
+        try {
+            payload = draft.toJson(submissionId, BuildConfig.VERSION_NAME).toString();
+        } catch (JSONException exception) {
+            return;
+        }
+        Context context = requireContext().getApplicationContext();
+        if (!operations.beginSaving(sequence, false)) return;
+        renderOperationState();
+        try {
+            operations.execute(() -> {
+                try {
+                    TrashCanQueueStore.save(context, submissionId, payload, photoPath);
+                    if (!operations.recordQueuedTrashCan(sequence)) {
+                        throw new IOException("Could not checkpoint the repeat sequence.");
+                    }
+                } catch (IOException | RuntimeException exception) {
+                    operations.failSave(true);
+                    return;
+                }
+                PhotoStorage.delete(photoPath);
+                boolean uploadQueued = true;
+                try {
+                    TrashCanUploadScheduler.enqueue(context, submissionId);
+                } catch (RuntimeException exception) {
+                    uploadQueued = false;
+                }
+                operations.completeSave(sequence, uploadQueued);
+            });
         } catch (RejectedExecutionException exception) {
             operations.failSave(true);
         }
@@ -1492,6 +1596,9 @@ public final class ContinuousReportFragment extends Fragment
                 R.string.continuous_report_saved_locally_format,
                 savedSequence
         );
+        if ("trash_can".equals(selectedHierarchy()) && uploadQueued) {
+            confirmation = getString(R.string.trash_can_repeat_saved_format, savedSequence);
+        }
         Toast.makeText(
                 requireContext(),
                 confirmation,
@@ -1729,6 +1836,12 @@ public final class ContinuousReportFragment extends Fragment
         if (hierarchySpinner != null) {
             hierarchySpinner.setEnabled(!isBusy);
         }
+        if (trashCategorySpinner != null) {
+            trashCategorySpinner.setEnabled(!isBusy);
+            trashHaulerSpinner.setEnabled(!isBusy);
+            trashScopeSpinner.setEnabled(!isBusy);
+            trashPropertyTypeSpinner.setEnabled(!isBusy);
+        }
         if (sidewalkLipSpinner != null) {
             sidewalkLipSpinner.setEnabled(!isBusy);
         }
@@ -1824,6 +1937,10 @@ public final class ContinuousReportFragment extends Fragment
         outState.putString(STATE_LICENSE_PLATE, textValue(licensePlate));
         outState.putString(STATE_PLATE_STATE, textValue(plateState));
         outState.putString(STATE_COMMENTS, textValue(comments));
+        outState.putInt("trash_category", trashCategorySpinner.getSelectedItemPosition());
+        outState.putInt("trash_hauler", trashHaulerSpinner.getSelectedItemPosition());
+        outState.putInt("trash_scope", trashScopeSpinner.getSelectedItemPosition());
+        outState.putInt("trash_property_type", trashPropertyTypeSpinner.getSelectedItemPosition());
         outState.putBoolean(
                 STATE_TEST_EMAIL_OPT_IN,
                 officialEmailOptIn != null && officialEmailOptIn.isChecked()
@@ -1984,6 +2101,8 @@ public final class ContinuousReportFragment extends Fragment
                                          applicationContext)) {
                         storedSequence = database
                                 .getNextContinuousSequence(restoredSessionId);
+                        storedSequence = Math.max(storedSequence,
+                                preferences.getInt(restoredSessionId + ".next_trash_sequence", 1));
                     } catch (RuntimeException ignored) {
                         reconciled = false;
                     }
@@ -2115,6 +2234,12 @@ public final class ContinuousReportFragment extends Fragment
             saveCompletion = null;
             saveFailurePhotoRestored = null;
             return true;
+        }
+
+        synchronized boolean recordQueuedTrashCan(int savedSequence) {
+            SharedPreferences preferences = draftPreferences();
+            return preferences != null && preferences.edit()
+                    .putInt(draftKey("next_trash_sequence"), savedSequence + 1).commit();
         }
 
         void completeSave(int savedSequence, boolean uploadQueued) {
